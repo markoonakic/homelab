@@ -20,7 +20,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./clusters/talos-home
+  path: ./clusters/staging
   prune: true
   sourceRef:
     kind: GitRepository
