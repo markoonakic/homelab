@@ -4,5 +4,5 @@ metadata:
   name: headscale-charts
   namespace: flux-system
 spec:
-  url: https://headscale.github.io/headscale
+  url: https://juanfont.github.io/headscale-charts
   interval: 1h
