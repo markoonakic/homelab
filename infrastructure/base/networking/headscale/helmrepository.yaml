@@ -4,5 +4,5 @@ metadata:
   name: headscale-charts
   namespace: flux-system
 spec:
-  url: https://headscale.k8s.tursidai.com/charts
+  url: https://headscale.github.io/headscale
   interval: 1h
