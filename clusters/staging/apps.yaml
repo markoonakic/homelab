@@ -10,5 +10,5 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./apps/talos-home
+  path: ./apps/staging
   prune: true
