@@ -38,3 +38,5 @@ spec:
       runAsGroup: 1000
       runAsNonRoot: true
       fsGroup: 1000
+    # Custom command to create unix socket directory
+    command: ["/bin/sh", "-c", "mkdir -p /var/run/headscale && headscale serve -c /etc/headscale/config.yaml"]
