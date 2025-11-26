@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: headplane
+  namespace: headscale
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: headplane
+  template:
+    metadata:
+      labels:
+        app: headplane
+    spec:
+      containers:
+      - name: headplane
+        image: ghcr.io/tale/headplane:latest
+        ports:
+        - containerPort: 3000
+          name: web
+        volumeMounts:
+        - name: config
+          mountPath: /etc/headplane
+        - name: data
+          mountPath: /var/lib/headplane
+        - name: headscale-config
+          mountPath: /etc/headscale
+      volumes:
+      - name: config
+        configMap:
+          name: headplane-config
+      - name: data
+        emptyDir: {}
+      - name: headscale-config
+        configMap:
+          name: headscale-config
