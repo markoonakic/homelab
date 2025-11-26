@@ -28,15 +28,13 @@ spec:
     ui:
       enabled: true
       port: 8081
+    # Security hardening - non-root execution
     securityContext:
       allowPrivilegeEscalation: false
       capabilities:
         drop: ["ALL"]
-      readOnlyRootFilesystem: true
     podSecurityContext:
       runAsUser: 1000
       runAsGroup: 1000
       runAsNonRoot: true
       fsGroup: 1000
-      seccompProfile:
-        type: RuntimeDefault
