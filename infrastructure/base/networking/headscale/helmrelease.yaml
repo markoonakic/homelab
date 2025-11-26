@@ -28,14 +28,16 @@ spec:
     ui:
       enabled: true
       port: 8081
-    # Security hardening
+    # Security hardening - non-root execution like Linkding
     securityContext:
       allowPrivilegeEscalation: false
       capabilities:
         drop: ["ALL"]
       readOnlyRootFilesystem: true
     podSecurityContext:
-      runAsUser: 65534
-      runAsGroup: 65534
+      runAsUser: 1000
+      runAsGroup: 1000
       runAsNonRoot: true
-      fsGroup: 65534
+      fsGroup: 1000
+      seccompProfile:
+        type: RuntimeDefault
