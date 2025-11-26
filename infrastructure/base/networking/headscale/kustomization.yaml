@@ -1,6 +1,26 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: headscale
 resources:
   - namespace.yaml
   - helmrepository.yaml
   - helmrelease.yaml
+patches:
+  - target:
+      kind: Deployment
+      name: headscale
+    patch: |-
+      - op: add
+        path: /spec/template/spec/securityContext
+        value:
+          runAsUser: 65534
+          runAsGroup: 65534
+          runAsNonRoot: true
+          fsGroup: 65534
+      - op: add
+        path: /spec/template/spec/containers/0/securityContext
+        value:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+          readOnlyRootFilesystem: true
