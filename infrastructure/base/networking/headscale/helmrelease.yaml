@@ -28,7 +28,6 @@ spec:
     ui:
       enabled: true
       port: 8081
-    # Security hardening - non-root execution like Linkding
     securityContext:
       allowPrivilegeEscalation: false
       capabilities:
