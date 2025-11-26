@@ -22,11 +22,9 @@ spec:
     ports:
       web:
         port: 80
-        expose: true
         protocol: TCP
       websecure:
         port: 443
-        expose: true
         protocol: TCP
     service:
       type: LoadBalancer
