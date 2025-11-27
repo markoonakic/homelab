@@ -28,10 +28,4 @@ spec:
         protocol: TCP
     service:
       type: NodePort
-    certificatesResolvers:
-      letsencrypt:
-        acme:
-          email: admin@sarma.xyz
-          storage: /data/acme.json
-          httpChallenge:
-            entryPoint: web
+
