@@ -10,9 +10,6 @@ spec:
   - match: Host(`headscale.markonakic.xyz`) && PathPrefix(`/`) && !PathPrefix(`/.well-known/acme-challenge/`)
     kind: Rule
     priority: 1
-    middlewares:
-    - name: cors
-      namespace: headscale
     services:
     - name: headscale
       port: 8080
