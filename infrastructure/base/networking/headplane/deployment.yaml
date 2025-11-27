@@ -30,14 +30,9 @@ spec:
           mountPath: /etc/headplane
         - name: data
           mountPath: /var/lib/headplane
-        - name: headscale-config
-          mountPath: /etc/headscale
       volumes:
       - name: config
         configMap:
           name: headplane-config
       - name: data
         emptyDir: {}
-      - name: headscale-config
-        configMap:
-          name: headscale-config
