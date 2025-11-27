@@ -13,14 +13,27 @@ spec:
       labels:
         app: headplane
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: headplane
         image: ghcr.io/tale/headplane:latest
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
         ports:
         - containerPort: 3000
           name: web
         env:
-        - name: COOKIE_SECRET
+        - name: HEADPLANE_LOAD_ENV_OVERRIDES
+          value: "true"
+        - name: HEADPLANE_SERVER__COOKIE_SECRET
           valueFrom:
             secretKeyRef:
               name: headplane-secret
