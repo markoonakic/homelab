@@ -28,4 +28,12 @@ spec:
         protocol: TCP
     service:
       type: NodePort
+    certificatesResolvers:
+      letsencrypt:
+        acme:
+          email: admin@markonakic.xyz
+          storage: /data/acme.json
+          dnsChallenge:
+            provider: porkbun
+            delayBeforeCheck: 30
 
