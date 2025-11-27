@@ -4,5 +4,3 @@ resources:
   - namespace.yaml
   - helmrepository.yaml
   - helmrelease.yaml
-patches:
-  - path: command-patch.yaml
