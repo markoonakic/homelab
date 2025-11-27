@@ -36,4 +36,15 @@ spec:
           dnsChallenge:
             provider: porkbun
             delayBeforeCheck: 30
+    env:
+    - name: PORKBUN_API_KEY
+      valueFrom:
+        secretKeyRef:
+          name: porkbun-credentials
+          key: PORKBUN_API_KEY
+    - name: PORKBUN_SECRET_API_KEY
+      valueFrom:
+        secretKeyRef:
+          name: porkbun-credentials
+          key: PORKBUN_SECRET_API_KEY
 
