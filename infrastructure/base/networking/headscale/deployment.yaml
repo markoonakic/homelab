@@ -23,7 +23,7 @@ spec:
       containers:
       - name: headscale
         image: headscale/headscale:v0.27.0
-        args: ["serve", "-c", "/config/config.yaml"]
+        args: ["serve", "-c", "/etc/headscale/config.yaml"]
         ports:
         - containerPort: 8080
           name: http
@@ -35,12 +35,16 @@ spec:
             drop: ["ALL"]
         volumeMounts:
         - name: config
-          mountPath: /config
+          mountPath: /etc/headscale
         - name: data
           mountPath: /var/lib/headscale
+        - name: run
+          mountPath: /var/run/headscale
       volumes:
       - name: config
         secret:
           secretName: headscale-config
       - name: data
+        emptyDir: {}
+      - name: run
         emptyDir: {}
