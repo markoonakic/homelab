@@ -19,6 +19,12 @@ spec:
         ports:
         - containerPort: 3000
           name: web
+        env:
+        - name: COOKIE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: headplane-secret
+              key: cookie_secret
         volumeMounts:
         - name: config
           mountPath: /etc/headplane
