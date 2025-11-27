@@ -6,7 +6,7 @@ metadata:
 spec:
   secretName: headscale-tls-cert
   issuerRef:
-    name: letsencrypt-prod
+    name: selfsigned-issuer
     kind: ClusterIssuer
   dnsNames:
   - headscale.markonakic.xyz
