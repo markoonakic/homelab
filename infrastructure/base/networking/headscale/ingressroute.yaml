@@ -10,29 +10,11 @@ spec:
   - match: Host(`headscale.markonakic.xyz`) && PathPrefix(`/`) && !PathPrefix(`/.well-known/acme-challenge/`)
     kind: Rule
     priority: 1
+    middlewares:
+    - name: cors
+      namespace: headscale
     services:
     - name: headscale
       port: 8080
   tls:
-    certResolver: letsencrypt
-
----
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: cors
-  namespace: headscale
-spec:
-  headers:
-    accessControlAllowHeaders:
-      - "*"
-    accessControlAllowMethods:
-      - "GET"
-      - "POST"
-      - "PUT"
-      - "DELETE"
-      - "OPTIONS"
-    accessControlAllowOriginList:
-      - "*"  # Allow all origins for initial setup
-    accessControlMaxAge: 100
-    addVaryHeader: true
+    secretName: headscale-tls
