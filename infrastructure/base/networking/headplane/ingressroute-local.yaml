@@ -9,7 +9,7 @@ spec:
   entryPoints:
     - web
   routes:
-  - match: Path(`/admin`) || PathPrefix(`/admin/`)
+  - match: PathPrefix(`/admin`)
     kind: Rule
     priority: 10
     services:
