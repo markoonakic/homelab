@@ -7,14 +7,14 @@ spec:
   entryPoints:
     - websecure
   routes:
-  - match: PathPrefix(`/`) && !PathPrefix(`/admin`)
+  - match: PathPrefix(`/`)
     kind: Rule
     priority: 1
     services:
     - name: headscale
       port: 8080
   tls:
-    secretName: headscale-tls
+    certResolver: letsencrypt
 
 ---
 apiVersion: traefik.io/v1alpha1
