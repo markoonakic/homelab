@@ -27,4 +27,11 @@ spec:
         port: 443
         protocol: TCP
     service:
-      type: LoadBalancer
+      type: NodePort
+    certificatesResolvers:
+      letsencrypt:
+        acme:
+          email: admin@sarma.xyz
+          storage: /data/acme.json
+          httpChallenge:
+            entryPoint: web
