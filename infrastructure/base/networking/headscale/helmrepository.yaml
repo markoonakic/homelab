@@ -1,8 +1,0 @@
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: headscale-charts
-  namespace: flux-system
-spec:
-  url: https://kapernikov.github.io/headscale-helm
-  interval: 1h
