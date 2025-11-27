@@ -14,7 +14,7 @@ spec:
     - name: headscale
       port: 8080
   tls:
-    certResolver: letsencrypt
+    secretName: headscale-tls
 
 ---
 apiVersion: traefik.io/v1alpha1
