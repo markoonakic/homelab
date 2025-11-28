@@ -1,0 +1,132 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: pihole
+  namespace: flux-system
+spec:
+  interval: 10m
+  targetNamespace: pihole
+  chart:
+    spec:
+      chart: pihole
+      version: "2.27.0"
+      sourceRef:
+        kind: HelmRepository
+        name: pihole-charts
+        namespace: flux-system
+  install:
+    createNamespace: false
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    image:
+      repository: pihole/pihole
+      tag: "2024.07.0"
+      pullPolicy: IfNotPresent
+
+    # DNS Configuration
+    DNS1: "1.1.1.1"
+    DNS2: "9.9.9.9"
+    DNS3: "8.8.8.8"
+    DNS4: "8.8.4.4"
+
+    # Web UI
+    adminPassword: "lrrIjcwirQZzkh1z"
+
+    # Persistent storage
+    persistentVolumeClaim:
+      enabled: true
+      existingClaim: pihole-data-pvc
+      size: 5Gi
+
+    # Service configuration
+    serviceWeb:
+      type: ClusterIP
+      port: 80
+      annotations:
+        traefik.ingress.kubernetes.io/router.entrypoints: websecure
+        traefik.ingress.kubernetes.io/router.tls: "true"
+        cert-manager.io/cluster-issuer: selfsigned-issuer
+
+    serviceDns:
+      type: ClusterIP
+      port: 53
+      annotations:
+        metallb.universe.tf/loadBalancerIPs: 192.168.0.10
+
+    # Ingress
+    ingress:
+      enabled: true
+      ingressClassName: traefik
+      hosts:
+        - pihole.sarma.xyz
+      tls:
+        - secretName: pihole-tls
+          hosts:
+            - pihole.sarma.xyz
+
+    # Security
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      runAsNonRoot: true
+
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      capabilities:
+        drop:
+          - ALL
+
+    # Resources
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "200m"
+
+    # Additional environment variables
+    extraEnvVars:
+      - name: TZ
+        value: "Europe/Zagreb"
+      - name: DNSSEC
+        value: "true"
+      - name: DNS_BOGUS_PRIV
+        value: "true"
+      - name: DNS_FQDN_REQUIRED
+        value: "true"
+      - name: REV_SERVER
+        value: "true"
+      - name: REV_SERVER_DOMAIN
+        value: "sarma.xyz"
+      - name: REV_SERVER_TARGET
+        value: "192.168.0.200"
+      - name: REV_SERVER_CIDR
+        value: "192.168.0.0/24"
+
+    # Custom DNS entries
+    extraEnvVarsSecret:
+      - envName: WEBPASSWORD
+        secretName: pihole-secret
+        secretKey: WEBPASSWORD
+
+    # Ad blocking configuration
+    adlists:
+      - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+      - https://mirror1.malwaredomains.com/files/justdomains
+      - https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
+      - https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
+
+    # DHCP (disabled - we use router DHCP)
+    dhcp:
+      enabled: false
