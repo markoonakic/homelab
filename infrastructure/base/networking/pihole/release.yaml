@@ -41,6 +41,8 @@ spec:
     serviceDns:
       type: ClusterIP
       port: 53
+      annotations:
+        metallb.universe.tf/allow-shared-ip: pihole-dns
     ingress:
       enabled: true
       ingressClassName: traefik
@@ -50,6 +52,8 @@ spec:
         - secretName: pihole-tls
           hosts:
             - pihole.sarma.xyz
+    hostNetwork: "true"
+    dnsPolicy: ClusterFirstWithHostNet
     podSecurityContext:
       runAsUser: 1000
       runAsGroup: 1000
