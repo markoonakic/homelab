@@ -16,7 +16,7 @@ spec:
         app: wireguard
     spec:
       nodeSelector:
-        node.kubernetes.io/control-plane: ""
+        node-role.kubernetes.io/control-plane: ""
       securityContext:
         runAsUser: 568
         runAsGroup: 568
