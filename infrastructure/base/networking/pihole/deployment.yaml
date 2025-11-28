@@ -16,9 +16,8 @@ spec:
         app: pihole
     spec:
       securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        runAsNonRoot: true
+        runAsUser: 0
+        runAsGroup: 0
         fsGroup: 1000
       containers:
       - name: pihole
@@ -58,13 +57,12 @@ spec:
           initialDelaySeconds: 30
           periodSeconds: 5
         securityContext:
-          allowPrivilegeEscalation: false
+          allowPrivilegeEscalation: true
           capabilities:
-            drop: ["ALL"]
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 1000
-          runAsGroup: 1000
+            add: ["NET_ADMIN", "NET_RAW", "SYS_ADMIN"]
+          readOnlyRootFilesystem: false
+          runAsUser: 0
+          runAsGroup: 0
         volumeMounts:
         - name: config
           mountPath: /etc/pihole
