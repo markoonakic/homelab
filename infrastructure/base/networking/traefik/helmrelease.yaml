@@ -16,7 +16,7 @@ spec:
         namespace: flux-system
   install:
     createNamespace: false
-   values:
+  values:
     additionalArguments:
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
