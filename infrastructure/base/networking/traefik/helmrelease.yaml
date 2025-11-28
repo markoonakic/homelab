@@ -17,8 +17,12 @@ spec:
   install:
     createNamespace: false
   values:
+    additionalArguments:
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
     deployment:
       replicas: 1
+    
     ports:
       web:
         port: 80
@@ -26,9 +30,24 @@ spec:
       websecure:
         port: 443
         protocol: TCP
+    persistence:
+      enabled: true
+      path: /data
+      size: 1Gi
+      storageClass: longhorn
+    ingressRoute:
+      dashboard:
+        enabled: false
     service:
-      type: NodePort
+      annotations:
+        metallb.universe.tf/address-pool: service-pool
+      loadBalancerIP: 192.168.0.200
+      type: LoadBalancer
     certificatesResolvers:
-      selfsigned:
-        selfSigned: {}
+      letsencrypt:
+        acme:
+          email: marko@markonakic.xyz
+          storage: /data/acme.json
+          httpChallenge:
+            entryPoint: web
 
