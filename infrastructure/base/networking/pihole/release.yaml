@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: pihole
-      version: "2.27.0"
+      version: "2.34.0"
       sourceRef:
         kind: HelmRepository
         name: pihole-charts
@@ -27,37 +27,20 @@ spec:
       repository: pihole/pihole
       tag: "2024.07.0"
       pullPolicy: IfNotPresent
-
-    # DNS Configuration
     DNS1: "1.1.1.1"
     DNS2: "9.9.9.9"
     DNS3: "8.8.8.8"
     DNS4: "8.8.4.4"
-
-    # Web UI
-    adminPassword: "lrrIjcwirQZzkh1z"
-
-    # Environment variables
-    envVars:
-      TZ: "Europe/Zagreb"
-      WEBPASSWORD: "lrrIjcwirQZzkh1z"
-
-    # Persistent storage
     persistentVolumeClaim:
       enabled: true
       existingClaim: pihole-data-pvc
       size: 5Gi
-
-    # Service configuration
     serviceWeb:
       type: ClusterIP
       port: 80
-
     serviceDns:
       type: ClusterIP
       port: 53
-
-    # Ingress
     ingress:
       enabled: true
       ingressClassName: traefik
@@ -67,14 +50,11 @@ spec:
         - secretName: pihole-tls
           hosts:
             - pihole.sarma.xyz
-
-    # Security
     podSecurityContext:
       runAsUser: 1000
       runAsGroup: 1000
       fsGroup: 1000
       runAsNonRoot: true
-
     securityContext:
       allowPrivilegeEscalation: false
       readOnlyRootFilesystem: true
@@ -84,8 +64,6 @@ spec:
       capabilities:
         drop:
           - ALL
-
-    # Resources
     resources:
       requests:
         memory: "128Mi"
@@ -93,23 +71,17 @@ spec:
       limits:
         memory: "256Mi"
         cpu: "200m"
-
-    # Additional environment variables
     extraEnvVars:
       TZ: "Europe/Zagreb"
       DNSSEC: "true"
       DNS_BOGUS_PRIV: "true"
       DNS_FQDN_REQUIRED: "true"
-
-    # Custom DNS entries
-
-    # Ad blocking configuration
+    extraEnvVarsSecret:
+      WEBPASSWORD: pihole-secret
     adlists:
       - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
       - https://mirror1.malwaredomains.com/files/justdomains
       - https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
       - https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
-
-    # DHCP (disabled - we use router DHCP)
     dhcp:
       enabled: false
