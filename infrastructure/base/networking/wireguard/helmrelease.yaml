@@ -1,0 +1,79 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: wireguard
+  namespace: flux-system
+spec:
+  interval: 10m
+  targetNamespace: wireguard
+  chart:
+    spec:
+      chart: wireguard
+      version: "4.0.0"
+      sourceRef:
+        kind: HelmRepository
+        name: linuxserver
+        namespace: flux-system
+  install:
+    createNamespace: false
+  values:
+    image:
+      repository: linuxserver/wireguard
+      tag: latest
+    service:
+      type: LoadBalancer
+      annotations:
+        metallb.universe.tf/address-pool: service-pool
+      loadBalancerIP: 192.168.0.201
+      externalTrafficPolicy: Local
+      ports:
+        wireguard:
+          port: 51820
+          protocol: UDP
+    env:
+      - name: WG_PRIVATE_KEY
+        valueFrom:
+          secretKeyRef:
+            name: wireguard-secret
+            key: WG_PRIVATE_KEY
+      - name: WG_ADDRESS
+        valueFrom:
+          secretKeyRef:
+            name: wireguard-secret
+            key: WG_ADDRESS
+      - name: WG_ALLOWED_IPS
+        valueFrom:
+          secretKeyRef:
+            name: wireguard-secret
+            key: WG_ALLOWED_IPS
+      - name: WG_POST_UP
+        valueFrom:
+          secretKeyRef:
+            name: wireguard-secret
+            key: WG_POST_UP
+      - name: WG_POST_DOWN
+        valueFrom:
+          secretKeyRef:
+            name: wireguard-secret
+            key: WG_POST_DOWN
+    persistence:
+      config:
+        enabled: true
+        existingClaim: wireguard-config
+    podSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
+    securityContext:
+      capabilities:
+        add:
+          - NET_ADMIN
+          - SYS_MODULE
+      privileged: false
+    resources:
+      requests:
+        memory: 128Mi
+        cpu: 100m
+      limits:
+        memory: 256Mi
+        cpu: 200m
