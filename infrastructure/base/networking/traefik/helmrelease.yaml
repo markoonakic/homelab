@@ -25,6 +25,8 @@ spec:
       initContainers:
       - name: init-acme
         image: busybox
+        securityContext:
+          runAsUser: 0
         command: ['sh', '-c', 'chown -R 65532:65532 /data']
         volumeMounts:
         - name: data
