@@ -22,15 +22,6 @@ spec:
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
     deployment:
       replicas: 1
-      initContainers:
-      - name: init-acme
-        image: busybox
-        securityContext:
-          runAsUser: 0
-        command: ['sh', '-c', 'chown -R 65532:65532 /data']
-        volumeMounts:
-        - name: data
-          mountPath: /data
     env:
       - name: PORKBUN_API_KEY
         valueFrom:
@@ -66,7 +57,7 @@ spec:
       porkbun:
         acme:
           email: marko@markonakic.xyz
-          storage: /data/acme.json
+          storage: /tmp/acme.json
           dnsChallenge:
             provider: porkbun
             delayBeforeCheck: 30
