@@ -4,6 +4,3 @@ resources:
   - namespace.yaml
   - helmrepository.yaml
   - helmrelease.yaml
-  - ingressroute-headscale.yaml
-  - ingressroute-headplane.yaml
-  - ingressroute-pihole.yaml
