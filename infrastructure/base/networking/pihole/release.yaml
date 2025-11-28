@@ -73,6 +73,18 @@ spec:
       limits:
         memory: "256Mi"
         cpu: "200m"
+    livenessProbe:
+      httpGet:
+        path: /
+        port: http
+      initialDelaySeconds: 60
+      periodSeconds: 10
+    readinessProbe:
+      httpGet:
+        path: /
+        port: http
+      initialDelaySeconds: 30
+      periodSeconds: 5
 
     extraEnvVars:
       TZ: "Europe/Zagreb"
