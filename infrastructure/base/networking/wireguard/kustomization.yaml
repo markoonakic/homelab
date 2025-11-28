@@ -4,5 +4,6 @@ resources:
   - namespace.yaml
   - pvc.yaml
   - secret.yaml
+  - networkpolicy.yaml
   - helmrepository.yaml
   - helmrelease.yaml
