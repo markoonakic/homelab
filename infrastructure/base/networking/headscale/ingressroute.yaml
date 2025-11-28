@@ -7,7 +7,13 @@ spec:
   entryPoints:
     - websecure
   routes:
-  - match: Host(`headscale.markonakic.xyz`) && PathPrefix(`/`) && !PathPrefix(`/.well-known/acme-challenge/`)
+  - match: Host(`headscale.markonakic.xyz`) && PathPrefix(`/`)
+    kind: Rule
+    priority: 1
+    services:
+    - name: headscale
+      port: 8080
+  - match: Host(`headscale.sarma.xyz`) && PathPrefix(`/`)
     kind: Rule
     priority: 1
     services:

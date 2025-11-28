@@ -5,11 +5,13 @@ metadata:
   namespace: headscale
 spec:
   entryPoints:
-    - web
+    - websecure
   routes:
-  - match: PathPrefix(`/admin`)
+  - match: Host(`headplane.sarma.xyz`) && PathPrefix(`/`)
     kind: Rule
-    priority: 10
+    priority: 1
     services:
     - name: headplane
       port: 3000
+  tls:
+    secretName: headplane-tls
