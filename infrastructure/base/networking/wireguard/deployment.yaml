@@ -18,9 +18,9 @@ spec:
       nodeSelector:
         node-role.kubernetes.io/control-plane: ""
       securityContext:
-        runAsUser: 568
-        runAsGroup: 568
-        fsGroup: 568
+        runAsUser: 0
+        runAsGroup: 0
+        fsGroup: 0
       containers:
       - name: wireguard
         image: linuxserver/wireguard:latest
@@ -30,7 +30,10 @@ spec:
           name: wireguard
         env:
         - name: WG_PRIVATE_KEY
-          value: "ELAubbtOQKQzFEMyLUvpKQM7aLdg8okKFhmxt1+/MHo="
+          valueFrom:
+            secretKeyRef:
+              name: wireguard-secret
+              key: WG_PRIVATE_KEY
         - name: WG_ADDRESS
           valueFrom:
             secretKeyRef:
@@ -57,8 +60,6 @@ spec:
           value: "nft"
         securityContext:
           privileged: true
-          runAsUser: 0
-          runAsGroup: 0
         volumeMounts:
         - name: config
           mountPath: /config
