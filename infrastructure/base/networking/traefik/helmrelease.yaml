@@ -22,6 +22,13 @@ spec:
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
     deployment:
       replicas: 1
+      initContainers:
+      - name: init-acme
+        image: busybox
+        command: ['sh', '-c', 'chown -R 65532:65532 /data']
+        volumeMounts:
+        - name: data
+          mountPath: /data
     env:
       - name: PORKBUN_API_KEY
         valueFrom:
