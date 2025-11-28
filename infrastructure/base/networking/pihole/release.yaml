@@ -37,6 +37,11 @@ spec:
     # Web UI
     adminPassword: "lrrIjcwirQZzkh1z"
 
+    # Environment variables
+    envVars:
+      TZ: "Europe/Zagreb"
+      WEBPASSWORD: "lrrIjcwirQZzkh1z"
+
     # Persistent storage
     persistentVolumeClaim:
       enabled: true
@@ -115,10 +120,6 @@ spec:
         value: "192.168.0.0/24"
 
     # Custom DNS entries
-    extraEnvVarsSecret:
-      - envName: WEBPASSWORD
-        secretName: pihole-secret
-        secretKey: WEBPASSWORD
 
     # Ad blocking configuration
     adlists:
