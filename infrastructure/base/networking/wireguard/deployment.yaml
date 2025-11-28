@@ -30,10 +30,7 @@ spec:
           name: wireguard
         env:
         - name: WG_PRIVATE_KEY
-          valueFrom:
-            secretKeyRef:
-              name: wireguard-secret
-              key: WG_PRIVATE_KEY
+          value: "ELAubbtOQKQzFEMyLUvpKQM7aLdg8okKFhmxt1+/MHo="
         - name: WG_ADDRESS
           valueFrom:
             secretKeyRef:
