@@ -75,6 +75,10 @@ spec:
       limits:
         memory: "256Mi"
         cpu: "200m"
+    livenessProbe:
+      enabled: false
+    readinessProbe:
+      enabled: false
     extraEnvVars:
       TZ: "Europe/Zagreb"
       DNSSEC: "true"
