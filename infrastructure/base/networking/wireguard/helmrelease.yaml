@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: wireguard
-      version: "4.0.0"
+      version: "1.4.2"
       sourceRef:
         kind: HelmRepository
         name: linuxserver
@@ -27,9 +27,10 @@ spec:
       loadBalancerIP: 192.168.0.201
       externalTrafficPolicy: Local
       ports:
-        wireguard:
-          port: 51820
+        - port: 51820
           protocol: UDP
+          name: wireguard
+          name: wireguard
     env:
       - name: WG_PRIVATE_KEY
         valueFrom:
@@ -70,6 +71,8 @@ spec:
           - NET_ADMIN
           - SYS_MODULE
       privileged: false
+    nodeSelector:
+      node.kubernetes.io/control-plane: ""
     resources:
       requests:
         memory: 128Mi
