@@ -54,11 +54,10 @@ spec:
       loadBalancerIP: 192.168.0.200
       type: LoadBalancer
     certificatesResolvers:
-      porkbun:
+      letsencrypt:
         acme:
           email: marko@markonakic.xyz
           storage: /tmp/acme.json
-          dnsChallenge:
-            provider: porkbun
-            delayBeforeCheck: 30
+          httpChallenge:
+            entryPoint: web
 
