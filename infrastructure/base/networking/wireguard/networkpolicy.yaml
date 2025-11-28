@@ -6,7 +6,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: wireguard
+      app: wireguard
   policyTypes:
     - Ingress
     - Egress
@@ -20,12 +20,6 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: kube-system
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: metallb-system
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: longhorn-system
         - podSelector:
             matchLabels:
               k8s-app: kube-dns
