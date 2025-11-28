@@ -46,7 +46,7 @@ spec:
           value: "true"
          livenessProbe:
            httpGet:
-             path: /
+             path: /admin/
              port: http
            initialDelaySeconds: 60
            periodSeconds: 10
