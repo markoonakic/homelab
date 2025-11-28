@@ -52,16 +52,10 @@ spec:
     serviceWeb:
       type: ClusterIP
       port: 80
-      annotations:
-        traefik.ingress.kubernetes.io/router.entrypoints: websecure
-        traefik.ingress.kubernetes.io/router.tls: "true"
-        cert-manager.io/cluster-issuer: selfsigned-issuer
 
     serviceDns:
       type: ClusterIP
       port: 53
-      annotations:
-        metallb.universe.tf/loadBalancerIPs: 192.168.0.10
 
     # Ingress
     ingress:
@@ -102,22 +96,10 @@ spec:
 
     # Additional environment variables
     extraEnvVars:
-      - name: TZ
-        value: "Europe/Zagreb"
-      - name: DNSSEC
-        value: "true"
-      - name: DNS_BOGUS_PRIV
-        value: "true"
-      - name: DNS_FQDN_REQUIRED
-        value: "true"
-      - name: REV_SERVER
-        value: "true"
-      - name: REV_SERVER_DOMAIN
-        value: "sarma.xyz"
-      - name: REV_SERVER_TARGET
-        value: "192.168.0.200"
-      - name: REV_SERVER_CIDR
-        value: "192.168.0.0/24"
+      TZ: "Europe/Zagreb"
+      DNSSEC: "true"
+      DNS_BOGUS_PRIV: "true"
+      DNS_FQDN_REQUIRED: "true"
 
     # Custom DNS entries
 
