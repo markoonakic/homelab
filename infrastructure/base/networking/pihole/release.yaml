@@ -39,10 +39,9 @@ spec:
       type: ClusterIP
       port: 80
     serviceDns:
-      type: ClusterIP
+      type: LoadBalancer
+      loadBalancerIP: 192.168.0.200
       port: 53
-      annotations:
-        metallb.universe.tf/allow-shared-ip: pihole-dns
     ingress:
       enabled: true
       ingressClassName: traefik
@@ -52,8 +51,7 @@ spec:
         - secretName: pihole-tls
           hosts:
             - pihole.sarma.xyz
-    hostNetwork: "true"
-    dnsPolicy: ClusterFirstWithHostNet
+
     podSecurityContext:
       runAsUser: 1000
       runAsGroup: 1000
@@ -75,10 +73,7 @@ spec:
       limits:
         memory: "256Mi"
         cpu: "200m"
-    livenessProbe:
-      enabled: false
-    readinessProbe:
-      enabled: false
+
     extraEnvVars:
       TZ: "Europe/Zagreb"
       DNSSEC: "true"
