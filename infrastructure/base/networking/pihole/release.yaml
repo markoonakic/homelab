@@ -80,7 +80,9 @@ spec:
       DNS_BOGUS_PRIV: "true"
       DNS_FQDN_REQUIRED: "true"
     extraEnvVarsSecret:
-      WEBPASSWORD: pihole-secret
+      - envName: WEBPASSWORD
+        secretName: pihole-secret
+        secretKey: WEBPASSWORD
     adlists:
       - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
       - https://mirror1.malwaredomains.com/files/justdomains
