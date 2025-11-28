@@ -68,9 +68,13 @@ spec:
           mountPath: /etc/pihole
         - name: dnsmasq
           mountPath: /etc/dnsmasq.d
+        - name: run
+          mountPath: /run
       volumes:
       - name: config
         persistentVolumeClaim:
           claimName: pihole-data-pvc
       - name: dnsmasq
+        emptyDir: {}
+      - name: run
         emptyDir: {}
