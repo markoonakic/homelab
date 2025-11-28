@@ -6,3 +6,4 @@ resources:
   - ./traefik
   - ./headscale
   - ./headplane
+  - ./wireguard
