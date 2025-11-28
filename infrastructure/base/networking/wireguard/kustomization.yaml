@@ -5,5 +5,5 @@ resources:
   - pvc.yaml
   - secret.yaml
   - networkpolicy.yaml
-  - helmrepository.yaml
-  - helmrelease.yaml
+  - deployment.yaml
+  - service.yaml
