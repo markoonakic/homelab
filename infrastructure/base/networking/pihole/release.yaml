@@ -31,6 +31,7 @@ spec:
     DNS2: "9.9.9.9"
     DNS3: "8.8.8.8"
     DNS4: "8.8.4.4"
+    adminPassword: "lrrIjcwirQZzkh1z"
     persistentVolumeClaim:
       enabled: true
       existingClaim: pihole-data-pvc
@@ -91,10 +92,7 @@ spec:
       DNSSEC: "true"
       DNS_BOGUS_PRIV: "true"
       DNS_FQDN_REQUIRED: "true"
-    extraEnvVarsSecret:
-      WEBPASSWORD:
-        name: pihole-secret
-        key: WEBPASSWORD
+
     adlists:
       - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
       - https://mirror1.malwaredomains.com/files/justdomains
