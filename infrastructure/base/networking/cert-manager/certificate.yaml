@@ -4,7 +4,7 @@ metadata:
   name: headscale-tls
   namespace: headscale
 spec:
-  secretName: headscale-tls-cert
+  secretName: headscale-tls
   issuerRef:
     name: selfsigned-issuer
     kind: ClusterIssuer
