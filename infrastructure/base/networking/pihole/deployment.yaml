@@ -42,14 +42,20 @@ spec:
           value: "true"
         - name: DNS_BOGUS_PRIV
           value: "true"
-         - name: DNS_FQDN_REQUIRED
-           value: "true"
-         livenessProbe:
-           httpGet:
-             path: /admin/
-             port: http
-           initialDelaySeconds: 60
-           periodSeconds: 10
+        - name: DNS_FQDN_REQUIRED
+          value: "true"
+        livenessProbe:
+          httpGet:
+            path: /admin/
+            port: http
+          initialDelaySeconds: 60
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /admin/
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 5
         securityContext:
           allowPrivilegeEscalation: true
           capabilities:
