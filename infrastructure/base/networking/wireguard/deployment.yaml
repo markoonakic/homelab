@@ -60,6 +60,8 @@ spec:
           value: "nft"
         securityContext:
           privileged: true
+          runAsUser: 0
+          runAsGroup: 0
         volumeMounts:
         - name: config
           mountPath: /config
