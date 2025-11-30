@@ -4,5 +4,5 @@ metadata:
   name: sikalabs
   namespace: headscale
 spec:
-  url: https://helm.sikalabs.com
+  url: https://helm-repo-ondrejsika.vercel.app
   interval: 12h
