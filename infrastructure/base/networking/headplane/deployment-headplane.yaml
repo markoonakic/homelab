@@ -29,8 +29,13 @@ spec:
             secretKeyRef:
               name: headplane-secret
               key: cookie-secret
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: headplane-secret
+              key: api-key
         - name: DISABLE_API_KEY_LOGIN
-          value: "true"
+          value: "false"
         - name: ROOT_PATH
           value: "/"
         ports:
