@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: headscale
-        image: headscale/headscale:0.23.0
+        image: headscale/headscale:0.27.1
         imagePullPolicy: IfNotPresent
         command: ["headscale", "serve"]
         env:
