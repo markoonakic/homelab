@@ -8,12 +8,15 @@ spec:
   chart:
     spec:
       chart: postgresql
-      version: "16.2.1"
+      version: "15.5.20"
       sourceRef:
         kind: HelmRepository
         name: bitnami
         namespace: headscale
   values:
+    image:
+      tag: "16.4.0-debian-12-r13"
+
     auth:
       username: headscale
       database: headscale
