@@ -19,6 +19,7 @@ data:
         region_code: "homelab"
         region_name: "Homelab"
         stun_listen_addr: "0.0.0.0:3478"
+        private_key_path: /var/lib/headscale/derp_server_private.key
       urls: []
       paths: []
       auto_update_enabled: false
