@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: headplane
+  namespace: headscale
+  labels:
+    app: headplane
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: headplane
+  template:
+    metadata:
+      labels:
+        app: headplane
+    spec:
+      containers:
+      - name: headplane
+        image: ghcr.io/tale/headplane:0.3.1
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: TZ
+          value: "UTC"
+        - name: HEADSCALE_URL
+          value: "http://headscale:8080"
+        - name: COOKIE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: headplane-secret
+              key: cookie-secret
+        - name: DISABLE_API_KEY_LOGIN
+          value: "false"
+        - name: ROOT_PATH
+          value: "/"
+        ports:
+        - name: http
+          containerPort: 3000
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi

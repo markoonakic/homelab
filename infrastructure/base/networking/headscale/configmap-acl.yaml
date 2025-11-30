@@ -4,7 +4,7 @@ metadata:
   name: headscale-acl
   namespace: headscale
 data:
-  policy.json: |
+  acl.json: |
     {
       "groups": {
         "group:admin": ["admin"]

@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: headscale
+  namespace: headscale
+  labels:
+    app: headscale
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: headscale
+  template:
+    metadata:
+      labels:
+        app: headscale
+    spec:
+      containers:
+      - name: headscale
+        image: headscale/headscale:0.23.0
+        imagePullPolicy: IfNotPresent
+        command: ["headscale", "serve"]
+        env:
+        - name: TZ
+          value: "UTC"
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: metrics
+          containerPort: 9090
+          protocol: TCP
+        - name: grpc
+          containerPort: 50443
+          protocol: TCP
+        - name: stun
+          containerPort: 3478
+          protocol: UDP
+        volumeMounts:
+        - name: config
+          mountPath: /etc/headscale
+          readOnly: true
+        - name: data
+          mountPath: /var/lib/headscale
+        - name: run
+          mountPath: /var/run/headscale
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+      volumes:
+      - name: config
+        projected:
+          sources:
+          - configMap:
+              name: headscale-config
+          - configMap:
+              name: headscale-acl
+      - name: data
+        persistentVolumeClaim:
+          claimName: headscale-data
+      - name: run
+        emptyDir: {}
