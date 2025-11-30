@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: headscale-acl
+  namespace: headscale
+data:
+  policy.json: |
+    {
+      "groups": {
+        "group:admin": ["admin"]
+      },
+      "tagOwners": {
+        "tag:homelab": ["group:admin"]
+      },
+      "acls": [
+        {
+          "action": "accept",
+          "src": ["*"],
+          "dst": ["*:*"]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "accept",
+          "src": ["group:admin"],
+          "dst": ["*"],
+          "users": ["root", "autogroup:nonroot"]
+        }
+      ],
+      "autoApprovers": {
+        "routes": {
+          "192.168.0.0/24": ["tag:homelab"]
+        }
+      }
+    }

@@ -4,3 +4,4 @@ resources:
   - ./metallb
   - ./traefik
   - ./cert-manager
+  - ./headscale

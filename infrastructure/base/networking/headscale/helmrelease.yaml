@@ -1,0 +1,141 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: headscale
+  namespace: headscale
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: headscale
+      version: "0.1.0"
+      sourceRef:
+        kind: HelmRepository
+        name: sikalabs
+        namespace: headscale
+  values:
+    # Headscale configuration
+    headscale:
+      # Server URL (CRITICAL - must match public DNS)
+      serverUrl: "https://headscale.markonakic.xyz"
+
+      # Container image
+      image:
+        repository: headscale/headscale
+        tag: "0.23.0"
+        pullPolicy: IfNotPresent
+
+      # Network configuration
+      config:
+        listen_addr: "0.0.0.0:8080"
+        metrics_listen_addr: "0.0.0.0:9090"
+        grpc_listen_addr: "0.0.0.0:50443"
+
+        # TLS (disabled - Traefik handles TLS termination)
+        tls_cert_path: ""
+        tls_key_path: ""
+        tls_letsencrypt_hostname: ""
+
+        # Database (SQLite)
+        database:
+          type: "sqlite3"
+          sqlite:
+            path: "/var/lib/headscale/db.sqlite"
+
+        # IP allocation
+        ip_prefixes:
+          - "100.64.0.0/10"  # Standard Tailscale IP range
+
+        # DNS configuration (MagicDNS)
+        dns:
+          magic_dns: true
+          base_domain: "homelab.internal"
+          nameservers:
+            - "1.1.1.1"
+            - "1.0.0.1"
+          extra_records: []
+
+        # DERP server configuration (embedded relay)
+        derp:
+          server:
+            enabled: true
+            region_id: 999
+            region_code: "homelab"
+            region_name: "Home Lab"
+            stun_listen_addr: "0.0.0.0:3478"
+          urls:
+            - "https://controlplane.tailscale.com/derpmap/default"
+
+        # ACL policy (mount from ConfigMap)
+        policy:
+          path: "/etc/headscale/acl/policy.json"
+
+      # Persistence
+      persistence:
+        enabled: true
+        existingClaim: "headscale-data"
+        mountPath: "/var/lib/headscale"
+
+      # Extra volumes (for ACL ConfigMap)
+      extraVolumes:
+        - name: acl-policy
+          configMap:
+            name: headscale-acl
+
+      extraVolumeMounts:
+        - name: acl-policy
+          mountPath: /etc/headscale/acl
+          readOnly: true
+
+      # Service
+      service:
+        type: ClusterIP
+        port: 8080
+
+      # Resources
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 500m
+          memory: 512Mi
+
+      # ServiceMonitor (Prometheus)
+      serviceMonitor:
+        enabled: true
+        namespace: monitoring
+        interval: 60s
+
+    # Headplane configuration (web UI)
+    headplane:
+      enabled: true
+
+      # Container image
+      image:
+        repository: ghcr.io/tale/headplane
+        tag: "0.3.1"
+        pullPolicy: IfNotPresent
+
+      # Configuration
+      config:
+        headscale_url: "http://headscale:8080"  # Internal cluster DNS
+        cookie_secret:
+          existingSecret: "headplane-cookie-secret"
+          key: "cookie-secret"
+        oidc:
+          enabled: false
+
+      # Service
+      service:
+        type: ClusterIP
+        port: 3000
+
+      # Resources
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi

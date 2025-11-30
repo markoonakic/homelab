@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespace.yaml
+  - helmrepository.yaml
+  - pvc.yaml
+  - configmap-acl.yaml
+  - secret-cookie.yaml
+  - helmrelease.yaml
+  - service-derp.yaml
+  - ingress-headscale.yaml
