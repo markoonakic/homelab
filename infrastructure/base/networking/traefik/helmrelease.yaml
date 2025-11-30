@@ -17,22 +17,8 @@ spec:
   install:
     createNamespace: false
   values:
-    additionalArguments:
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
     deployment:
       replicas: 1
-    env:
-      - name: PORKBUN_API_KEY
-        valueFrom:
-          secretKeyRef:
-            name: porkbun-credentials
-            key: PORKBUN_API_KEY
-      - name: PORKBUN_SECRET_API_KEY
-        valueFrom:
-          secretKeyRef:
-            name: porkbun-credentials
-            key: PORKBUN_SECRET_API_KEY
     ports:
       web:
         port: 80
@@ -40,24 +26,9 @@ spec:
       websecure:
         port: 443
         protocol: TCP
-    persistence:
-      enabled: true
-      path: /data
-      size: 1Gi
-      storageClass: longhorn
-    ingressRoute:
-      dashboard:
-        enabled: false
     service:
-      annotations:
-        metallb.universe.tf/address-pool: service-pool
-      loadBalancerIP: 192.168.0.200
-      type: LoadBalancer
+      type: NodePort
     certificatesResolvers:
-      letsencrypt:
-        acme:
-          email: marko@markonakic.xyz
-          storage: /tmp/acme.json
-          httpChallenge:
-            entryPoint: web
+      selfsigned:
+        selfSigned: {}
 
