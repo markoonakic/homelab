@@ -1,0 +1,62 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cert-manager
+  namespace: cert-manager
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: cert-manager
+      version: "v1.16.2"
+      sourceRef:
+        kind: HelmRepository
+        name: jetstack
+        namespace: cert-manager
+  values:
+    # CRD installation (CRITICAL)
+    installCRDs: true
+
+    # Global configuration
+    global:
+      leaderElection:
+        namespace: cert-manager
+
+    # Prometheus metrics
+    prometheus:
+      enabled: true
+      servicemonitor:
+        enabled: true
+        namespace: monitoring
+        interval: 60s
+
+    # Webhook configuration
+    webhook:
+      enabled: true
+      timeoutSeconds: 30
+
+    # Resource limits
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+
+    # Startup API check
+    startupapicheck:
+      enabled: true
+      timeout: 5m
+
+    # Tolerations for Talos control plane
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+
+    # Security context
+    securityContext:
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
