@@ -35,9 +35,6 @@ spec:
         port: 8000
         exposedPort: 80
         protocol: TCP
-        redirectTo:
-          port: websecure  # Automatic HTTP → HTTPS redirect
-          priority: 10
       websecure:
         port: 8443
         exposedPort: 443
