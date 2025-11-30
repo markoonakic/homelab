@@ -1,0 +1,131 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: traefik
+  namespace: traefik
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: traefik
+      version: "32.1.0"
+      sourceRef:
+        kind: HelmRepository
+        name: traefik
+        namespace: traefik
+  values:
+    # Deployment configuration
+    deployment:
+      enabled: true
+      kind: Deployment
+      replicas: 1  # Single replica sufficient for 2-node homelab
+
+    # Service configuration - LoadBalancer with MetalLB
+    service:
+      enabled: true
+      type: LoadBalancer
+      annotations:
+        metallb.universe.tf/allow-shared-ip: "traefik-shared"  # Allows sharing IP with Headscale DERP UDP service
+      spec:
+        loadBalancerIP: 192.168.0.220  # Request specific IP from MetalLB pool
+      ports:
+        web:
+          port: 80
+          expose: true
+          exposedPort: 80
+        websecure:
+          port: 443
+          expose: true
+          exposedPort: 443
+        metrics:
+          port: 9100
+          expose: false  # Metrics accessed via ServiceMonitor, not externally
+
+    # Entry points (traffic listeners)
+    ports:
+      web:
+        port: 8000
+        expose: true
+        exposedPort: 80
+        protocol: TCP
+        redirectTo:
+          port: websecure  # Automatic HTTP → HTTPS redirect
+          priority: 10
+      websecure:
+        port: 8443
+        expose: true
+        exposedPort: 443
+        protocol: TCP
+        tls:
+          enabled: true  # TLS termination at Traefik
+      metrics:
+        port: 9100
+        expose: false
+        protocol: TCP
+
+    # Enable Prometheus metrics
+    metrics:
+      prometheus:
+        enabled: true
+        entryPoint: metrics
+        service:
+          enabled: true
+        serviceMonitor:
+          enabled: true
+          namespace: monitoring  # ServiceMonitor created in monitoring namespace
+          interval: 30s
+
+    # Providers - how Traefik discovers services
+    providers:
+      kubernetesCRD:
+        enabled: true
+        allowCrossNamespace: true  # Allows IngressRoute resources in any namespace
+      kubernetesIngress:
+        enabled: true
+        allowExternalNameServices: true
+        publishedService:
+          enabled: true
+
+    # Ingress class
+    ingressClass:
+      enabled: true
+      isDefaultClass: true  # Makes Traefik default ingress controller
+
+    # Resource limits
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+    # Security
+    securityContext:
+      capabilities:
+        drop: [ALL]
+      readOnlyRootFilesystem: true
+      runAsGroup: 65532
+      runAsNonRoot: true
+      runAsUser: 65532
+
+    podSecurityContext:
+      fsGroup: 65532
+
+    # Tolerations for Talos control plane
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+
+    # Logs
+    logs:
+      general:
+        level: INFO
+      access:
+        enabled: true
+
+    # Additional arguments
+    additionalArguments:
+      - "--providers.kubernetesingress.ingressclass=traefik"
+      - "--providers.kubernetescrd.allowCrossNamespace=true"
