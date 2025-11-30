@@ -4,5 +4,5 @@ metadata:
   name: sikalabs
   namespace: headscale
 spec:
-  url: https://sikalabs.github.io/charts/
+  url: https://helm.sikalabs.com
   interval: 12h
