@@ -4,6 +4,5 @@ resources:
   - namespace.yaml
   - helmrepository.yaml
   - helmrelease.yaml
-  # IPAddressPool and L2Advertisement will be added after Helm chart installs CRDs
-  # - ipaddresspool.yaml
-  # - l2advertisement.yaml
+  - ipaddresspool.yaml
+  - l2advertisement.yaml
