@@ -27,8 +27,10 @@ data:
     # Database
     database:
       type: sqlite
+      debug: false
       sqlite:
         path: /var/lib/headscale/db.sqlite
+        write_ahead_log: true
 
     # Private key will be auto-generated on first run
     private_key_path: /var/lib/headscale/private.key
@@ -39,6 +41,7 @@ data:
     prefixes:
       v4: 100.64.0.0/10
       v6: fd7a:115c:a1e0::/48
+      allocation: sequential
 
     # DNS configuration
     dns:
@@ -51,6 +54,7 @@ data:
 
     # ACL policy file
     policy:
+      mode: file
       path: /etc/headscale/acl.json
 
     # Logging

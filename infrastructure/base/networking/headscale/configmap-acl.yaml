@@ -7,7 +7,7 @@ data:
   acl.json: |
     {
       "groups": {
-        "group:admin": ["admin"]
+        "group:admin": ["admin@headscale"]
       },
       "tagOwners": {
         "tag:homelab": ["group:admin"]
