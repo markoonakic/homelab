@@ -3,9 +3,8 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - helmrepository.yaml
-  - pvc.yaml
-  - configmap-acl.yaml
-  - secret-cookie.yaml
+  - postgresql-helmrepository.yaml
+  - secret-postgresql.yaml
+  - postgresql-helmrelease.yaml
   - helmrelease.yaml
   - service-derp.yaml
-  - ingress-headscale.yaml
