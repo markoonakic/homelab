@@ -30,7 +30,7 @@ spec:
               name: headplane-secret
               key: cookie-secret
         - name: DISABLE_API_KEY_LOGIN
-          value: "false"
+          value: "true"
         - name: ROOT_PATH
           value: "/"
         ports:

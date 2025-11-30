@@ -59,12 +59,6 @@ data:
     policy:
       path: /etc/headscale/acl.json
 
-    # TLS settings (handled by Traefik)
-    tls_letsencrypt_hostname: ""
-    tls_letsencrypt_challenge_type: ""
-    tls_cert_path: ""
-    tls_key_path: ""
-
     # Logging
     log:
       format: text
