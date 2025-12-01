@@ -52,6 +52,10 @@ data:
         global:
           - 1.1.1.1
           - 8.8.8.8
+      extra_records:
+        - name: "headplane.sarma.xyz"
+          type: "A"
+          value: "192.168.0.220"
 
     # ACL policy file
     policy:

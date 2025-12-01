@@ -5,3 +5,4 @@ resources:
   - secret-headplane.yaml
   - deployment-headplane.yaml
   - service-headplane.yaml
+  - ingress-headplane.yaml

@@ -6,6 +6,7 @@ resources:
   - pvc.yaml
   - configmap-config.yaml
   - configmap-acl.yaml
+  - secret-sarma-cert.yaml
   - deployment-headscale.yaml
   - service-headscale.yaml
   - service-derp.yaml
