@@ -1,0 +1,14 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: porkbun-webhook
+  namespace: cert-manager
+spec:
+  interval: 1h
+  url: https://github.com/mdonoughe/porkbun-webhook
+  ref:
+    tag: v0.1.5
+  ignore: |
+    /*
+    !/deploy/porkbun-webhook
