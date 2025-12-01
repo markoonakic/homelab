@@ -1,8 +1,0 @@
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: cert-manager-webhook-porkbun
-  namespace: cert-manager
-spec:
-  interval: 1h
-  url: https://mayswind.github.io/cert-manager-webhook-porkbun
