@@ -64,6 +64,38 @@ subjects:
     name: cert-manager-webhook-porkbun
     namespace: cert-manager
 ---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: cert-manager-webhook-porkbun:webhook-authentication-reader
+  namespace: kube-system
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    resourceNames:
+      - extension-apiserver-authentication
+    verbs:
+      - get
+      - list
+      - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: cert-manager-webhook-porkbun:webhook-authentication-reader
+  namespace: kube-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: cert-manager-webhook-porkbun:webhook-authentication-reader
+subjects:
+  - apiGroup: ""
+    kind: ServiceAccount
+    name: cert-manager-webhook-porkbun
+    namespace: cert-manager
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -99,7 +131,7 @@ spec:
       serviceAccountName: cert-manager-webhook-porkbun
       containers:
         - name: cert-manager-webhook-porkbun
-          image: docker.io/talinx/cert-manager-webhook-porkbun:latest
+          image: docker.io/talinx/cert-manager-webhook-porkbun:v0.4.0
           imagePullPolicy: IfNotPresent
           args:
             - --tls-cert-file=/tls/tls.crt
