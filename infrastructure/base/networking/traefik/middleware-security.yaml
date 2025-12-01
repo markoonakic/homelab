@@ -1,0 +1,28 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: traefik-security-headers
+  namespace: traefik
+spec:
+  headers:
+    # HTTP Strict Transport Security (HSTS)
+    # Forces browsers to use HTTPS for 1 year
+    stsSeconds: 31536000
+    stsIncludeSubdomains: true
+    stsPreload: true
+
+    # Force HTTPS
+    forceSTSHeader: true
+
+    # Additional security headers
+    browserXssFilter: true
+    contentTypeNosniff: true
+    frameDeny: true
+
+    # Referrer policy
+    referrerPolicy: "strict-origin-when-cross-origin"
+
+    # Custom security headers
+    customResponseHeaders:
+      X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex"

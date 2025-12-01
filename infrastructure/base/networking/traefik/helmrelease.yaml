@@ -35,12 +35,20 @@ spec:
         port: 8000
         exposedPort: 80
         protocol: TCP
+        # Redirect all HTTP traffic to HTTPS
+        redirectTo:
+          port: websecure
+          scheme: https
       websecure:
         port: 8443
         exposedPort: 443
         protocol: TCP
         tls:
           enabled: true  # TLS termination at Traefik
+        # Enable HTTP Strict Transport Security (HSTS)
+        http:
+          middlewares:
+            - traefik-security-headers@kubernetescrd
       metrics:
         port: 9100
         protocol: TCP
