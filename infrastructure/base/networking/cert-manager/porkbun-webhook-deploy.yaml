@@ -131,7 +131,7 @@ spec:
       serviceAccountName: cert-manager-webhook-porkbun
       containers:
         - name: cert-manager-webhook-porkbun
-          image: docker.io/talinx/cert-manager-webhook-porkbun:v0.4.0
+          image: ghcr.io/mdonoughe/porkbun-webhook:v0.1.5
           imagePullPolicy: IfNotPresent
           args:
             - --tls-cert-file=/tls/tls.crt
