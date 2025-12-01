@@ -45,10 +45,6 @@ spec:
         protocol: TCP
         tls:
           enabled: true  # TLS termination at Traefik
-        # Enable HTTP Strict Transport Security (HSTS)
-        http:
-          middlewares:
-            - traefik-security-headers@kubernetescrd
       metrics:
         port: 9100
         protocol: TCP
