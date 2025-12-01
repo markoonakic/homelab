@@ -7,4 +7,5 @@ resources:
   - secret-porkbun.yaml
   - porkbun-webhook-helmrepository.yaml
   - porkbun-webhook-helmrelease.yaml
+  - porkbun-webhook-rbac.yaml
   - clusterissuer.yaml
