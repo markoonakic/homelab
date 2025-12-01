@@ -16,8 +16,8 @@ data:
       server:
         enabled: true
         region_id: 999
-        region_code: "homelab"
-        region_name: "Homelab"
+        region_code: "sarma"
+        region_name: "sarma"
         stun_listen_addr: "0.0.0.0:3478"
         private_key_path: /var/lib/headscale/derp_server_private.key
       urls: []
@@ -47,7 +47,7 @@ data:
     # DNS configuration
     dns:
       magic_dns: true
-      base_domain: homelab.internal
+      base_domain: sarma.internal
       nameservers:
         global:
           - 1.1.1.1
