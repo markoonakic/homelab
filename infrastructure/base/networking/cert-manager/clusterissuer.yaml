@@ -10,9 +10,17 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-prod-account-key
     solvers:
-      - http01:
-          ingress:
-            class: traefik
+      - dns01:
+          webhook:
+            groupName: acme.porkbun.com
+            solverName: porkbun
+            config:
+              secretKeySecretRef:
+                name: porkbun-api-key
+                key: secret-key
+              apiKeySecretRef:
+                name: porkbun-api-key
+                key: api-key
 ---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer

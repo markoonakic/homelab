@@ -20,13 +20,14 @@ spec:
       kind: Deployment
       replicas: 1  # Single replica sufficient for 2-node homelab
 
-    # Service configuration - NodePort for testing (bypass MetalLB)
+    # Service configuration - LoadBalancer with MetalLB
     service:
       enabled: true
-      type: NodePort
+      type: LoadBalancer
+      annotations:
+        metallb.universe.tf/allow-shared-ip: "traefik-shared"  # Allows sharing IP with Headscale DERP UDP service
       spec:
-        externalIPs:
-          - 192.168.0.201  # Worker node IP - direct routing test
+        loadBalancerIP: 192.168.0.220  # Request specific IP from MetalLB pool
 
     # Entry points (traffic listeners)
     ports:
