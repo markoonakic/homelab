@@ -6,3 +6,4 @@ resources:
   - ./cert-manager
   - ./headscale
   - ./headplane
+  - ./tailscale-router

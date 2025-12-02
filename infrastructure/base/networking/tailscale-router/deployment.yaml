@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tailscale-subnet-router
+  namespace: tailscale-router
+  labels:
+    app: tailscale-subnet-router
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tailscale-subnet-router
+  template:
+    metadata:
+      labels:
+        app: tailscale-subnet-router
+    spec:
+      serviceAccountName: tailscale-subnet-router
+      initContainers:
+      - name: sysctler
+        image: busybox:1.36
+        securityContext:
+          privileged: true
+        command: ["/bin/sh"]
+        args:
+          - -c
+          - sysctl -w net.ipv4.ip_forward=1 net.ipv6.conf.all.forwarding=1
+        resources:
+          requests:
+            cpu: 1m
+            memory: 1Mi
+      containers:
+      - name: tailscale
+        imagePullPolicy: IfNotPresent
+        image: tailscale/tailscale:v1.90.9
+        env:
+        # Store state in k8s secret
+        - name: TS_KUBE_SECRET
+          value: "tailscale-subnet-router-state"
+        - name: TS_USERSPACE
+          value: "false"
+        # Connect to Headscale
+        - name: TS_AUTH_ONCE
+          value: "true"
+        - name: TS_STATE_DIR
+          value: "/var/lib/tailscale"
+        # Hostname on the VPN
+        - name: TS_HOSTNAME
+          value: "sarma"
+        # Advertise routes
+        - name: TS_ROUTES
+          value: "192.168.0.0/24"
+        # Accept DNS from Headscale (MagicDNS)
+        - name: TS_ACCEPT_DNS
+          value: "true"
+        # Auth key from secret
+        - name: TS_AUTHKEY
+          valueFrom:
+            secretKeyRef:
+              name: tailscale-auth
+              key: TS_AUTHKEY
+        # Use tag for ACL auto-approval and connect to Headscale
+        - name: TS_EXTRA_ARGS
+          value: "--login-server=https://headscale.markonakic.xyz --advertise-tags=tag:homelab"
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
