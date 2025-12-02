@@ -61,7 +61,7 @@ spec:
               key: TS_AUTHKEY
         # Use tag for ACL auto-approval and connect to Headscale
         - name: TS_EXTRA_ARGS
-          value: "--login-server=https://headscale.markonakic.xyz --advertise-tags=tag:homelab"
+          value: "--login-server=https://headscale.sarma.love --advertise-tags=tag:homelab"
         securityContext:
           capabilities:
             add:
