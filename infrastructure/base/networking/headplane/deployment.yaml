@@ -17,27 +17,18 @@ spec:
     spec:
       containers:
       - name: headplane
-        image: ghcr.io/tale/headplane:0.3.1
+        image: ghcr.io/tale/headplane:0.6.1
         imagePullPolicy: IfNotPresent
         env:
         - name: TZ
           value: "UTC"
-        - name: HEADSCALE_URL
-          value: "http://headscale:8080"
-        - name: COOKIE_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: headplane-secret
-              key: cookie-secret
-        - name: API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: headplane-secret
-              key: api-key
-        - name: DISABLE_API_KEY_LOGIN
-          value: "false"
-        - name: ROOT_PATH
-          value: "/"
+        volumeMounts:
+        - name: config
+          mountPath: /etc/headplane
+          readOnly: true
+        - name: secrets
+          mountPath: /secrets
+          readOnly: true
         ports:
         - name: http
           containerPort: 3000
@@ -63,3 +54,10 @@ spec:
           limits:
             cpu: 200m
             memory: 256Mi
+      volumes:
+      - name: config
+        configMap:
+          name: headplane-config
+      - name: secrets
+        secret:
+          secretName: headplane-secret

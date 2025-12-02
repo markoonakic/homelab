@@ -5,3 +5,5 @@ resources:
   - helmrepository.yaml
   - secret-grafana-admin.yaml
   - helmrelease.yaml
+  - ingress-grafana.yaml
+  - ingress-prometheus.yaml

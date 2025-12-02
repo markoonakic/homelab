@@ -5,7 +5,7 @@ metadata:
   namespace: headscale
 data:
   config.yaml: |
-    server_url: https://headscale.markonakic.xyz
+    server_url: https://headscale.sarma.love
     listen_addr: 0.0.0.0:8080
     metrics_listen_addr: 0.0.0.0:9090
     grpc_listen_addr: 0.0.0.0:50443
@@ -47,13 +47,19 @@ data:
     # DNS configuration
     dns:
       magic_dns: true
-      base_domain: sarma.internal
+      base_domain: sarma.love
       nameservers:
         global:
           - 1.1.1.1
           - 8.8.8.8
       extra_records:
-        - name: "headplane.sarma.xyz"
+        - name: "headplane.sarma.love"
+          type: "A"
+          value: "192.168.0.220"
+        - name: "grafana.sarma.love"
+          type: "A"
+          value: "192.168.0.220"
+        - name: "prometheus.sarma.love"
           type: "A"
           value: "192.168.0.220"
 

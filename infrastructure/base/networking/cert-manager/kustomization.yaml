@@ -9,3 +9,4 @@ resources:
   - porkbun-webhook-helmrelease.yaml
   - porkbun-webhook-rbac.yaml
   - clusterissuer.yaml
+  - certificate-sarma-wildcard.yaml
