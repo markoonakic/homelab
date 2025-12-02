@@ -10,7 +10,7 @@ data:
         "group:admin": ["admin@headscale"]
       },
       "tagOwners": {
-        "tag:homelab": ["group:admin"]
+        "tag:homelab": ["group:admin", "marko"]
       },
       "acls": [
         {
