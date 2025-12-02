@@ -4,17 +4,16 @@ metadata:
   name: headscale
   namespace: headscale
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
     traefik.ingress.kubernetes.io/router.middlewares: traefik-traefik-security-headers@kubernetescrd
 spec:
   ingressClassName: traefik
   tls:
   - hosts:
-    - headscale.markonakic.xyz
-    secretName: headscale-tls
+    - headscale.sarma.love
+    secretName: sarma-wildcard-tls
   rules:
-  - host: headscale.markonakic.xyz
+  - host: headscale.sarma.love
     http:
       paths:
       - path: /

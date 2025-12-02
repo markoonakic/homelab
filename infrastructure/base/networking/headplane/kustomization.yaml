@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: headscale
 resources:
   - secret.yaml
+  - configmap.yaml
   - deployment.yaml
   - service.yaml
   - ingress.yaml
