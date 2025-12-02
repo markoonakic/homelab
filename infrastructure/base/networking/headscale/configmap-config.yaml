@@ -47,7 +47,7 @@ data:
     # DNS configuration
     dns:
       magic_dns: true
-      base_domain: sarma.love
+      base_domain: internal.sarma.love
       nameservers:
         global:
           - 1.1.1.1
