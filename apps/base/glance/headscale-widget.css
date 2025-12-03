@@ -1,0 +1,83 @@
+/* Headscale Nodes Widget - Custom CSS */
+/* This CSS is for the custom-api widget that displays Headscale VPN nodes */
+
+.device-info-container {
+  position: relative;
+  overflow: hidden;
+  height: 1.5em;
+}
+
+.device-info {
+  display: flex;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.device-ip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.device-info-container:hover .device-info {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.device-info-container:hover .device-ip {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.router-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-blue-light);
+  display: inline-block;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+.offline-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-negative);
+  display: inline-block;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+.online-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-positive);
+  display: inline-block;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+.device-name-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.indicators-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tag-badge {
+  background-color: var(--color-primary-dark);
+  color: var(--color-text-base);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75em;
+  font-weight: 500;
+}
