@@ -39,7 +39,7 @@ spec:
               mountPath: /app/config/glance.yml
               subPath: glance.yml
             - name: custom-css
-              mountPath: /app/static/assets
+              mountPath: /app/assets/glance-gruvbox.css
               subPath: glance-gruvbox.css
               readOnly: true
           resources:
