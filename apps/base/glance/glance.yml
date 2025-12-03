@@ -1,6 +1,9 @@
 # Glance Dashboard Configuration
 # Configured for: glance.sarma.love (VPN-only access)
 
+server:
+  assets-path: /app/assets
+
 # Theme: Gruvbox Dark
 theme:
   light: false
