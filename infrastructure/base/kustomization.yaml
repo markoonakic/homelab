@@ -5,3 +5,4 @@ resources:
   - ./controllers
   - ./networking
   - ./monitoring
+  - ./security
