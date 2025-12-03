@@ -26,13 +26,14 @@ body,
   background-color: #282828 !important;
 }
 
-/* Widget containers and borders */
+/* Widget containers and borders + subtle shadow */
 .widget,
 .widget-content,
 .widget-content-frame {
   background-color: #282828 !important;
   border-color: #1d2021 !important;
-  box-shadow: 0 2px 0 #1d2021 !important;
+  /* single soft outer shadow for separation */
+  box-shadow: 0 4px 10px rgba(29, 32, 33, 0.8) !important;
 }
 
 /* Text colors */
@@ -62,7 +63,7 @@ a:visited,
 a:hover,
 .widget a:hover,
 [class*="widget-type-"] a:hover {
-  color: #d3869b !important; /* light purple on hover */
+  color: #d3869b !important;
 }
 
 /* Status icons: keep green/red */
@@ -79,7 +80,8 @@ a:hover,
   cursor: pointer;
 }
 
-/* Monitor icons: recolor black Simple Icons → #ebdbb2 */
+/* Monitor icons: start from black, then apply your filter to get #ebdbb2 */
+/* This assumes the black variant of the Simple Icon per Glance docs. */
 .monitor-site-icon img {
   filter: brightness(0) saturate(100%) invert(87%) sepia(12%) saturate(562%)
     hue-rotate(5deg) brightness(96%) contrast(101%) !important;
@@ -144,7 +146,7 @@ a:hover,
   color: #d3869b !important;
 }
 
-/* ===== Twitch hover popover: single border, Gruvbox colors ===== */
+/* ===== Twitch hover popover: single border, soft shadow, Gruvbox colors ===== */
 
 .popover-container {
   background: transparent !important;
@@ -162,7 +164,8 @@ a:hover,
   background-color: #282828 !important;
   border: 1px solid #1d2021 !important; /* single visible border */
   border-radius: 6px !important;
-  box-shadow: none !important;
+  /* soft shadow same tone as widgets */
+  box-shadow: 0 4px 10px rgba(29, 32, 33, 0.8) !important;
   color: #ebdbb2 !important;
   padding: 8px !important;
 }
