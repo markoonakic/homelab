@@ -205,8 +205,8 @@ pages:
                     {{ if gt (len $tags) 0 }}
                     <div class="flex gap-5">
                       {{ range $tags }}
-                      {{ $tagStr := printf "%s" . }}
-                      <span class="tag-badge">{{ $tagStr | trimPrefix "tag:" }}</span>
+                      {{ $tagValue := .Str }}
+                      <span class="tag-badge">{{ $tagValue | trimPrefix "tag:" }}</span>
                       {{ end }}
                     </div>
                     {{ end }}
