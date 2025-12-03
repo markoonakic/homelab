@@ -38,7 +38,7 @@ spec:
             - name: config
               mountPath: /app/config/glance.yml
               subPath: glance.yml
-            - name: custom-css
+            - name: assets
               mountPath: /app/assets/
               readOnly: true
           resources:
