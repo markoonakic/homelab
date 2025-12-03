@@ -81,3 +81,12 @@ data:
                 calendar-url: https://calendar.google.com/calendar/ical/en.rs%23holiday%40group.v.calendar.google.com/public/basic.ics
                 max-events: 15
                 cache: 1h
+
+              # VPN Nodes - Headscale API
+              - type: extension
+                title: VPN Nodes
+                url: https://headscale.sarma.love/api/v1/node
+                allow-potentially-dangerous-html: true
+                cache: 30s
+                headers:
+                  Authorization: Bearer ${HEADSCALE_API_KEY}
