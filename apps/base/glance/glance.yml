@@ -3,11 +3,10 @@
 
 # Theme: Gruvbox Dark
 theme:
-  light: false
-  background-color: 40 13 11 # Gruvbox dark background (#282828)
-  primary-color: 344 47 68 # Gruvbox pink (#d3869b)
-  positive-color: 79 54 46 # Gruvbox green (#b8bb26)
-  negative-color: 0 74 59 # Gruvbox red (#fb4934)
+  background-color: 0 0 16
+  primary-color: 344 47 68
+  positive-color: 61 66 44
+  negative-color: 6 96 59
 
 # Dashboard Pages
 pages:
