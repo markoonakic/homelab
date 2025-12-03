@@ -223,6 +223,6 @@ pages:
               </ul>
 
           - type: extension
-            url: http://glance-k8s.glance-k8s.svc.cluster.local/extension/nodes
+            url: http://glance-k8s-glance-k8s.glance-k8s.svc.cluster.local/extension/nodes
             allow-potentially-dangerous-html: true
             cache: 10s
