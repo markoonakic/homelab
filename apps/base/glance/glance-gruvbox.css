@@ -253,3 +253,36 @@ a:hover,
   border: none !important;
   box-shadow: none !important;
 }
+
+/* ===== Kubernetes nodes widget (glance-k8s extension) ===== */
+
+/* Server icon styling - dark blue default, light blue on hover */
+.server-icon {
+  color: var(--color-blue) !important;
+  stroke: var(--color-blue) !important;
+  transition: color 0.2s ease, stroke 0.2s ease !important;
+}
+
+.server:hover .server-icon {
+  color: var(--color-blue-light) !important;
+  stroke: var(--color-blue-light) !important;
+}
+
+/* Progress bars with smooth animations */
+.progress-bar {
+  transition: all 0.2s ease !important;
+}
+
+.progress-value {
+  transition: width 0.2s ease !important;
+}
+
+/* Server stats hover effects - smooth transitions both ways */
+.server-stats > div {
+  transition: transform 0.2s ease, opacity 0.2s ease !important;
+}
+
+/* Popover elements with smooth show/hide */
+[data-popover-type] {
+  transition: opacity 0.2s ease, transform 0.2s ease !important;
+}
