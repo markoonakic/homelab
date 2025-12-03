@@ -209,18 +209,20 @@ a:hover,
   color: var(--color-primary-light) !important;
 }
 
-/* ===== Twitch hover popover ===== */
+/* ===== Popover system (Twitch, K8s nodes, etc.) ===== */
 
 .popover-container {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
+  transition: opacity 0.2s ease, transform 0.2s ease !important;
 }
 
 .popover-frame {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
+  transition: opacity 0.2s ease, transform 0.2s ease !important;
 }
 
 .popover-content {
@@ -232,6 +234,7 @@ a:hover,
     0 0 0 1px var(--color-bg-dark) !important;
   color: var(--color-text-base) !important;
   padding: 8px !important;
+  transition: opacity 0.2s ease, transform 0.2s ease !important;
 }
 
 .popover-content img.twitch-stream-preview {
@@ -261,9 +264,11 @@ a:hover,
   color: var(--color-blue) !important;
   stroke: var(--color-blue) !important;
   transition: color 0.2s ease, stroke 0.2s ease !important;
+  cursor: pointer;
 }
 
-.server:hover .server-icon {
+/* Only change color when hovering the icon itself, not the entire widget */
+.server-icon:hover {
   color: var(--color-blue-light) !important;
   stroke: var(--color-blue-light) !important;
 }
@@ -277,12 +282,12 @@ a:hover,
   transition: width 0.2s ease !important;
 }
 
-/* Server stats hover effects - smooth transitions both ways */
-.server-stats > div {
+/* Server widget container transitions */
+.server {
   transition: transform 0.2s ease, opacity 0.2s ease !important;
 }
 
-/* Popover elements with smooth show/hide */
-[data-popover-type] {
-  transition: opacity 0.2s ease, transform 0.2s ease !important;
+/* Server stats hover effects - smooth transitions both ways */
+.server-stats > div {
+  transition: transform 0.2s ease, opacity 0.2s ease !important;
 }
