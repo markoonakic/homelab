@@ -21,7 +21,26 @@ data:
     pages:
       - name: Home
         columns:
-          # Column 1: Weather & Calendar
+          # Column 1: Main content (full width)
+          - size: full
+            widgets:
+              # Kubernetes Nodes Widget (glance-k8s extension)
+              - type: extension
+                url: http://localhost:8081/extension/nodes
+                allow-potentially-dangerous-html: true
+                cache: 10s
+
+              # Twitch Channels Widget
+              - type: twitch-channels
+                channels:
+                  - forsen
+                  - northernlion
+                  - k3soju
+                collapse-after: 3
+                sort-by: viewers
+                cache: 5m
+
+          # Column 2: Sidebar (small width)
           - size: small
             widgets:
               # Weather Widget
@@ -40,28 +59,6 @@ data:
                 max-events: 15
                 cache: 1h
 
-          # Column 2: Kubernetes & Twitch
-          - size: small
-            widgets:
-              # Kubernetes Nodes Widget (glance-k8s extension)
-              - type: extension
-                url: http://localhost:8081/extension/nodes
-                allow-potentially-dangerous-html: true
-                cache: 10s
-
-              # Twitch Channels Widget
-              - type: twitch-channels
-                channels:
-                  - forsen
-                  - northernlion
-                  - k3soju
-                collapse-after: 3
-                sort-by: viewers
-                cache: 5m
-
-          # Column 3: Tailscale/Headscale Devices
-          - size: small
-            widgets:
               # Tailscale Devices Widget (via Headscale API)
               - type: extension
                 url: https://headscale.sarma.love/api/v1/machine
