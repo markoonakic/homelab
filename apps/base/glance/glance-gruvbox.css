@@ -26,14 +26,28 @@ body,
   background-color: #282828 !important;
 }
 
-/* Widget containers and borders + subtle shadow */
-.widget,
-.widget-content,
-.widget-content-frame {
+/* Widget shell: no shadow here, just background + border */
+.widget {
   background-color: #282828 !important;
   border-color: #1d2021 !important;
-  /* single soft outer shadow for separation */
-  box-shadow: 0 4px 10px rgba(29, 32, 33, 0.8) !important;
+  box-shadow: none !important;
+}
+
+/* Widget content: main card surface with soft gradient-like shadow */
+.widget-content {
+  background-color: #282828 !important;
+  border-color: #1d2021 !important;
+  /* big blur / low alpha so it fades into background */
+  box-shadow:
+    0 12px 30px rgba(29, 32, 33, 0.85),
+    0 0 0 1px #1d2021 !important;
+}
+
+/* Framed content: no extra shadow (keeps things flat when both classes present) */
+.widget-content.widget-content-frame {
+  box-shadow: none !important;
+  border-color: #1d2021 !important;
+  background-color: #282828 !important;
 }
 
 /* Text colors */
@@ -48,7 +62,7 @@ body,
   color: #a89984 !important;
 }
 
-/* Links: foreground by default, purple on hover */
+/* Links */
 a,
 a:visited,
 .widget a,
@@ -80,8 +94,7 @@ a:hover,
   cursor: pointer;
 }
 
-/* Monitor icons: start from black, then apply your filter to get #ebdbb2 */
-/* This assumes the black variant of the Simple Icon per Glance docs. */
+/* Monitor icons: start from black, then apply your filter to reach Gruvbox fg */
 .monitor-site-icon img {
   filter: brightness(0) saturate(100%) invert(87%) sepia(12%) saturate(562%)
     hue-rotate(5deg) brightness(96%) contrast(101%) !important;
@@ -98,32 +111,28 @@ a:hover,
   color: #d3869b !important;
 }
 
-/* Weather widget: values and times use foreground */
+/* Weather widget text */
 .widget-type-weather .weather-column-value,
 .widget-type-weather .weather-column-time {
   color: #ebdbb2 !important;
 }
 
-/* Weather bar styling */
+/* Weather bar */
 .widget-type-weather .weather-bar {
   background-color: #ebdbb2 !important;
   border-radius: 999px !important;
   border: 1px solid #b16286 !important;
   box-sizing: border-box !important;
 }
-
-/* Weather bar hover */
 .widget-type-weather .weather-column:hover .weather-bar {
   border-color: #d3869b !important;
   background-color: #f0e2c0 !important;
 }
-
-/* Prevent hour text from being clipped */
 .widget-type-weather .weather-column {
   overflow: visible !important;
 }
 
-/* Calendar widget: dates & header */
+/* Calendar widget */
 .widget-type-calendar .calendar-date,
 .widget-type-calendar .calendar-dates div,
 .widget-type-calendar .calendar-header-button svg,
@@ -132,7 +141,6 @@ a:hover,
   color: #ebdbb2 !important;
   stroke: #ebdbb2 !important;
 }
-
 .widget-type-calendar .calendar-current-date {
   background-color: #3c3836 !important;
   color: #ebdbb2 !important;
@@ -146,7 +154,7 @@ a:hover,
   color: #d3869b !important;
 }
 
-/* ===== Twitch hover popover: single border, soft shadow, Gruvbox colors ===== */
+/* ===== Twitch hover popover: single border + matching gradient shadow ===== */
 
 .popover-container {
   background: transparent !important;
@@ -162,17 +170,19 @@ a:hover,
 
 .popover-content {
   background-color: #282828 !important;
-  border: 1px solid #1d2021 !important; /* single visible border */
+  border: 1px solid #1d2021 !important;
   border-radius: 6px !important;
-  /* soft shadow same tone as widgets */
-  box-shadow: 0 4px 10px rgba(29, 32, 33, 0.8) !important;
+  /* same style shadow as widget-content for consistency */
+  box-shadow:
+    0 12px 30px rgba(29, 32, 33, 0.85),
+    0 0 0 1px #1d2021 !important;
   color: #ebdbb2 !important;
   padding: 8px !important;
 }
 
 .popover-content img.twitch-stream-preview {
   border-radius: 4px !important;
-  border: none !important; /* no extra inner border */
+  border: none !important;
   max-width: 100% !important;
   display: block !important;
 }
