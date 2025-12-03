@@ -20,4 +20,4 @@ configMapGenerator:
     namespace: glance
     files:
       - glance-gruvbox.css
-      - headscale-widget.css
+      - widgets/headscale-nodes/style.css

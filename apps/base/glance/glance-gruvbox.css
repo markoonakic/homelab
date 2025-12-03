@@ -1,7 +1,7 @@
 /* Gruvbox Dark Theme for Glance Dashboard */
 
 /* Import widget-specific CSS */
-@import url("/assets/headscale-widget.css");
+@import url("/assets/widgets/headscale-nodes/style.css");
 
 :root {
   /* Gruvbox Dark - Background colors */
