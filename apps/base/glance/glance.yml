@@ -4,7 +4,7 @@
 # Theme: Gruvbox Dark
 theme:
   light: false
-  custom-css-file: glance-gruvbox.css
+  custom-css-file: /static/assets/glance-gruvbox.css
 
 # Dashboard Pages
 pages:
