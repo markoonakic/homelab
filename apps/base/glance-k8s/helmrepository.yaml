@@ -1,0 +1,9 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: glance-k8s
+  namespace: flux-system
+spec:
+  url: oci://ghcr.io/lukasdietrich/glance-k8s/chart
+  type: oci
+  interval: 12h

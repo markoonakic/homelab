@@ -37,6 +37,11 @@ pages:
                 check-url: http://linkding.linkding.svc.cluster.local:9090
                 icon: si:linkding
 
+          - type: extension
+            url: http://glance-k8s.glance-k8s.svc.cluster.local/extension/nodes
+            allow-potentially-dangerous-html: true
+            cache: 10s
+
           - type: split-column
             widgets:
               - type: monitor
@@ -46,7 +51,7 @@ pages:
                 sites:
                   - title: Headplane
                     url: https://headplane.sarma.love/admin
-                    check-url: http://headplane.headscale.svc.cluster.local:3000
+                    check-url: http://headplane.headscale.svc.cluster.local:3000/admin
                     icon: si:tailscale
               - type: monitor
                 collapse-after: 10
@@ -77,10 +82,147 @@ pages:
             max-events: 15
             cache: 1h
 
-          - type: extension
-            title: VPN Nodes
+          - type: custom-api
+            title: Headscale Nodes
+            title-url: https://headplane.sarma.love/admin
             url: https://headscale.sarma.love/api/v1/node
-            allow-potentially-dangerous-html: true
             cache: 30s
             headers:
               Authorization: Bearer ${HEADSCALE_API_KEY}
+            template: |
+              {{/* Headscale Nodes Widget - Adapted from Tailscale widget */}}
+              {{/* Set to true if you'd like an indicator for online devices */}}
+              {{ $enableOnlineIndicator := true }}
+
+              <style>
+                .device-info-container {
+                  position: relative;
+                  overflow: hidden;
+                  height: 1.5em;
+                }
+
+                .device-info {
+                  display: flex;
+                  transition: transform 0.2s ease, opacity 0.2s ease;
+                }
+
+                .device-ip {
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  transform: translateY(-100%);
+                  opacity: 0;
+                  transition: transform 0.2s ease, opacity 0.2s ease;
+                }
+
+                .device-info-container:hover .device-info {
+                  transform: translateY(100%);
+                  opacity: 0;
+                }
+
+                .device-info-container:hover .device-ip {
+                  transform: translateY(0);
+                  opacity: 1;
+                }
+
+                .router-indicator {
+                  width: 8px;
+                  height: 8px;
+                  border-radius: 50%;
+                  background-color: #8b5cf6;
+                  display: inline-block;
+                  margin-left: 4px;
+                  vertical-align: middle;
+                }
+
+                .offline-indicator {
+                  width: 8px;
+                  height: 8px;
+                  border-radius: 50%;
+                  background-color: var(--color-negative);
+                  display: inline-block;
+                  margin-left: 4px;
+                  vertical-align: middle;
+                }
+
+                .online-indicator {
+                  width: 8px;
+                  height: 8px;
+                  border-radius: 50%;
+                  background-color: var(--color-positive);
+                  display: inline-block;
+                  margin-left: 4px;
+                  vertical-align: middle;
+                }
+
+                .device-name-container {
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                }
+
+                .indicators-container {
+                  display: flex;
+                  align-items: center;
+                  gap: 4px;
+                }
+
+                .tag-badge {
+                  background-color: var(--color-primary);
+                  color: var(--color-background);
+                  padding: 2px 6px;
+                  border-radius: 4px;
+                  font-size: 0.75em;
+                  font-weight: 500;
+                }
+              </style>
+              <ul class="list list-gap-10 collapsible-container" data-collapse-after="4">
+                {{ range .JSON.Array "nodes" }}
+                <li>
+                  <div class="flex items-center gap-10">
+                    <div class="device-name-container grow">
+                      <span class="size-h4 block text-truncate color-primary">
+                        {{ .String "givenName" }}
+                      </span>
+                      <div class="indicators-container">
+                        {{ $online := .Bool "online" }}
+                        {{ if $online }}
+                          {{ if $enableOnlineIndicator }}
+                          <span class="online-indicator" data-popover-type="text" data-popover-text="Online"></span>
+                          {{ end }}
+                        {{ else }}
+                          {{ $lastSeen := .String "lastSeen" | parseTime "rfc3339" }}
+                          {{ $lastSeenTimezoned := $lastSeen.In now.Location }}
+                          <span class="offline-indicator" data-popover-type="text"
+                            data-popover-text="Offline - Last seen {{ $lastSeenTimezoned.Format "Jan 2 3:04pm" }}"></span>
+                        {{ end }}
+
+                        {{/* Show router indicator if node has approved routes */}}
+                        {{ $routes := .Array "approvedRoutes" }}
+                        {{ if gt (len $routes) 0 }}
+                        <span class="router-indicator" data-popover-type="text"
+                          data-popover-text="Router - {{ range $i, $route := $routes }}{{ if $i }}, {{ end }}{{ $route }}{{ end }}"></span>
+                        {{ end }}
+                      </div>
+                    </div>
+                    {{/* Show tags if present */}}
+                    {{ $tags := .Array "validTags" }}
+                    {{ if gt (len $tags) 0 }}
+                    <div class="flex gap-5">
+                      {{ range $tags }}
+                      <span class="tag-badge">{{ . }}</span>
+                      {{ end }}
+                    </div>
+                    {{ end }}
+                  </div>
+                  <div class="device-info-container">
+                    <ul class="list-horizontal-text device-info">
+                      <li>{{ .String "user.name" }}</li>
+                    </ul>
+                    <div class="device-ip">
+                      {{ .String "ipAddresses.0" }}
+                    </div>
+                  </div>
+                </li>
+                {{ end }}
+              </ul>
