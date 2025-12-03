@@ -86,6 +86,12 @@ a:hover,
   cursor: pointer;
 }
 
+/* Icon recolor to Gruvbox foreground (#ebdbb2) */
+.widget-type-monitor .monitor-site-icon svg:not(.monitor-site-status-icon svg) {
+  filter: brightness(0) saturate(100%) invert(75%) sepia(77%) saturate(5375%)
+    hue-rotate(20deg) brightness(100%) contrast(100%);
+}
+
 /* Icon keeps its original logo colors; just respond to hover with opacity */
 .widget-type-monitor .monitor-site-icon {
   transition: opacity 0.2s ease !important;
@@ -147,17 +153,31 @@ a:hover,
   color: #d3869b !important;
 }
 
-/* Gruvbox icon colorization: monochrome SVGs → #ebdbb2 (foreground beige) */
-.widget-type-monitor .monitor-site-icon svg:not(.monitor-site-status-icon svg),
-svg[data-icon-prefix]:not(.monitor-site-status-icon svg) {
-  filter: invert(89%) sepia(10%) saturate(800%) hue-rotate(25deg)
-    brightness(105%) contrast(95%);
+/* Twitch stream preview popover container styling - Gruvbox colors */
+div[data-popover-html] {
+  background-color: #282828 !important;
+  border: 1px solid #1d2021 !important;
+  padding: 8px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(29, 32, 33, 0.8);
+  color: #ebdbb2 !important;
 }
 
-/* Specific selectors for Simple Icons, selfh.st, Dashboard Icons */
-[class*="si:"],
-[class*="sh:"],
-[class*="di:"] {
-  filter: invert(89%) sepia(10%) saturate(800%) hue-rotate(25deg)
-    brightness(105%) contrast(95%);
+/* Twitch stream preview image */
+div[data-popover-html] img.twitch-stream-preview {
+  border-radius: 4px;
+  border: 1px solid #1d2021 !important;
+  display: block;
+  max-width: 100%;
+}
+
+/* Twitch stream title */
+div[data-popover-html] p.color-highlight {
+  color: #ebdbb2 !important;
+  margin-top: 10px;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
