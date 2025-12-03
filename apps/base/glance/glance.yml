@@ -32,18 +32,10 @@ pages:
             cache: 1m
             title: Services
             sites:
-              - title: Headplane
-                url: https://headplane.sarma.love/admin
-                check-url: http://headplane.headscale.svc.cluster.local:3000
-                icon: si:tailscale
-              - title: Grafana
-                url: https://grafana.sarma.love
-                check-url: http://monitoring-kube-prometheus-stack-grafana.monitoring.svc.cluster.local
-                icon: si:grafana
-              - title: Prometheus
-                url: https://prometheus.sarma.love
-                check-url: http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
-                icon: si:prometheus
+              - title: Linkding
+                url: https://linkding.sarma.love
+                check-url: http://linkding.linkding.svc.cluster.local:9090
+                icon: si:linkding
 
           - type: split-column
             widgets:
