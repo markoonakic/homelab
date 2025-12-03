@@ -35,6 +35,15 @@ body,
   box-shadow: none !important;
 }
 
+/* Hide Glance theme selector / theme picker in header */
+.header [class*="theme"],
+.header [data-theme-picker],
+.header .theme-picker,
+.header .header-theme,
+.header .theme-toggle {
+  display: none !important;
+}
+
 /* Navigation tabs and page title use foreground color */
 .header a,
 .header .size-h2,
@@ -105,25 +114,30 @@ a:hover,
 }
 
 /* === Monitor icons === */
-/* Base state: recolor (white/gray) Simple Icon to Gruvbox fg #ebdbb2 */
-/* brightness(0) saturate(100%) forces a black base, then apply your ebdbb2 filter */
+/* Base state: recolor Simple Icons to Gruvbox fg #ebdbb2 */
 .monitor-site-icon,
 .monitor-site-icon img {
   filter: brightness(0) saturate(100%) invert(88%) sepia(23%) saturate(404%)
     hue-rotate(350deg) brightness(103%) contrast(84%) !important;
   transition:
     filter 0.2s ease,
-    opacity 0.2s ease !important;
+    opacity 0.2s ease,
+    color 0.2s ease !important;
 }
 
-/* Hover state: switch icons to purple #d3869b using your purple filter */
+/* Hover state: switch icons to purple #d3869b */
 .widget-type-monitor .monitor-site:hover .monitor-site-icon,
 .widget-type-monitor .monitor-site:hover .monitor-site-icon img {
   filter: brightness(0) saturate(100%) invert(60%) sepia(27%) saturate(504%)
     hue-rotate(293deg) brightness(95%) contrast(96%) !important;
 }
 
-/* Also keep text hover color */
+/* Monitor widget row behaviour */
+.widget-type-monitor .monitor-site {
+  cursor: pointer;
+}
+
+/* Text hover color next to icon */
 .widget-type-monitor .monitor-site:hover a.size-h3 {
   color: #d3869b !important;
 }
@@ -134,17 +148,24 @@ a:hover,
   color: #ebdbb2 !important;
 }
 
-/* Weather bar */
+/* Weather bar with same easing as links/icons */
 .widget-type-weather .weather-bar {
   background-color: #ebdbb2 !important;
   border-radius: 999px !important;
   border: 1px solid #b16286 !important;
   box-sizing: border-box !important;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease !important;
 }
 .widget-type-weather .weather-column:hover .weather-bar {
   border-color: #d3869b !important;
   background-color: #f0e2c0 !important;
 }
+
+/* Ensure layout doesn't clip hover effects */
 .widget-type-weather .weather-column {
   overflow: visible !important;
 }
