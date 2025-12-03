@@ -29,7 +29,6 @@ body,
 /* Widget shell: no shadow here, just background + border */
 .widget {
   background-color: #282828 !important;
-  border-color: #1d2021 !important;
   box-shadow: none !important;
 }
 
