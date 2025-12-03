@@ -1,3 +1,6 @@
+/* Gruvbox Dark Theme for Glance Dashboard */
+
+/* Core colors via CSS variables */
 :root {
   /* Backgrounds */
   --color-background: #282828 !important;
@@ -20,14 +23,44 @@
   --color-negative: #fb4934 !important; /* red */
 
   /* Borders / dividers */
-  --color-border-subtle: #3c3836 !important;
-  --color-border-strong: #504945 !important;
+  --color-border-subtle: #1d2021 !important;
+  --color-border-strong: #1d2021 !important;
 }
 
-/* Smooth purple hover */
+/* Global backgrounds */
+body,
+.page {
+  background-color: #282828 !important;
+}
+
+/* Widget containers and borders */
+.widget,
+.widget-content,
+.widget-content-frame {
+  background-color: #282828 !important;
+  border-color: #1d2021 !important;
+  box-shadow: 0 2px 0 #1d2021 !important;
+}
+
+/* Text colors */
+.widget *,
+.page *,
+.footer {
+  color: #ebdbb2 !important;
+}
+
+/* Subdued text */
+.color-subdue {
+  color: #a89984 !important;
+}
+
+/* Links & interactive elements */
 a,
+a:visited,
 .widget a,
 [class*="widget-type-"] a {
+  color: #b16286 !important;
+  text-decoration: none;
   transition:
     color 0.2s ease,
     opacity 0.2s ease !important;
@@ -36,5 +69,88 @@ a,
 a:hover,
 .widget a:hover,
 [class*="widget-type-"] a:hover {
-  color: #d3869b !important; /* light purple on hover */
+  color: #d3869b !important;
+}
+
+/* Icons default to foreground color */
+svg,
+svg path {
+  fill: #ebdbb2 !important;
+  stroke: #ebdbb2 !important;
+}
+
+/* Keep positive/negative status icons colored */
+.monitor-site-status-icon svg[fill="var(--color-positive)"],
+.monitor-site-status-icon svg[fill="var(--color-negative)"] {
+  fill: currentColor !important;
+}
+
+.monitor-site-status-icon svg {
+  color: var(--color-positive) !important;
+}
+.monitor-site-status-icon svg[fill="var(--color-negative)"] {
+  color: var(--color-negative) !important;
+}
+
+/* Monitor widget: icon + name share link/hover color */
+.widget-type-monitor .monitor-site {
+  cursor: pointer;
+}
+
+/* Icon and name as one visual link */
+.widget-type-monitor .monitor-site-icon,
+.widget-type-monitor .monitor-site a.size-h3 {
+  color: #b16286 !important;
+  fill: #b16286 !important;
+}
+
+/* Hover row: icon + name go light purple */
+.widget-type-monitor .monitor-site:hover .monitor-site-icon,
+.widget-type-monitor .monitor-site:hover a.size-h3 {
+  color: #d3869b !important;
+  fill: #d3869b !important;
+}
+
+/* Twitch / lists keep foreground text */
+.widget-type-twitch-channels .twitch-channel-avatar {
+  border-color: #1d2021 !important;
+}
+
+/* Weather widget: bars and temps use foreground color */
+.widget-type-weather .weather-column-value,
+.widget-type-weather .weather-column-time {
+  color: #ebdbb2 !important;
+}
+
+.widget-type-weather .weather-bar {
+  background-color: #ebdbb2 !important;
+}
+
+.widget-type-weather .weather-column-daylight,
+.widget-type-weather .weather-column-daylight-sunrise,
+.widget-type-weather .weather-column-daylight-sunset {
+  background-color: #3c3836 !important;
+}
+
+/* Calendar widget: dates & header */
+.widget-type-calendar .calendar-date,
+.widget-type-calendar .calendar-dates div,
+.widget-type-calendar .calendar-header-button svg,
+.widget-type-calendar .size-h2,
+.widget-type-calendar .size-h3 {
+  color: #ebdbb2 !important;
+  stroke: #ebdbb2 !important;
+}
+
+.widget-type-calendar .calendar-current-date {
+  background-color: #3c3836 !important;
+  color: #ebdbb2 !important;
+}
+
+/* Footer link color */
+.footer a {
+  color: #b16286 !important;
+}
+.footer a:hover {
+  color: #d3869b !important;
 }
