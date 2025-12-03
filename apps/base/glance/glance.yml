@@ -34,13 +34,16 @@ pages:
             title: Services
             sites:
               - title: Headplane
-                url: https://headplane.sarma.love/admin
+                url: https://headplane.sarma.love
+                check-url: http://headplane.headscale.svc.cluster.local:3000
                 icon: si:tailscale
               - title: Grafana
                 url: https://grafana.sarma.love
+                check-url: http://monitoring-kube-prometheus-stack-grafana.monitoring.svc.cluster.local
                 icon: si:grafana
               - title: Prometheus
                 url: https://prometheus.sarma.love
+                check-url: http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
                 icon: si:prometheus
 
           - type: split-column
@@ -51,7 +54,8 @@ pages:
                 title: Networking
                 sites:
                   - title: Headplane
-                    url: https://headplane.sarma.love/admin
+                    url: https://headplane.sarma.love
+                    check-url: http://headplane.headscale.svc.cluster.local:3000
                     icon: si:tailscale
               - type: monitor
                 collapse-after: 10
@@ -60,9 +64,11 @@ pages:
                 sites:
                   - title: Grafana
                     url: https://grafana.sarma.love
+                    check-url: http://monitoring-kube-prometheus-stack-grafana.monitoring.svc.cluster.local
                     icon: si:grafana
                   - title: Prometheus
                     url: https://prometheus.sarma.love
+                    check-url: http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
                     icon: si:prometheus
       # Column 3: Right sidebar (small)
       - size: small
