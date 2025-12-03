@@ -1,38 +1,26 @@
 /* Gruvbox Dark Theme for Glance Dashboard */
 
-/* Core colors via CSS variables */
 :root {
-  /* Backgrounds */
   --color-background: #282828 !important;
   --color-surface: #282828 !important;
   --color-widget-background: #282828 !important;
   --color-header-background: #282828 !important;
-
-  /* Text */
   --color-text-base: #ebdbb2 !important;
   --color-text-subdue: #a89984 !important;
   --color-text-highlight: #ebdbb2 !important;
-
-  /* Primary / accents (purple used on hover) */
   --color-primary: #b16286 !important;
   --color-highlight: #b16286 !important;
-
-  /* Positive / negative indicators */
   --color-positive: #b8bb26 !important;
   --color-negative: #fb4934 !important;
-
-  /* Borders / dividers */
   --color-border-subtle: #1d2021 !important;
   --color-border-strong: #1d2021 !important;
 }
 
-/* Global backgrounds */
 body,
 .page {
   background-color: #282828 !important;
 }
 
-/* Widget containers and borders */
 .widget,
 .widget-content,
 .widget-content-frame {
@@ -41,24 +29,21 @@ body,
   box-shadow: 0 2px 0 #1d2021 !important;
 }
 
-/* Text colors */
 .widget *,
 .page *,
 .footer {
   color: #ebdbb2 !important;
 }
 
-/* Subdued text */
 .color-subdue {
   color: #a89984 !important;
 }
 
-/* Links: foreground by default, purple on hover */
 a,
 a:visited,
 .widget a,
 [class*="widget-type-"] a {
-  color: #ebdbb2 !important; /* foreground default */
+  color: #ebdbb2 !important;
   text-decoration: none;
   transition:
     color 0.2s ease,
@@ -68,11 +53,10 @@ a:visited,
 a:hover,
 .widget a:hover,
 [class*="widget-type-"] a:hover {
-  color: #d3869b !important; /* light purple on hover */
+  color: #d3869b !important;
 }
 
-/* DO NOT touch all svg globally (so third‑party logos keep their colors) */
-/* Status icons: keep green/red */
+/* Status icons: keep green/red - DO NOT recolor these */
 .monitor-site-status-icon svg {
   fill: var(--color-positive) !important;
   stroke: none !important;
@@ -81,56 +65,50 @@ a:hover,
   fill: var(--color-negative) !important;
 }
 
-/* Monitor widget: icon visually linked with name (hover together) */
+/* FIXED: Target IMG icons specifically (not SVG status icons) */
+.monitor-site-icon img,
+.monitor-site-icon.flat-icon {
+  filter: brightness(0) saturate(100%) invert(75%) sepia(77%) saturate(5375%)
+    hue-rotate(20deg) brightness(100%) contrast(100%) !important;
+}
+
 .widget-type-monitor .monitor-site {
   cursor: pointer;
 }
 
-/* Icon recolor to Gruvbox foreground (#ebdbb2) */
-.widget-type-monitor .monitor-site-icon svg:not(.monitor-site-status-icon svg) {
-  filter: brightness(0) saturate(100%) invert(75%) sepia(77%) saturate(5375%)
-    hue-rotate(20deg) brightness(100%) contrast(100%);
-}
-
-/* Icon keeps its original logo colors; just respond to hover with opacity */
 .widget-type-monitor .monitor-site-icon {
   transition: opacity 0.2s ease !important;
 }
 
-/* Name link uses normal link rules; on row hover, both react */
 .widget-type-monitor .monitor-site:hover .monitor-site-icon {
   opacity: 0.8 !important;
 }
+
 .widget-type-monitor .monitor-site:hover a.size-h3 {
   color: #d3869b !important;
 }
 
-/* Weather widget: values and times use foreground */
 .widget-type-weather .weather-column-value,
 .widget-type-weather .weather-column-time {
   color: #ebdbb2 !important;
 }
 
-/* Base bar: foreground fill with small purple border, no layout changes */
 .widget-type-weather .weather-bar {
   background-color: #ebdbb2 !important;
   border-radius: 999px !important;
-  border: 1px solid #b16286 !important; /* thinner border */
+  border: 1px solid #b16286 !important;
   box-sizing: border-box !important;
 }
 
-/* Hover: brighter purple border, slightly dimmed fill */
 .widget-type-weather .weather-column:hover .weather-bar {
   border-color: #d3869b !important;
   background-color: #f0e2c0 !important;
 }
 
-/* Prevent hour text from being clipped */
 .widget-type-weather .weather-column {
   overflow: visible !important;
 }
 
-/* Calendar widget: dates & header */
 .widget-type-calendar .calendar-date,
 .widget-type-calendar .calendar-dates div,
 .widget-type-calendar .calendar-header-button svg,
@@ -145,39 +123,34 @@ a:hover,
   color: #ebdbb2 !important;
 }
 
-/* Footer links: foreground default, purple on hover */
 .footer a {
   color: #ebdbb2 !important;
 }
+
 .footer a:hover {
   color: #d3869b !important;
 }
 
-/* Twitch stream preview popover container styling - Gruvbox colors */
-div[data-popover-html] {
+/* Twitch popover styling - FIXED selectors from your HTML */
+.popover-container,
+.popover-frame,
+.popover-content {
   background-color: #282828 !important;
   border: 1px solid #1d2021 !important;
-  padding: 8px;
-  border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(29, 32, 33, 0.8);
+  border-radius: 6px !important;
   color: #ebdbb2 !important;
+  padding: 8px !important;
 }
 
-/* Twitch stream preview image */
-div[data-popover-html] img.twitch-stream-preview {
-  border-radius: 4px;
+.popover-content img.twitch-stream-preview {
+  border-radius: 4px !important;
   border: 1px solid #1d2021 !important;
-  display: block;
-  max-width: 100%;
+  max-width: 100% !important;
+  display: block !important;
 }
 
-/* Twitch stream title */
-div[data-popover-html] p.color-highlight {
+.popover-content p.color-highlight,
+.popover-content p {
   color: #ebdbb2 !important;
-  margin-top: 10px;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  margin-top: 10px !important;
 }
