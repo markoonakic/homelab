@@ -5,10 +5,9 @@
 theme:
   light: false
   background-color: 40 13 11 # Gruvbox dark background (#282828)
-  primary-color: 25 89 58 # Gruvbox orange (#fe8019)
+  primary-color: 344 47 68 # Gruvbox pink (#d3869b)
   positive-color: 79 54 46 # Gruvbox green (#b8bb26)
   negative-color: 0 74 59 # Gruvbox red (#fb4934)
-  contrast-multiplier: 1.1
 
 # Dashboard Pages
 pages:
@@ -23,7 +22,7 @@ pages:
               - northernlion
               - k3soju
             collapse-after: 3
-            sort-by: viewers
+            sort-by: live
             cache: 5m
 
       # Column 2: Main content (full width)
@@ -54,7 +53,7 @@ pages:
                 title: Networking
                 sites:
                   - title: Headplane
-                    url: https://headplane.sarma.love
+                    url: https://headplane.sarma.love/admin
                     check-url: http://headplane.headscale.svc.cluster.local:3000
                     icon: si:tailscale
               - type: monitor
@@ -70,6 +69,7 @@ pages:
                     url: https://prometheus.sarma.love
                     check-url: http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
                     icon: si:prometheus
+
       # Column 3: Right sidebar (small)
       - size: small
         widgets:
@@ -84,8 +84,6 @@ pages:
 
           # Calendar Widget - Serbian Holidays
           - type: calendar
-            title: Serbian Holidays
-            calendar-url: https://calendar.google.com/calendar/ical/en.rs%23holiday%40group.v.calendar.google.com/public/basic.ics
             max-events: 15
             cache: 1h
 
