@@ -61,7 +61,7 @@ pages:
             title: Services
             sites:
               - title: Headplane
-                url: https://headplane.sarma.love
+                url: https://headplane.sarma.love/admin
                 icon: si:tailscale
               - title: Grafana
                 url: https://grafana.sarma.love
