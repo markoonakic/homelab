@@ -4,3 +4,4 @@ resources:
   - namespace.yaml
   - storageclass-media.yaml
   - pvc-data.yaml
+  - ./qbittorrent
