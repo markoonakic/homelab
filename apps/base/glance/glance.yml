@@ -16,6 +16,10 @@ pages:
       # Column 1: Left sidebar (small)
       - size: small
         widgets:
+          - type: calendar
+            max-events: 15
+            cache: 1h
+
           - type: twitch-channels
             channels:
               - forsen
@@ -36,11 +40,6 @@ pages:
                 url: https://linkding.sarma.love
                 check-url: http://linkding.linkding.svc.cluster.local:9090
                 icon: si:linkding
-
-          - type: extension
-            url: http://glance-k8s.glance-k8s.svc.cluster.local/extension/nodes
-            allow-potentially-dangerous-html: true
-            cache: 10s
 
           - type: split-column
             widgets:
@@ -77,10 +76,6 @@ pages:
             hide-location: false
             show-area-name: true
             cache: 30m
-
-          - type: calendar
-            max-events: 15
-            cache: 1h
 
           - type: custom-api
             title: Headscale Nodes
@@ -226,3 +221,8 @@ pages:
                 </li>
                 {{ end }}
               </ul>
+
+          - type: extension
+            url: http://glance-k8s.glance-k8s.svc.cluster.local/extension/nodes
+            allow-potentially-dangerous-html: true
+            cache: 10s
