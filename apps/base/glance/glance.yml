@@ -124,7 +124,7 @@ pages:
                   width: 8px;
                   height: 8px;
                   border-radius: 50%;
-                  background-color: #8b5cf6;
+                  background-color: var(--color-blue-light);
                   display: inline-block;
                   margin-left: 4px;
                   vertical-align: middle;
@@ -163,8 +163,8 @@ pages:
                 }
 
                 .tag-badge {
-                  background-color: var(--color-primary);
-                  color: var(--color-background);
+                  background-color: var(--color-primary-dark);
+                  color: var(--color-text-base);
                   padding: 2px 6px;
                   border-radius: 4px;
                   font-size: 0.75em;
@@ -205,7 +205,7 @@ pages:
                     {{ if gt (len $tags) 0 }}
                     <div class="flex gap-5">
                       {{ range $tags }}
-                      <span class="tag-badge">{{ . }}</span>
+                      <span class="tag-badge">{{ . | trimPrefix "tag:" }}</span>
                       {{ end }}
                     </div>
                     {{ end }}
