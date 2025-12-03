@@ -43,7 +43,7 @@ body,
 }
 
 /* Framed content: no extra shadow (keeps things flat when both classes present) */
-.widget-content.widget-content-frame {
+.widget-content.widget-content-frameless {
   box-shadow: none !important;
   border-color: #1d2021 !important;
   background-color: #282828 !important;
@@ -86,11 +86,6 @@ a:hover,
 }
 .monitor-site-status-icon svg[fill="var(--color-negative)"] {
   fill: var(--color-negative) !important;
-}
-
-/* Monitor widget row behaviour */
-.widget-type-monitor .monitor-site {
-  cursor: pointer;
 }
 
 /* Monitor icons: start from black, then apply your filter to reach Gruvbox fg */
