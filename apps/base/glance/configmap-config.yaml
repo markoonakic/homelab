@@ -37,26 +37,31 @@ data:
           # Column 2: Main content (full width)
           - size: full
             widgets:
-              # Monitor Widget - Service Status Dashboard
-              - type: monitor
+              # Bookmarks Widget - Quick Links to Services
+              - type: bookmarks
                 title: Homelab Services
-                cache: 1m
-                sites:
-                  - name: Headscale API
-                    icon: si:tailscale
-                    url: https://headscale.sarma.love
-                  - name: Headplane
-                    icon: mdi:vpn
-                    url: https://headplane.sarma.love
-                  - name: Grafana
-                    icon: si:grafana
-                    url: https://grafana.sarma.love
-                  - name: Prometheus
-                    icon: si:prometheus
-                    url: https://prometheus.sarma.love
-                  - name: Glance
-                    icon: mdi:view-dashboard
-                    url: https://glance.sarma.love
+                groups:
+                  - title: VPN Management
+                    links:
+                      - title: Headscale API
+                        url: https://headscale.sarma.love
+                        icon: si:tailscale
+                      - title: Headplane
+                        url: https://headplane.sarma.love
+                        icon: mdi:vpn
+                  - title: Monitoring
+                    links:
+                      - title: Grafana
+                        url: https://grafana.sarma.love
+                        icon: si:grafana
+                      - title: Prometheus
+                        url: https://prometheus.sarma.love
+                        icon: si:prometheus
+                  - title: Apps
+                    links:
+                      - title: Glance Dashboard
+                        url: https://glance.sarma.love
+                        icon: mdi:view-dashboard
 
           # Column 3: Right sidebar (small)
           - size: small
