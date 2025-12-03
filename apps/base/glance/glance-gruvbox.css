@@ -1,37 +1,77 @@
 /* Gruvbox Dark Theme for Glance Dashboard */
-/* Clean and elegant with smooth transitions */
+/* Targeting Glance's utility classes and widget structure */
 
-/* ===== GLOBAL STYLES ===== */
+/* ===== BACKGROUNDS ===== */
 body,
 .page,
 .widget,
-.widget-content,
-.widget * {
+[class*="widget-type-"] {
   background-color: #282828 !important;
+}
+
+/* ===== TEXT/FOREGROUND COLORS ===== */
+/* Target all text elements in widgets */
+.widget *,
+[class*="widget-type-"] *,
+.widget-content *,
+.widget-title,
+.widget-header,
+.list-item,
+.list-item-title,
+.calendar-day,
+.calendar-event-title,
+.weather-temperature,
+.weather-location,
+.feed-item-title,
+.feed-item-author,
+.feed-item-time,
+.market-name,
+.market-symbol,
+.market-price,
+span,
+p,
+div {
   color: #ebdbb2 !important;
 }
 
 /* ===== LINKS & INTERACTIVE ELEMENTS ===== */
+/* More specific selectors for links */
 a,
-a:visited {
+a:visited,
+.widget a,
+[class*="widget-type-"] a,
+.widget-content a,
+.list-item-link,
+.feed-item-link {
   color: #b16286 !important; /* Gruvbox dark purple */
-  transition: color 0.2s ease, opacity 0.2s ease !important;
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease !important;
   text-decoration: none;
 }
 
-a:hover {
+a:hover,
+.widget a:hover,
+[class*="widget-type-"] a:hover,
+.widget-content a:hover {
   color: #d3869b !important; /* Gruvbox light purple */
 }
 
 /* ===== POSITIVE/NEGATIVE INDICATORS ===== */
 .positive,
 .change-positive,
-[class*="positive"] {
+.color-positive,
+[class*="positive"],
+.market-change.positive,
+[class*="widget-type-"] .positive {
   color: #b8bb26 !important; /* Gruvbox green */
 }
 
 .negative,
 .change-negative,
-[class*="negative"] {
+.color-negative,
+[class*="negative"],
+.market-change.negative,
+[class*="widget-type-"] .negative {
   color: #fb4934 !important; /* Gruvbox red */
 }
