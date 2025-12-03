@@ -1,5 +1,8 @@
 /* Gruvbox Dark Theme for Glance Dashboard */
 
+/* Import widget-specific CSS */
+@import url("/assets/headscale-widget.css");
+
 :root {
   /* Gruvbox Dark - Background colors */
   --color-background: #282828 !important;
