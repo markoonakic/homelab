@@ -32,7 +32,4 @@ spec:
       logging:
         minimumLevel: Information
       watcher:
-        timeout: "00:02:00"  # 2 minutes (default is much higher)
-      kubernetes:
-        watchReconnectTimeoutSeconds: 30  # Reconnect faster (default 300)
-        connectionRetryIntervalMs: 1000  # Retry every 1s (default 5000)
+        timeout: "00:02:00"  # 2 minutes for faster detection of stale connections
