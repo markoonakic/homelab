@@ -55,7 +55,7 @@ data:
 
               # Tailscale Devices Widget (via Headscale API)
               - type: extension
-                url: https://headscale.sarma.love/api/v1/machine
+                url: https://headscale.sarma.love/api/v1/node
                 title: VPN Devices
                 allow-potentially-dangerous-html: true
                 cache: 30s
