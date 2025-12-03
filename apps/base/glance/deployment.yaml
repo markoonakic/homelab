@@ -20,6 +20,9 @@ spec:
         # Main Glance container
         - name: glance
           image: glanceapp/glance:latest
+          args:
+            - --config
+            - /app/config/glance.yml
           ports:
             - name: http
               containerPort: 8080
@@ -33,7 +36,7 @@ spec:
                   key: HEADSCALE_API_KEY
           volumeMounts:
             - name: config
-              mountPath: /app/glance.yml
+              mountPath: /app/config/glance.yml
               subPath: glance.yml
           resources:
             requests:
