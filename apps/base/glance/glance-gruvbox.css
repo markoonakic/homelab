@@ -13,7 +13,7 @@
   --color-text-subdue: #a89984 !important;
   --color-text-highlight: #ebdbb2 !important;
 
-  /* Primary / accents (purple on hover only) */
+  /* Primary / accents (purple used on hover) */
   --color-primary: #b16286 !important;
   --color-highlight: #b16286 !important;
 
@@ -58,7 +58,7 @@ a,
 a:visited,
 .widget a,
 [class*="widget-type-"] a {
-  color: #ebdbb2 !important; /* foreground by default */
+  color: #ebdbb2 !important; /* foreground default */
   text-decoration: none;
   transition:
     color 0.2s ease,
@@ -71,49 +71,55 @@ a:hover,
   color: #d3869b !important; /* light purple on hover */
 }
 
-/* Icons default to foreground color */
-svg,
-svg path {
-  fill: #ebdbb2 !important;
-  stroke: #ebdbb2 !important;
-}
-
-/* Preserve positive/negative icon colors in monitor widgets */
+/* DO NOT touch all svg globally (so third‑party logos keep their colors) */
+/* Status icons: keep green/red */
 .monitor-site-status-icon svg {
   fill: var(--color-positive) !important;
   stroke: none !important;
 }
-
 .monitor-site-status-icon svg[fill="var(--color-negative)"] {
   fill: var(--color-negative) !important;
 }
 
-/* Monitor widget: icon stays foreground; name follows link behavior */
-.widget-type-monitor .monitor-site-icon {
-  filter: none !important;
+/* Monitor widget: icon visually linked with name (hover together) */
+.widget-type-monitor .monitor-site {
+  cursor: pointer;
 }
 
-/* Weather widget: values and times use foreground, bars with purple border */
+/* Icon keeps its original logo colors; just respond to hover with opacity */
+.widget-type-monitor .monitor-site-icon {
+  transition: opacity 0.2s ease !important;
+}
+
+/* Name link uses normal link rules; on row hover, both react */
+.widget-type-monitor .monitor-site:hover .monitor-site-icon {
+  opacity: 0.8 !important;
+}
+.widget-type-monitor .monitor-site:hover a.size-h3 {
+  color: #d3869b !important;
+}
+
+/* Weather widget: values and times use foreground */
 .widget-type-weather .weather-column-value,
 .widget-type-weather .weather-column-time {
   color: #ebdbb2 !important;
 }
 
-/* Base bar: foreground fill with dark purple border, no layout changes */
+/* Base bar: foreground fill with small purple border, no layout changes */
 .widget-type-weather .weather-bar {
   background-color: #ebdbb2 !important;
   border-radius: 999px !important;
-  border: 2px solid #b16286 !important; /* dark purple border */
-  box-sizing: border-box !important; /* prevents height/overflow issues */
+  border: 1px solid #b16286 !important; /* thinner border */
+  box-sizing: border-box !important;
 }
 
 /* Hover: brighter purple border, slightly dimmed fill */
 .widget-type-weather .weather-column:hover .weather-bar {
-  border-color: #d3869b !important; /* light purple on hover */
-  background-color: #f0e2c0 !important; /* subtle change, same size */
+  border-color: #d3869b !important;
+  background-color: #f0e2c0 !important;
 }
 
-/* Keep hour text from being clipped */
+/* Prevent hour text from being clipped */
 .widget-type-weather .weather-column {
   overflow: visible !important;
 }
@@ -133,7 +139,7 @@ svg path {
   color: #ebdbb2 !important;
 }
 
-/* Footer link color: foreground default, purple on hover */
+/* Footer links: foreground default, purple on hover */
 .footer a {
   color: #ebdbb2 !important;
 }
