@@ -24,12 +24,6 @@ data:
           # Column 1: Main content (full width)
           - size: full
             widgets:
-              # Kubernetes Nodes Widget (glance-k8s extension)
-              - type: extension
-                url: http://localhost:8081/extension/nodes
-                allow-potentially-dangerous-html: true
-                cache: 10s
-
               # Twitch Channels Widget
               - type: twitch-channels
                 channels:

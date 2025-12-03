@@ -58,24 +58,6 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 10
 
-        # glance-k8s sidecar for Kubernetes monitoring
-        - name: glance-k8s
-          image: lukasdietrich/glance-k8s:latest
-          ports:
-            - name: http-k8s
-              containerPort: 8081
-              protocol: TCP
-          env:
-            - name: PORT
-              value: "8081"
-          resources:
-            requests:
-              cpu: 10m
-              memory: 32Mi
-            limits:
-              cpu: 100m
-              memory: 128Mi
-
       volumes:
         - name: config
           configMap:
