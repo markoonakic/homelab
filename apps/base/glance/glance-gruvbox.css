@@ -13,14 +13,13 @@
   --color-text-subdue: #a89984 !important;
   --color-text-highlight: #ebdbb2 !important;
 
-  /* Primary / accents (purple) */
-  --color-primary: #b16286 !important; /* dark purple */
+  /* Primary / accents (purple on hover only) */
+  --color-primary: #b16286 !important;
   --color-highlight: #b16286 !important;
-  --color-link: #b16286 !important;
 
-  /* Positive / negative */
-  --color-positive: #b8bb26 !important; /* green */
-  --color-negative: #fb4934 !important; /* red */
+  /* Positive / negative indicators */
+  --color-positive: #b8bb26 !important;
+  --color-negative: #fb4934 !important;
 
   /* Borders / dividers */
   --color-border-subtle: #1d2021 !important;
@@ -54,12 +53,12 @@ body,
   color: #a89984 !important;
 }
 
-/* Links & interactive elements */
+/* Links: foreground by default, purple on hover */
 a,
 a:visited,
 .widget a,
 [class*="widget-type-"] a {
-  color: #b16286 !important;
+  color: #ebdbb2 !important; /* foreground by default */
   text-decoration: none;
   transition:
     color 0.2s ease,
@@ -69,7 +68,7 @@ a:visited,
 a:hover,
 .widget a:hover,
 [class*="widget-type-"] a:hover {
-  color: #d3869b !important;
+  color: #d3869b !important; /* light purple on hover */
 }
 
 /* Icons default to foreground color */
@@ -79,57 +78,44 @@ svg path {
   stroke: #ebdbb2 !important;
 }
 
-/* Keep positive/negative status icons colored */
-.monitor-site-status-icon svg[fill="var(--color-positive)"],
-.monitor-site-status-icon svg[fill="var(--color-negative)"] {
-  fill: currentColor !important;
-}
-
+/* Preserve positive/negative icon colors in monitor widgets */
 .monitor-site-status-icon svg {
-  color: var(--color-positive) !important;
+  fill: var(--color-positive) !important;
+  stroke: none !important;
 }
+
 .monitor-site-status-icon svg[fill="var(--color-negative)"] {
-  color: var(--color-negative) !important;
+  fill: var(--color-negative) !important;
 }
 
-/* Monitor widget: icon + name share link/hover color */
-.widget-type-monitor .monitor-site {
-  cursor: pointer;
+/* Monitor widget: icon stays foreground; name follows link behavior */
+.widget-type-monitor .monitor-site-icon {
+  filter: none !important;
 }
 
-/* Icon and name as one visual link */
-.widget-type-monitor .monitor-site-icon,
-.widget-type-monitor .monitor-site a.size-h3 {
-  color: #b16286 !important;
-  fill: #b16286 !important;
-}
-
-/* Hover row: icon + name go light purple */
-.widget-type-monitor .monitor-site:hover .monitor-site-icon,
-.widget-type-monitor .monitor-site:hover a.size-h3 {
-  color: #d3869b !important;
-  fill: #d3869b !important;
-}
-
-/* Twitch / lists keep foreground text */
-.widget-type-twitch-channels .twitch-channel-avatar {
-  border-color: #1d2021 !important;
-}
-
-/* Weather widget: bars and temps use foreground color */
+/* Weather widget: values and times use foreground, bars with purple border */
 .widget-type-weather .weather-column-value,
 .widget-type-weather .weather-column-time {
   color: #ebdbb2 !important;
 }
 
+/* Base bar: foreground fill with dark purple border, no layout changes */
 .widget-type-weather .weather-bar {
   background-color: #ebdbb2 !important;
+  border-radius: 999px !important;
+  border: 2px solid #b16286 !important; /* dark purple border */
+  box-sizing: border-box !important; /* prevents height/overflow issues */
 }
 
-.widget-type-weather .weather-column-daylight,
-.widget-type-weather .weather-column-daylight-sunrise,
-.widget-type-weather .weather-column-daylight-sunset {
-  background-color: #3c3836 !important;
+/* Hover: brighter purple border, slightly dimmed fill */
+.widget-type-weather .weather-column:hover .weather-bar {
+  border-color: #d3869b !important; /* light purple on hover */
+  background-color: #f0e2c0 !important; /* subtle change, same size */
+}
+
+/* Keep hour text from being clipped */
+.widget-type-weather .weather-column {
+  overflow: visible !important;
 }
 
 /* Calendar widget: dates & header */
@@ -147,9 +133,9 @@ svg path {
   color: #ebdbb2 !important;
 }
 
-/* Footer link color */
+/* Footer link color: foreground default, purple on hover */
 .footer a {
-  color: #b16286 !important;
+  color: #ebdbb2 !important;
 }
 .footer a:hover {
   color: #d3869b !important;
