@@ -52,7 +52,6 @@ body,
 .widget-content {
   background-color: #282828 !important;
   border-color: #1d2021 !important;
-  /* big blur / low alpha so it fades into background */
   box-shadow:
     0 12px 30px rgba(29, 32, 33, 0.85),
     0 0 0 1px #1d2021 !important;
@@ -105,28 +104,26 @@ a:hover,
   fill: var(--color-negative) !important;
 }
 
-/* Monitor icons: IMG only, unified selector */
-/* Glance is giving white auto-inverted icons in dark mode, so: */
-/* 1) brightness(0) saturate(100%) → solid black */
-/* 2) your computed filter → Gruvbox #ebdbb2 tone */
+/* === Monitor icons === */
+/* Base state: recolor (white/gray) Simple Icon to Gruvbox fg #ebdbb2 */
+/* brightness(0) saturate(100%) forces a black base, then apply your ebdbb2 filter */
 .monitor-site-icon,
 .monitor-site-icon img {
-  filter: brightness(0) saturate(100%) invert(87%) sepia(12%) saturate(562%)
-    hue-rotate(5deg) brightness(96%) contrast(101%) !important;
+  filter: brightness(0) saturate(100%) invert(88%) sepia(23%) saturate(404%)
+    hue-rotate(350deg) brightness(103%) contrast(84%) !important;
+  transition:
+    filter 0.2s ease,
+    opacity 0.2s ease !important;
 }
 
-/* Monitor widget row behaviour */
-.widget-type-monitor .monitor-site {
-  cursor: pointer;
+/* Hover state: switch icons to purple #d3869b using your purple filter */
+.widget-type-monitor .monitor-site:hover .monitor-site-icon,
+.widget-type-monitor .monitor-site:hover .monitor-site-icon img {
+  filter: brightness(0) saturate(100%) invert(60%) sepia(27%) saturate(504%)
+    hue-rotate(293deg) brightness(95%) contrast(96%) !important;
 }
 
-/* Icon hover opacity */
-.widget-type-monitor .monitor-site-icon {
-  transition: opacity 0.2s ease !important;
-}
-.widget-type-monitor .monitor-site:hover .monitor-site-icon {
-  opacity: 0.8 !important;
-}
+/* Also keep text hover color */
 .widget-type-monitor .monitor-site:hover a.size-h3 {
   color: #d3869b !important;
 }
@@ -192,7 +189,6 @@ a:hover,
   background-color: #282828 !important;
   border: 1px solid #1d2021 !important;
   border-radius: 6px !important;
-  /* same style shadow as widget-content for consistency */
   box-shadow:
     0 12px 30px rgba(29, 32, 33, 0.85),
     0 0 0 1px #1d2021 !important;
