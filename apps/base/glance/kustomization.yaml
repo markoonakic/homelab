@@ -6,7 +6,13 @@ resources:
   - clusterrole.yaml
   - clusterrolebinding.yaml
   - secret-api-keys.yaml
-  - configmap-config.yaml
   - deployment.yaml
   - service.yaml
   - ingress.yaml
+
+# Generate ConfigMap from glance.yml file
+configMapGenerator:
+  - name: glance-config
+    namespace: glance
+    files:
+      - glance.yml
