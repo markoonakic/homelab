@@ -3,10 +3,8 @@
 
 # Theme: Gruvbox Dark
 theme:
-  background-color: 0 0 16
-  primary-color: 344 47 68
-  positive-color: 61 66 44
-  negative-color: 6 96 59
+  light: false
+  custom-css-file: glance-gruvbox.css
 
 # Dashboard Pages
 pages:
