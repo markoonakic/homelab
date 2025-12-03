@@ -22,12 +22,17 @@ spec:
       limits:
         cpu: 100m
         memory: 128Mi
-    
+
     # RBAC - Reflector needs cluster-wide permissions to watch/copy secrets
     rbac:
       enabled: true
-    
+
     # Configuration
     configuration:
       logging:
         minimumLevel: Information
+      watcher:
+        timeout: "00:02:00"  # 2 minutes (default is much higher)
+      kubernetes:
+        watchReconnectTimeoutSeconds: 30  # Reconnect faster (default 300)
+        connectionRetryIntervalMs: 1000  # Retry every 1s (default 5000)
