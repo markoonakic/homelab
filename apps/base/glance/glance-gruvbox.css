@@ -1,7 +1,40 @@
 :root {
+  /* Backgrounds */
   --color-background: #282828 !important;
+  --color-surface: #282828 !important;
+  --color-widget-background: #282828 !important;
+  --color-header-background: #282828 !important;
+
+  /* Text */
   --color-text-base: #ebdbb2 !important;
-  --color-primary: #b16286 !important;
-  --color-positive: #b8bb26 !important;
-  --color-negative: #fb4934 !important;
+  --color-text-subdue: #a89984 !important;
+  --color-text-highlight: #ebdbb2 !important;
+
+  /* Primary / accents (purple) */
+  --color-primary: #b16286 !important; /* dark purple */
+  --color-highlight: #b16286 !important;
+  --color-link: #b16286 !important;
+
+  /* Positive / negative */
+  --color-positive: #b8bb26 !important; /* green */
+  --color-negative: #fb4934 !important; /* red */
+
+  /* Borders / dividers */
+  --color-border-subtle: #3c3836 !important;
+  --color-border-strong: #504945 !important;
+}
+
+/* Smooth purple hover */
+a,
+.widget a,
+[class*="widget-type-"] a {
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease !important;
+}
+
+a:hover,
+.widget a:hover,
+[class*="widget-type-"] a:hover {
+  color: #d3869b !important; /* light purple on hover */
 }
