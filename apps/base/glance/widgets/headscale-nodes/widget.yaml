@@ -1,0 +1,10 @@
+# Headscale Nodes Widget Configuration
+# Widget metadata and API configuration
+
+type: custom-api
+title: Headscale Nodes
+title-url: https://headplane.sarma.love/admin
+url: https://headscale.sarma.love/api/v1/node
+cache: 30s
+headers:
+  Authorization: Bearer ${HEADSCALE_API_KEY}
