@@ -73,7 +73,6 @@ pages:
       # Column 3: Right sidebar (small)
       - size: small
         widgets:
-          # Weather Widget
           - type: weather
             location: Belgrade, Serbia
             units: metric
@@ -82,12 +81,10 @@ pages:
             show-area-name: true
             cache: 30m
 
-          # Calendar Widget - Serbian Holidays
           - type: calendar
             max-events: 15
             cache: 1h
 
-          # VPN Nodes - Headscale API
           - type: extension
             title: VPN Nodes
             url: https://headscale.sarma.love/api/v1/node

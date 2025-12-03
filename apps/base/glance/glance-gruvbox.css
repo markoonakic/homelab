@@ -146,3 +146,18 @@ a:hover,
 .footer a:hover {
   color: #d3869b !important;
 }
+
+/* Gruvbox icon colorization: monochrome SVGs → #ebdbb2 (foreground beige) */
+.widget-type-monitor .monitor-site-icon svg:not(.monitor-site-status-icon svg),
+svg[data-icon-prefix]:not(.monitor-site-status-icon svg) {
+  filter: invert(89%) sepia(10%) saturate(800%) hue-rotate(25deg)
+    brightness(105%) contrast(95%);
+}
+
+/* Specific selectors for Simple Icons, selfh.st, Dashboard Icons */
+[class*="si:"],
+[class*="sh:"],
+[class*="di:"] {
+  filter: invert(89%) sepia(10%) saturate(800%) hue-rotate(25deg)
+    brightness(105%) contrast(95%);
+}
