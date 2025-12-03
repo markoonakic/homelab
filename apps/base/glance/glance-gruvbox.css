@@ -104,7 +104,7 @@ a:hover,
   color: #d3869b !important;
 }
 
-/* Status icons: keep green/red */
+/* Status icons */
 .monitor-site-status-icon svg {
   fill: var(--color-positive) !important;
   stroke: none !important;
@@ -148,7 +148,7 @@ a:hover,
   color: #ebdbb2 !important;
 }
 
-/* Weather bar with same easing as links/icons */
+/* Weather bar */
 .widget-type-weather .weather-bar {
   background-color: #ebdbb2 !important;
   border-radius: 999px !important;
@@ -192,7 +192,7 @@ a:hover,
   color: #d3869b !important;
 }
 
-/* ===== Twitch hover popover: single border + matching gradient shadow ===== */
+/* ===== Twitch hover popover ===== */
 
 .popover-container {
   background: transparent !important;
@@ -228,4 +228,11 @@ a:hover,
 .popover-content p {
   color: #ebdbb2 !important;
   margin-top: 10px !important;
+}
+
+/* Popover diamond pointer: solid #1d2021, no border */
+.popover-frame::before {
+  background-color: #1d2021 !important;
+  border: none !important;
+  box-shadow: none !important;
 }
