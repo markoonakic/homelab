@@ -5,6 +5,8 @@ metadata:
   namespace: headscale
   labels:
     app: headscale
+  annotations:
+    reloader.stakater.com/auto: "true"
 spec:
   replicas: 1
   strategy:
