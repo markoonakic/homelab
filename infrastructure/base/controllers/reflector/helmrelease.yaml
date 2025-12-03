@@ -31,5 +31,3 @@ spec:
     configuration:
       logging:
         minimumLevel: Information
-      watcher:
-        timeout: "00:02:00"  # 2 minutes for faster detection of stale connections
