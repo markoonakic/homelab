@@ -26,7 +26,23 @@ body,
   background-color: #282828 !important;
 }
 
-/* Widget shell: no shadow here, just background + border */
+/* Top header / navigation bar so corners match background */
+.header,
+.header-container,
+.page-header {
+  background-color: #282828 !important;
+  border-color: #1d2021 !important;
+  box-shadow: none !important;
+}
+
+/* Navigation tabs and page title use foreground color */
+.header a,
+.header .size-h2,
+.header .size-h3 {
+  color: #ebdbb2 !important;
+}
+
+/* Widget shell: no shadow here, just background */
 .widget {
   background-color: #282828 !important;
   box-shadow: none !important;
@@ -42,8 +58,9 @@ body,
     0 0 0 1px #1d2021 !important;
 }
 
-/* Framed content: no extra shadow (keeps things flat when both classes present) */
-.widget-content.widget-content-frameless {
+/* Framed/frameless content that should stay flat (no card shadow) */
+.widget-content.widget-content-frameless,
+.widget-content.widget-content-frame {
   box-shadow: none !important;
   border-color: #1d2021 !important;
   background-color: #282828 !important;
@@ -88,10 +105,19 @@ a:hover,
   fill: var(--color-negative) !important;
 }
 
-/* Monitor icons: start from black, then apply your filter to reach Gruvbox fg */
+/* Monitor icons: IMG only, unified selector */
+/* Glance is giving white auto-inverted icons in dark mode, so: */
+/* 1) brightness(0) saturate(100%) → solid black */
+/* 2) your computed filter → Gruvbox #ebdbb2 tone */
+.monitor-site-icon,
 .monitor-site-icon img {
   filter: brightness(0) saturate(100%) invert(87%) sepia(12%) saturate(562%)
     hue-rotate(5deg) brightness(96%) contrast(101%) !important;
+}
+
+/* Monitor widget row behaviour */
+.widget-type-monitor .monitor-site {
+  cursor: pointer;
 }
 
 /* Icon hover opacity */
