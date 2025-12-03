@@ -16,3 +16,7 @@ configMapGenerator:
     namespace: glance
     files:
       - glance.yml
+  - name: glance-css
+    namespace: glance
+    files:
+      - glance-gruvbox.css

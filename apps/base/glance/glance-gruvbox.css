@@ -1,0 +1,37 @@
+/* Gruvbox Dark Theme for Glance Dashboard */
+/* Clean and elegant with smooth transitions */
+
+/* ===== GLOBAL STYLES ===== */
+body,
+.page,
+.widget,
+.widget-content,
+.widget * {
+  background-color: #282828 !important;
+  color: #ebdbb2 !important;
+}
+
+/* ===== LINKS & INTERACTIVE ELEMENTS ===== */
+a,
+a:visited {
+  color: #b16286 !important; /* Gruvbox dark purple */
+  transition: color 0.2s ease, opacity 0.2s ease !important;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #d3869b !important; /* Gruvbox light purple */
+}
+
+/* ===== POSITIVE/NEGATIVE INDICATORS ===== */
+.positive,
+.change-positive,
+[class*="positive"] {
+  color: #b8bb26 !important; /* Gruvbox green */
+}
+
+.negative,
+.change-negative,
+[class*="negative"] {
+  color: #fb4934 !important; /* Gruvbox red */
+}

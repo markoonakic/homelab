@@ -19,7 +19,7 @@ spec:
       containers:
         # Main Glance container
         - name: glance
-          image: glanceapp/glance:latest
+          image: glanceapp/glance:v0.8.4
           args:
             - --config
             - /app/config/glance.yml
@@ -38,6 +38,10 @@ spec:
             - name: config
               mountPath: /app/config/glance.yml
               subPath: glance.yml
+            - name: custom-css
+              mountPath: /app/assets/glance-gruvbox.css
+              subPath: glance-gruvbox.css
+              readOnly: true
           resources:
             requests:
               cpu: 50m
@@ -62,3 +66,6 @@ spec:
         - name: config
           configMap:
             name: glance-config
+        - name: custom-css
+          configMap:
+            name: glance-css
