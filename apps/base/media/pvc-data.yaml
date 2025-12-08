@@ -8,5 +8,5 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Ti  # Media library ceiling for 2-node cluster (single replica = 1Ti actual). Alt: 500Gi (space-constrained), 2Ti (large library)
+      storage: 400Gi  # Reduced from 1Ti due to node storage constraints (456GB max available)  # Media library ceiling for 2-node cluster (single replica = 1Ti actual). Alt: 500Gi (space-constrained), 2Ti (large library)
   storageClassName: longhorn-media
