@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: qbittorrent
-          image: lscr.io/linuxserver/qbittorrent:latest
+          image: lscr.io/linuxserver/qbittorrent:5.1.4-r1-ls431
           ports:
             - name: http
               containerPort: 8080
