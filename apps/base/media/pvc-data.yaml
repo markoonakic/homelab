@@ -8,5 +8,5 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 200Gi  # Reduced from 1Ti due to node storage constraints (max 236GB/456GB per node)
+      storage: 250Gi  # After reducing Longhorn reservation from 30% to 10% (289GB available)
   storageClassName: longhorn-media
