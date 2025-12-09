@@ -35,7 +35,7 @@ spec:
 
     persistence:
       enabled: true
-      storageClass: longhorn-ha
+      storageClass: longhorn
       size: 10Gi
 
     resources:

@@ -9,4 +9,4 @@ spec:
   resources:
     requests:
       storage: 5Gi  # qBittorrent config/database (~1-3Gi actual). Alt: 10Gi (heavy torrent history)
-  storageClassName: longhorn-ha
+  storageClassName: longhorn
