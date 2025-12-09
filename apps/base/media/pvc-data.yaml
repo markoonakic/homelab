@@ -8,5 +8,5 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 250Gi  # After reducing Longhorn reservation from 30% to 10% (289GB available)
+      storage: 250Gi
   storageClassName: longhorn-media
