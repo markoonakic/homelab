@@ -18,10 +18,10 @@ spec:
     resources:
       requests:
         cpu: 10m
-        memory: 32Mi
+        memory: 64Mi
       limits:
         cpu: 100m
-        memory: 128Mi
+        memory: 256Mi
 
     # RBAC - Reflector needs cluster-wide permissions to watch/copy secrets
     rbac:
