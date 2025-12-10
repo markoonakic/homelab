@@ -7,3 +7,4 @@ resources:
   - middleware-security.yaml
   - middleware-auth.yaml
   - ingress-dashboard.yaml
+  - service-api.yaml

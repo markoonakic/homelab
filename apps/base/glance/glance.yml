@@ -54,7 +54,7 @@ pages:
                     icon: si:tailscale
                   - title: Traefik
                     url: https://traefik.sarma.love
-                    check-url: http://traefik.traefik.svc.cluster.local:9000/api/overview
+                    check-url: http://traefik-api.traefik.svc.cluster.local:9000/api/overview
                     icon: si:traefikproxy
               - type: monitor
                 collapse-after: 10
