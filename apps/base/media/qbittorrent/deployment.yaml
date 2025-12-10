@@ -40,7 +40,8 @@ spec:
             - name: config
               mountPath: /config
             - name: media-data
-              mountPath: /media-data
+              mountPath: /downloads
+              subPath: downloads
           resources:
             requests:
               cpu: 100m
