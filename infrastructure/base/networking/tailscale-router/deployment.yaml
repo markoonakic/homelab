@@ -51,8 +51,9 @@ spec:
         - name: TS_ROUTES
           value: "192.168.0.0/24"
         # Accept DNS from Headscale (MagicDNS)
+        # DISABLED: Prevents pod from resolving kubernetes.default.svc on startup
         - name: TS_ACCEPT_DNS
-          value: "true"
+          value: "false"
         # Auth key from secret
         - name: TS_AUTHKEY
           valueFrom:
