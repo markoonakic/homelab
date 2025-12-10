@@ -40,6 +40,10 @@ pages:
                 url: https://linkding.sarma.love
                 check-url: http://linkding.linkding.svc.cluster.local:9090
                 icon: si:linkding
+              - title: Vaultwarden
+                url: https://vault.sarma.love
+                check-url: http://vaultwarden-vaultwarden.vaultwarden.svc.cluster.local
+                icon: si:bitwarden
 
           - type: split-column
             widgets:
@@ -65,6 +69,24 @@ pages:
                     url: https://prometheus.sarma.love
                     check-url: http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
                     icon: si:prometheus
+
+          - type: monitor
+            collapse-after: 10
+            cache: 1m
+            title: Infrastructure
+            sites:
+              - title: Longhorn
+                url: https://longhorn.sarma.love
+                check-url: http://longhorn-frontend.longhorn-system.svc.cluster.local
+                icon: si:kubernetes
+              - title: Vaultwarden
+                url: https://vault.sarma.love
+                check-url: http://vaultwarden-vaultwarden.vaultwarden.svc.cluster.local
+                icon: si:bitwarden
+              - title: Traefik
+                url: https://traefik.sarma.love
+                check-url: http://traefik.traefik.svc.cluster.local:9000/dashboard/
+                icon: si:traefikproxy
 
       # Column 3: Right sidebar (small)
       - size: small

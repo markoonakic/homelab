@@ -5,3 +5,4 @@ resources:
   - helmrepository.yaml
   - helmrelease.yaml
   - middleware-security.yaml
+  - ingress-dashboard.yaml

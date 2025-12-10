@@ -115,3 +115,9 @@ spec:
     additionalArguments:
       - "--providers.kubernetesingress.ingressclass=traefik"
       - "--providers.kubernetescrd.allowCrossNamespace=true"
+      - "--api.dashboard=true"  # Enable Traefik dashboard
+
+    # API/Dashboard configuration
+    ingressRoute:
+      dashboard:
+        enabled: false  # We'll create our own Ingress for better control
