@@ -14,18 +14,7 @@ spec:
     metadata:
       labels:
         app: qbittorrent
-        app.kubernetes.io/part-of: media-stack
     spec:
-      affinity:
-        podAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: app.kubernetes.io/part-of
-                    operator: In
-                    values:
-                      - media-stack
-              topologyKey: kubernetes.io/hostname
       containers:
         - name: qbittorrent
           image: lscr.io/linuxserver/qbittorrent:5.1.4-r1-ls431
@@ -50,12 +39,8 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-            - name: downloads
-              mountPath: /downloads
-              subPath: downloads
-            - name: incomplete
-              mountPath: /downloads/incomplete
-              subPath: downloads/incomplete
+            - name: media-data
+              mountPath: /media-data
           resources:
             requests:
               cpu: 100m
@@ -67,9 +52,6 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: qbittorrent-config
-        - name: downloads
-          persistentVolumeClaim:
-            claimName: media-data
-        - name: incomplete
+        - name: media-data
           persistentVolumeClaim:
             claimName: media-data
