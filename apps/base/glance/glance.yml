@@ -237,3 +237,29 @@ pages:
             url: http://glance-k8s-glance-k8s.glance-k8s.svc.cluster.local/extension/nodes
             allow-potentially-dangerous-html: true
             cache: 10s
+
+  - name: Media
+    columns:
+      # Column 1: Media services monitor (left side, full height)
+      - size: small
+        widgets:
+          - type: monitor
+            cache: 1m
+            title: Media Services
+            sites:
+              - title: qBittorrent
+                url: https://qbittorrent.sarma.love
+                check-url: http://qbittorrent.media.svc.cluster.local:8080
+                icon: si:qbittorrent
+
+      # Column 2: Main content area (right side)
+      - size: full
+        widgets:
+          - type: monitor
+            cache: 1m
+            title: Status
+            sites:
+              - title: qBittorrent
+                url: https://qbittorrent.sarma.love
+                check-url: http://qbittorrent.media.svc.cluster.local:8080
+                icon: si:qbittorrent
