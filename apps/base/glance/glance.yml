@@ -240,26 +240,18 @@ pages:
 
   - name: Media
     columns:
-      # Column 1: Media services monitor (left side, full height)
-      - size: small
+      # Column 1: Left side (equal width)
+      - size: full
         widgets:
           - type: monitor
             cache: 1m
-            title: Media Services
+            title: Media
             sites:
               - title: qBittorrent
                 url: https://qbittorrent.sarma.love
                 check-url: http://qbittorrent.media.svc.cluster.local:8080
                 icon: si:qbittorrent
 
-      # Column 2: Main content area (right side)
+      # Column 2: Right side (equal width)
       - size: full
         widgets:
-          - type: monitor
-            cache: 1m
-            title: Status
-            sites:
-              - title: qBittorrent
-                url: https://qbittorrent.sarma.love
-                check-url: http://qbittorrent.media.svc.cluster.local:8080
-                icon: si:qbittorrent
