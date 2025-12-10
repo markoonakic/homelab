@@ -39,12 +39,8 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-            - name: downloads
-              mountPath: /downloads
-              subPath: downloads
-            - name: incomplete
-              mountPath: /downloads/incomplete
-              subPath: downloads/incomplete
+            - name: media-data
+              mountPath: /media-data
           resources:
             requests:
               cpu: 100m
@@ -56,9 +52,6 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: qbittorrent-config
-        - name: downloads
-          persistentVolumeClaim:
-            claimName: media-data
-        - name: incomplete
+        - name: media-data
           persistentVolumeClaim:
             claimName: media-data
