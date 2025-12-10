@@ -71,6 +71,12 @@ data:
         - name: "linkding.sarma.love"
           type: "A"
           value: "192.168.0.220"
+        - name: "longhorn.sarma.love"
+          type: "A"
+          value: "192.168.0.220"
+        - name: "traefik.sarma.love"
+          type: "A"
+          value: "192.168.0.220"
 
     # ACL policy file
     policy:
