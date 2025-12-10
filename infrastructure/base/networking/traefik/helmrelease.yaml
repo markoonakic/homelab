@@ -116,8 +116,9 @@ spec:
       - "--providers.kubernetesingress.ingressclass=traefik"
       - "--providers.kubernetescrd.allowCrossNamespace=true"
       - "--api.dashboard=true"  # Enable Traefik dashboard
+      - "--api.insecure=true"  # Enable API on port 9000 (internal only)
 
     # API/Dashboard configuration
     ingressRoute:
       dashboard:
-        enabled: false  # We'll create our own Ingress for better control
+        enabled: false  # We'll create our own IngressRoute for better control
