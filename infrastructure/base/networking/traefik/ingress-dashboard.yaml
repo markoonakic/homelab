@@ -13,19 +13,6 @@ spec:
         - name: api@internal
           kind: TraefikService
   tls:
-    secretName: traefik-dashboard-tls
+    secretName: sarma-wildcard-tls
     domains:
       - main: traefik.sarma.love
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: traefik-dashboard-tls
-  namespace: traefik
-spec:
-  secretName: traefik-dashboard-tls
-  issuerRef:
-    name: letsencrypt-prod
-    kind: ClusterIssuer
-  dnsNames:
-    - traefik.sarma.love

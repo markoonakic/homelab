@@ -4,7 +4,6 @@ metadata:
   name: longhorn-frontend
   namespace: longhorn-system
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
@@ -12,7 +11,7 @@ spec:
   tls:
     - hosts:
         - longhorn.sarma.love
-      secretName: longhorn-tls
+      secretName: sarma-wildcard-tls
   rules:
     - host: longhorn.sarma.love
       http:
