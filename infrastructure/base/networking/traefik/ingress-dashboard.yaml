@@ -9,6 +9,8 @@ spec:
   routes:
     - match: Host(`traefik.sarma.love`)
       kind: Rule
+      middlewares:
+        - name: traefik-dashboard-auth
       services:
         - name: api@internal
           kind: TraefikService

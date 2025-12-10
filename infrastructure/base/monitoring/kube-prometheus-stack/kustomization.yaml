@@ -7,3 +7,4 @@ resources:
   - helmrelease.yaml
   - ingress-grafana.yaml
   - ingress-prometheus.yaml
+  - middleware-auth.yaml
