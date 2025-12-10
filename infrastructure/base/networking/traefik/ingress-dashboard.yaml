@@ -25,7 +25,7 @@ metadata:
 spec:
   secretName: traefik-dashboard-tls
   issuerRef:
-    name: letsencrypt-production
+    name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
     - traefik.sarma.love
