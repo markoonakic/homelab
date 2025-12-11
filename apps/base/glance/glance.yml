@@ -305,9 +305,9 @@ pages:
             title: "Jellyfin Stats"
             title-url: https://jellyfin.sarma.love
             cache: 1h
-            base-url: http://jellyfin:8096
+            base-url: http://jellyfin.media.svc.cluster.local:8096
             options:
-              url: http://jellyfin:8096
+              url: http://jellyfin.media.svc.cluster.local:8096
               key: ${JELLYFIN_API_KEY}
             template: |
               {{ $url := .Options.StringOr "url" "" }}
@@ -357,7 +357,7 @@ pages:
           - type: custom-api
             title: Jellyseerr Requests
             title-url: https://jellyseerr.sarma.love/requests
-            url: http://jellyseerr:5055/api/v1/request/count
+            url: http://jellyseerr.media.svc.cluster.local:5055/api/v1/request/count
             cache: 1h
             options:
               small-column: false
@@ -473,13 +473,13 @@ pages:
               mode: "default"
             subrequests:
               transfer:
-                url: http://qbittorrent:8080/api/v2/transfer/info
+                url: http://qbittorrent.media.svc.cluster.local:8080/api/v2/transfer/info
               seeding:
-                url: http://qbittorrent:8080/api/v2/torrents/info
+                url: http://qbittorrent.media.svc.cluster.local:8080/api/v2/torrents/info
                 parameters:
                   filter: seeding
               leeching:
-                url: http://qbittorrent:8080/api/v2/torrents/info
+                url: http://qbittorrent.media.svc.cluster.local:8080/api/v2/torrents/info
                 parameters:
                   filter: downloading
             template: |
