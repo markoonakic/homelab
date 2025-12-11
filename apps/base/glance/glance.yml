@@ -240,60 +240,60 @@ pages:
 
   - name: Media
     columns:
-      # Column 1: Left side (equal width)
       - size: full
         widgets:
-          - type: monitor
-            cache: 1m
-            title: Download & Indexing
-            sites:
-              - title: qBittorrent
-                url: https://qbittorrent.sarma.love
-                check-url: http://qbittorrent.media.svc.cluster.local:8080
-                icon: si:qbittorrent
-              - title: Prowlarr
-                url: https://prowlarr.sarma.love
-                check-url: http://prowlarr.media.svc.cluster.local:9696
-                icon: mdi:download-network
+          - type: split-column
+            widgets:
+              - type: monitor
+                cache: 1m
+                title: Download & Indexing
+                sites:
+                  - title: qBittorrent
+                    url: https://qbittorrent.sarma.love
+                    check-url: http://qbittorrent.media.svc.cluster.local:8080
+                    icon: si:qbittorrent
+                  - title: Prowlarr
+                    url: https://prowlarr.sarma.love
+                    check-url: http://prowlarr.media.svc.cluster.local:9696
+                    icon: mdi:download-network
 
-          - type: monitor
-            cache: 1m
-            title: Automation
-            sites:
-              - title: Sonarr
-                url: https://sonarr.sarma.love
-                check-url: http://sonarr.media.svc.cluster.local:8989
-                icon: si:sonarr
-              - title: Radarr
-                url: https://radarr.sarma.love
-                check-url: http://radarr.media.svc.cluster.local:7878
-                icon: si:radarr
-              - title: Bazarr
-                url: https://bazarr.sarma.love
-                check-url: http://bazarr.media.svc.cluster.local:6767
-                icon: mdi:closed-caption
+              - type: monitor
+                cache: 1m
+                title: Streaming & Requests
+                sites:
+                  - title: Jellyfin
+                    url: https://jellyfin.sarma.love
+                    check-url: http://jellyfin.media.svc.cluster.local:8096
+                    icon: si:jellyfin
+                  - title: Jellyseerr
+                    url: https://jellyseerr.sarma.love
+                    check-url: http://jellyseerr.media.svc.cluster.local:5055
+                    icon: si:jellyfin
 
-      # Column 2: Right side (equal width)
-      - size: full
-        widgets:
-          - type: monitor
-            cache: 1m
-            title: Streaming & Requests
-            sites:
-              - title: Jellyfin
-                url: https://jellyfin.sarma.love
-                check-url: http://jellyfin.media.svc.cluster.local:8096
-                icon: si:jellyfin
-              - title: Jellyseerr
-                url: https://jellyseerr.sarma.love
-                check-url: http://jellyseerr.media.svc.cluster.local:5055
-                icon: si:jellyfin
+          - type: split-column
+            widgets:
+              - type: monitor
+                cache: 1m
+                title: Automation
+                sites:
+                  - title: Sonarr
+                    url: https://sonarr.sarma.love
+                    check-url: http://sonarr.media.svc.cluster.local:8989
+                    icon: si:sonarr
+                  - title: Radarr
+                    url: https://radarr.sarma.love
+                    check-url: http://radarr.media.svc.cluster.local:7878
+                    icon: si:radarr
+                  - title: Bazarr
+                    url: https://bazarr.sarma.love
+                    check-url: http://bazarr.media.svc.cluster.local:6767
+                    icon: mdi:closed-caption
 
-          - type: monitor
-            cache: 1m
-            title: Monitoring
-            sites:
-              - title: Tautulli
-                url: https://tautulli.sarma.love
-                check-url: http://tautulli.media.svc.cluster.local:8181
-                icon: mdi:chart-line
+              - type: monitor
+                cache: 1m
+                title: Monitoring
+                sites:
+                  - title: Tautulli
+                    url: https://tautulli.sarma.love
+                    check-url: http://tautulli.media.svc.cluster.local:8181
+                    icon: mdi:chart-line
