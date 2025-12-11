@@ -33,6 +33,9 @@ spec:
                 topologyKey: kubernetes.io/hostname
       nodeSelector:
         kubernetes.io/hostname: talos-cz9-9tb
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"
       containers:
         - name: tautulli
           image: lscr.io/linuxserver/tautulli:v2.16.0-ls202

@@ -17,6 +17,9 @@ spec:
     spec:
       nodeSelector:
         kubernetes.io/hostname: talos-cz9-9tb
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"
       containers:
         - name: qbittorrent
           image: lscr.io/linuxserver/qbittorrent:5.1.4-r1-ls431

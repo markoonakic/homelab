@@ -33,6 +33,9 @@ spec:
                 topologyKey: kubernetes.io/hostname
       nodeSelector:
         kubernetes.io/hostname: talos-cz9-9tb
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"
       containers:
         - name: bazarr
           image: lscr.io/linuxserver/bazarr:1.5.3

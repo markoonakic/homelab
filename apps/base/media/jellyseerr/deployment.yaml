@@ -33,6 +33,9 @@ spec:
                 topologyKey: kubernetes.io/hostname
       nodeSelector:
         kubernetes.io/hostname: talos-cz9-9tb
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"
       containers:
         - name: jellyseerr
           image: fallenbagel/jellyseerr:2.7.3
