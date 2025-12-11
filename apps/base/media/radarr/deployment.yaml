@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: prowlarr
+  name: radarr
   namespace: media
   labels:
-    app: prowlarr
-    app.kubernetes.io/name: prowlarr
+    app: radarr
+    app.kubernetes.io/name: radarr
     app.kubernetes.io/part-of: media-stack
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: prowlarr
+      app: radarr
   template:
     metadata:
       labels:
-        app: prowlarr
-        app.kubernetes.io/name: prowlarr
+        app: radarr
+        app.kubernetes.io/name: radarr
         app.kubernetes.io/part-of: media-stack
     spec:
       affinity:
@@ -32,11 +32,11 @@ spec:
                         - media-stack
                 topologyKey: kubernetes.io/hostname
       containers:
-        - name: prowlarr
-          image: lscr.io/linuxserver/prowlarr:2.3.0
+        - name: radarr
+          image: lscr.io/linuxserver/radarr:6.0.4
           ports:
             - name: http
-              containerPort: 9696
+              containerPort: 7878
               protocol: TCP
           env:
             - name: PUID
@@ -48,14 +48,19 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
+            - name: data
+              mountPath: /data
           resources:
             requests:
-              cpu: 50m
+              cpu: 100m
               memory: 256Mi
             limits:
               cpu: 500m
-              memory: 512Mi
+              memory: 1Gi
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: prowlarr-config
+            claimName: radarr-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: media-data

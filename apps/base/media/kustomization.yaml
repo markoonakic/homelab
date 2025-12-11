@@ -6,3 +6,5 @@ resources:
   - pvc-data.yaml
   - ./qbittorrent
   - ./prowlarr
+  - ./sonarr
+  - ./radarr

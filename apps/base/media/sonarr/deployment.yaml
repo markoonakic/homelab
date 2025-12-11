@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: prowlarr
+  name: sonarr
   namespace: media
   labels:
-    app: prowlarr
-    app.kubernetes.io/name: prowlarr
+    app: sonarr
+    app.kubernetes.io/name: sonarr
     app.kubernetes.io/part-of: media-stack
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: prowlarr
+      app: sonarr
   template:
     metadata:
       labels:
-        app: prowlarr
-        app.kubernetes.io/name: prowlarr
+        app: sonarr
+        app.kubernetes.io/name: sonarr
         app.kubernetes.io/part-of: media-stack
     spec:
       affinity:
@@ -32,11 +32,11 @@ spec:
                         - media-stack
                 topologyKey: kubernetes.io/hostname
       containers:
-        - name: prowlarr
-          image: lscr.io/linuxserver/prowlarr:2.3.0
+        - name: sonarr
+          image: lscr.io/linuxserver/sonarr:4.0.16
           ports:
             - name: http
-              containerPort: 9696
+              containerPort: 8989
               protocol: TCP
           env:
             - name: PUID
@@ -48,14 +48,19 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
+            - name: data
+              mountPath: /data
           resources:
             requests:
-              cpu: 50m
+              cpu: 100m
               memory: 256Mi
             limits:
               cpu: 500m
-              memory: 512Mi
+              memory: 1Gi
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: prowlarr-config
+            claimName: sonarr-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: media-data
