@@ -31,6 +31,8 @@ spec:
                       values:
                         - media-stack
                 topologyKey: kubernetes.io/hostname
+      nodeSelector:
+        kubernetes.io/hostname: talos-cz9-9tb
       containers:
         - name: prowlarr
           image: lscr.io/linuxserver/prowlarr:2.3.0

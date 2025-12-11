@@ -31,6 +31,8 @@ spec:
                       values:
                         - media-stack
                 topologyKey: kubernetes.io/hostname
+      nodeSelector:
+        kubernetes.io/hostname: talos-cz9-9tb
       containers:
         - name: sonarr
           image: lscr.io/linuxserver/sonarr:4.0.16
