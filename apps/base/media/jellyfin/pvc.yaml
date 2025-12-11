@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jellyfin-config
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi  # Metadata, thumbnails, transcodes (~5-15Gi). Alt: 10Gi (no transcoding), 50Gi (large library)
+  storageClassName: longhorn
