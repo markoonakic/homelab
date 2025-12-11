@@ -293,7 +293,7 @@ pages:
                 cache: 1m
                 title: Monitoring
                 sites:
-                  - title: Tautulli
-                    url: https://tautulli.sarma.love
-                    check-url: http://tautulli.media.svc.cluster.local:8181
+                  - title: Jellystat
+                    url: https://jellystat.sarma.love
+                    check-url: http://jellystat.media.svc.cluster.local:3000
                     icon: mdi:chart-line

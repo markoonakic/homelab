@@ -11,4 +11,5 @@ resources:
   - ./bazarr
   - ./jellyfin
   - ./jellyseerr
+  - ./jellystat
   - ./tautulli
