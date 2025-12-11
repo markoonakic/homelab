@@ -522,3 +522,1211 @@ pages:
                   <p class="size-sm">Check URL and authentication bypass settings.</p>
                 </div>
               {{ end }}
+
+          # Sonarr Upcoming TV Shows
+          - type: custom-api
+            title: Sonarr Upcoming
+            title-url: https://sonarr.sarma.love
+            cache: 30m
+            options:
+              service: sonarr
+              type: upcoming
+              size: medium
+              collapse-after: 5
+              show-grabbed: false
+              interval: 7
+              api-base-url: http://sonarr.media.svc.cluster.local:8989
+              key: ${SONARR_API_KEY}
+              url: https://sonarr.sarma.love
+            template: |
+              {{ $collapseAfter := .Options.IntOr "collapse-after" 5 }}
+              {{ $showGrabbed := .Options.BoolOr "show-grabbed" false }}
+              {{ $sortTime := .Options.StringOr "sort-time" "desc" }}
+              {{ $coverProxy := .Options.StringOr "cover-proxy" "" }}
+              {{ $size := .Options.StringOr "size" "medium" }}
+              {{ $service := .Options.StringOr "service" "" }}
+              {{ $type := .Options.StringOr "type" "" }}
+              {{ $intervalH := .Options.IntOr "interval" 0 | mul 24 }}
+
+              {{ $now := now | formatTime "2006-01-02T15:04:05" }}
+              {{ $posInterval := (offsetNow (printf "+%dh" $intervalH)) | formatTime "2006-01-02T15:04:05" }}
+              {{ $negInterval := (offsetNow (printf "-%dh" $intervalH)) | formatTime "2006-01-02T15:04:05" }}
+
+              {{ $apiBaseUrl := .Options.StringOr "api-base-url" "" }}
+              {{ $key := .Options.StringOr "key" "" }}
+              {{ $url := .Options.StringOr "url" $apiBaseUrl }}
+
+              {{ if or (and (ne $service "sonarr") (ne $service "radarr") (ne $service "lidarr"))
+                       (and (ne $type "upcoming") (ne $type "recent") (ne $type "missing"))
+                       (eq $apiBaseUrl "") (eq $key "") (eq $url "") }}
+                <div class="widget-error-header">
+                    <div class="color-negative size-h3">ERROR</div>
+                    <svg class="widget-error-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"></path>
+                    </svg>
+                  </div>
+                  <p class="break-all">
+                    Some options are not set or malformed
+                      <table style="border-spacing: 1rem;">
+                        <tr><td>service</td><td>{{ $service }}</td><td>must be sonarr, radarr, or lidarr</td></tr>
+                        <tr><td>type</td><td>{{ $type }}</td><td>must be upcoming, recent, or missing</td></tr>
+                        <tr><td>api-base-url</td><td>{{ $apiBaseUrl }}</td><td>should include http(s):// and port if needed</td></tr>
+                        <tr><td>key</td><td>{{ $key }}</td><td></td></tr>
+                      </table>
+                  </p>
+              {{ else }}
+                {{ $requestUrl := "" }}
+
+                {{ if eq $service "sonarr" }}
+                  {{ if eq $type "recent" }}
+                    {{ $requestUrl = printf "%s/api/v3/history/since?includeSeries=true&includeEpisode=true&eventType=grabbed&date=%s" $apiBaseUrl $negInterval }}
+                  {{ else if eq $type "missing" }}
+                    {{ $requestUrl = printf "%s/api/v3/wanted/missing?page=1&pageSize=50&includeSeries=true" $apiBaseUrl }}
+                  {{ else if eq $type "upcoming" }}
+                    {{ $requestUrl = printf "%s/api/v3/calendar?includeSeries=true&start=%s&end=%s" $apiBaseUrl $now $posInterval }}
+                  {{ end }}
+                {{ end }}
+
+                {{ $data := newRequest $requestUrl
+                  | withHeader "Accept" "application/json"
+                  | withHeader "X-Api-Key" $key
+                  | getResponse }}
+
+                <ul class="list list-gap-14 collapsible-container single-line-titles" data-collapse-after="{{ $collapseAfter }}">
+                  {{ $array := "" }}
+                  {{ $sortByField := "" }}
+                  {{ $itemDisplayed := false }}
+                  {{ $itemDate := "" }}
+                  {{ $isAvailable := false }}
+
+                  {{ if eq $type "missing" }}
+                    {{ $array = "records" }}
+                    {{ if eq $service "sonarr" }}
+                      {{ $sortByField = "airDateUtc" }}
+                    {{ else }}
+                      {{ $sortByField = "releaseDate" }}
+                    {{ end }}
+                  {{ else if eq $type "recent" }}
+                    {{ $sortByField = "date" }}
+                  {{ else }}
+                    {{ if eq $service "sonarr" }}
+                      {{ $sortByField = "airDateUtc" }}
+                    {{ else }}
+                      {{ $sortByField = "releaseDate" }}
+                    {{ end }}
+                  {{ end }}
+
+                  {{ range $data.JSON.Array $array | sortByTime $sortByField "rfc3339" $sortTime }}
+
+                    {{ if eq $service "sonarr" }}
+                      {{ $itemDate = .String "airDateUtc" | parseTime "RFC3339" }}
+                      {{ $itemDate = $itemDate.In now.Location | formatTime "2006-01-02T15:04:05" }}
+                      {{ $isAvailable = true }}
+                    {{ end }}
+
+                    {{ if or (eq $type "upcoming") (eq $type "recent") (and (or (and (gt $itemDate $negInterval) ((lt $itemDate $now ))) (eq $intervalH 0))  $isAvailable) }}
+                      {{ $itemDisplayed = true }}
+                      {{ $title := "" }}
+                      {{ $subtitle := "" }}
+                      {{ $coverUrl := "" }}
+                      {{ $status := "" }}
+                      {{ $coverBase := "" }}
+                      {{ $height := "" }}
+                      {{ $width := "" }}
+                      {{ $popoverTitle := "" }}
+                      {{ $popoverSubtitle := "" }}
+                      {{ $popoverSummary := "" }}
+                      {{ $summary := "" }}
+                      {{ $link := "" }}
+                      {{ $grabbed := false }}
+                      {{ $date := now }}
+                      {{ $datetype := "" }}
+                      {{ $seString := "" }}
+                      {{ $genres := "" }}
+                      {{ $buttonJustify := "left" }}
+
+
+                      {{ if eq $service "sonarr" }}
+                        {{ $series := "" }}
+                        {{ if eq $coverProxy "" }}
+                          {{ $coverBase = printf "%s/api/v3/mediacover" $apiBaseUrl }}
+                          {{ $coverUrl = printf "%s/%s/poster-500.jpg?apikey=%s" $coverBase (.String "seriesId") $key }}
+                        {{ else }}
+                          {{ $coverBase = $coverProxy }}
+                          {{ $coverUrl = printf "%s/%s/poster-500.jpg" $coverBase (.String "seriesId") }}
+                        {{ end }}
+                        {{ $title = .String "series.title" }}
+                        {{ $link = printf "%s/series/%s#" $url (.String "series.titleSlug") }}
+                        {{ $series = .Get "series" }}
+                        {{ $genres = $series.Get "genres" }}
+
+                        {{ if eq $type "recent" }}
+                          {{ $date = .String "date" | parseLocalTime "RFC3339" }}
+                          {{ $date = $date.In now.Location }}
+                          {{ $subtitle = .String "episode.title" }}
+                          {{ $summary = .String "episode.overview" }}
+                          {{ $seString = printf "S%02dE%02d" (.Int "episode.seasonNumber") (.Int "episode.episodeNumber") }}
+                          {{ $datetype = "Downloaded" }}
+
+                          {{ if $showGrabbed }}
+                            {{ $popoverTitle = .String "episode.title" }}
+                            {{ $popoverSubtitle = $seString }}
+                            {{ $popoverSummary = .String "episode.overview" }}
+                            {{ if .Bool "episode.hasFile" }}
+                              {{ $grabbed = true }}
+                            {{ end }}
+                          {{ else }}
+                            {{ $popoverTitle = .String "series.title" }}
+                            {{ $popoverSummary = .String "series.overview" }}
+                          {{ end }}
+
+                        {{ else if eq $type "missing" }}
+                          {{ $date = .String "airDateUtc" | parseLocalTime "RFC3339" }}
+                          {{ $date = $date.In now.Location }}
+                          {{ $subtitle = .String "title" }}
+                          {{ $summary = .String "overview" }}
+                          {{ $seString = printf "S%02dE%02d" (.Int "seasonNumber") (.Int "episodeNumber") }}
+                          {{ $datetype = "Aired" }}
+                          {{ if $showGrabbed }}
+                            {{ $popoverTitle = .String "title" }}
+                            {{ $popoverSubtitle = $seString }}
+                            {{ $popoverSummary = .String "overview" }}
+                            {{ if .Bool "episode.hasFile" }}
+                              {{ $grabbed = true }}
+                            {{ end }}
+                          {{ else }}
+                            {{ $popoverTitle = .String "series.title" }}
+                            {{ $popoverSummary = .String "series.overview" }}
+                          {{ end }}
+                        {{ else if eq $type "upcoming" }}
+                          {{ $date = .String "airDateUtc" | parseLocalTime "RFC3339" }}
+                          {{ $date = $date.In now.Location }}
+                          {{ $subtitle = .String "title" }}
+                          {{ $summary = .String "overview" }}
+                          {{ $seString = printf "S%02dE%02d" (.Int "seasonNumber") (.Int "episodeNumber") }}
+                          {{ $datetype = "Airs" }}
+                          {{ if $showGrabbed }}
+                            {{ $popoverTitle = .String "title" }}
+                            {{ $popoverSubtitle = $seString }}
+                            {{ $popoverSummary = .String "overview" }}
+                            {{ if .Bool "hasFile" }}
+                              {{ $grabbed = true }}
+                            {{ end }}
+                          {{ else }}
+                            {{ $popoverTitle = .String "series.title" }}
+                            {{ $popoverSummary = .String "series.overview" }}
+                          {{ end }}
+                        {{ end }}
+                      {{ end }}
+
+                      {{ if eq $size "small" }}
+                        {{ $buttonJustify = "right" }}
+                        {{ $height = "9rem" }}
+                        {{ if eq $service "lidarr" }}
+                          {{ $width = "9rem" }}
+                        {{ else }}
+                          {{ $width = "6rem" }}
+                        {{ end }}
+                      {{ else if eq $size "medium" }}
+                        {{ $height = "12rem" }}
+                        {{ if eq $service "lidarr" }}
+                          {{ $width = "12rem" }}
+                        {{ else }}
+                          {{ $width = "8rem" }}
+                        {{ end }}
+                      {{ else if eq $size "large" }}
+                        {{ $height = "15rem" }}
+                        {{ if eq $service "lidarr" }}
+                          {{ $width = "15rem" }}
+                        {{ else }}
+                          {{ $width = "10rem" }}
+                        {{ end }}
+                      {{ else if eq $size "huge" }}
+                        {{ $height = "18rem" }}
+                        {{ if eq $service "lidarr" }}
+                          {{ $width = "18rem" }}
+                        {{ else }}
+                          {{ $width = "12rem" }}
+                        {{ end }}
+                      {{ end }}
+
+                      <li style="position: relative;">
+                        <div class="flex gap-10 items-start thumbnail-container thumbnail-parent">
+                          <div>
+                            <div data-popover-type="html" data-popover-position="above" data-popover-show-delay="500" style="width: {{ $width  }}; height: {{ $height }}; align-content: center;">
+                              <div data-popover-html>
+                                <div style="margin: 5px;">
+                                  <strong class="size-h4 color-primary" title="{{ $popoverTitle }}">{{ $popoverTitle }}</strong>
+                                  <div class="size-h4 text-truncate text-very-compact color-subdue" title="{{ $popoverSubtitle }}">{{ $popoverSubtitle }}</div>
+                                  <p class="margin-top-20" style="overflow-y: auto; text-align: justify; max-height: 20rem;">
+                                    {{ if ne $popoverSummary "" }}
+                                      {{ $popoverSummary }}
+                                    {{ else }}
+                                      TBA
+                                    {{ end }}
+                                  </p>
+                                 {{ if gt (len ($genres.Array "")) 0 }}
+                                  <ul class="attachments margin-top-20">
+                                    {{ range $genres.Array "" }}
+                                      <li>{{ .String "" }}</li>
+                                    {{ end }}
+                                  </ul>
+                                  {{ end }}
+                                </div>
+                              </div>
+                              <img class="thumbnail" src="{{ $coverUrl }}" alt="Cover for {{ .String "title" }}" loading="lazy" style="width: 100%; height: 100%; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); object-fit: cover; border-radius: 0.5rem;">
+                            </div>
+                        </div>
+                          <div class="shrink min-width-0" style="height: 9rem; position: relative; padding-top: 5px; padding-right: 5px;">
+                            <strong class="size-h4 block text-truncate color-primary" title="{{ $title }}">{{ $title }}</strong>
+                            <div class="text-truncate text-very-compact" title="{{ $subtitle }}">{{ $subtitle }}</div>
+                            <div class="text-very-compact text-truncate">
+                              {{ if eq $service "sonarr" }}
+                                <div>{{ $seString }} - {{ $datetype }} {{ $date.Format "1/2 03:04PM" }}</div>
+                              {{ else }}
+                                <span>{{ $datetype }} {{ $date.Format "1/2" }}</span>
+                              {{ end }}
+                            </div>
+
+                            {{ if $showGrabbed }}
+                              {{ if eq $buttonJustify "right" }}
+                                </div>
+                                <a href="{{ $link }}" class="bookmarks-link size-h4 color-primary" target="_blank" rel="noreferrer"
+                                  style="position: absolute; bottom: 1rem; right: 1rem;
+                                    {{ if $grabbed }} color: var(--color-positive); border: 1px solid var(--color-positive); {{ else }} color: var(--color-negative); border: 1px solid var(--color-negative); {{ end }}
+                                    font-weight: bold; padding: 2px 5px; border-radius: 3px; display: inline-block; margin-top: 5px; text-decoration: none;">
+                                {{ if $grabbed }}Grabbed{{ else }}Missing{{ end }}
+                                </a>
+                              {{ else }}
+                                <a href="{{ $link }}" class="bookmarks-link size-h4 color-primary" target="_blank" rel="noreferrer"
+                                  style="{{ if $grabbed }} color: var(--color-positive); border: 1px solid var(--color-positive); {{ else }} color: var(--color-negative); border: 1px solid var(--color-negative); {{ end }}
+                                    font-weight: bold; padding: 2px 5px; border-radius: 3px; display: inline-block; margin-top: 5px; text-decoration: none;">
+                                {{ if $grabbed }}Grabbed{{ else }}Missing{{ end }}
+                                </a>
+                                </div>
+                              {{ end }}
+                            {{ else }}
+                              <div class="{{ if eq $size "small" }}text-truncate{{ if eq $service "radarr" }} margin-top-5{{ end }}{{ else }}text-truncate-2-lines margin-top-5{{ end }}">
+                                {{ $summary }}
+                              </div>
+                            {{ end }}
+                        </div>
+                      </li>
+                    {{ end }}
+                  {{ end }}
+                  {{ if not $itemDisplayed }}
+                    <li>No items found.</li>
+                  {{ end }}
+                </ul>
+              {{ end }}
+
+          # Radarr Upcoming Movies
+          - type: custom-api
+            title: Radarr Upcoming
+            title-url: https://radarr.sarma.love
+            cache: 30m
+            options:
+              service: radarr
+              type: upcoming
+              size: medium
+              collapse-after: 5
+              show-grabbed: false
+              interval: 14
+              api-base-url: http://radarr.media.svc.cluster.local:7878
+              key: ${RADARR_API_KEY}
+              url: https://radarr.sarma.love
+            template: |
+              {{ $collapseAfter := .Options.IntOr "collapse-after" 5 }}
+              {{ $showGrabbed := .Options.BoolOr "show-grabbed" false }}
+              {{ $sortTime := .Options.StringOr "sort-time" "desc" }}
+              {{ $coverProxy := .Options.StringOr "cover-proxy" "" }}
+              {{ $size := .Options.StringOr "size" "medium" }}
+              {{ $service := .Options.StringOr "service" "" }}
+              {{ $type := .Options.StringOr "type" "" }}
+              {{ $intervalH := .Options.IntOr "interval" 0 | mul 24 }}
+
+              {{ $now := now | formatTime "2006-01-02T15:04:05" }}
+              {{ $posInterval := (offsetNow (printf "+%dh" $intervalH)) | formatTime "2006-01-02T15:04:05" }}
+              {{ $negInterval := (offsetNow (printf "-%dh" $intervalH)) | formatTime "2006-01-02T15:04:05" }}
+
+              {{ $apiBaseUrl := .Options.StringOr "api-base-url" "" }}
+              {{ $key := .Options.StringOr "key" "" }}
+              {{ $url := .Options.StringOr "url" $apiBaseUrl }}
+
+              {{ if or (and (ne $service "sonarr") (ne $service "radarr") (ne $service "lidarr"))
+                       (and (ne $type "upcoming") (ne $type "recent") (ne $type "missing"))
+                       (eq $apiBaseUrl "") (eq $key "") (eq $url "") }}
+                <div class="widget-error-header">
+                    <div class="color-negative size-h3">ERROR</div>
+                    <svg class="widget-error-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"></path>
+                    </svg>
+                  </div>
+                  <p class="break-all">
+                    Some options are not set or malformed
+                      <table style="border-spacing: 1rem;">
+                        <tr><td>service</td><td>{{ $service }}</td><td>must be sonarr, radarr, or lidarr</td></tr>
+                        <tr><td>type</td><td>{{ $type }}</td><td>must be upcoming, recent, or missing</td></tr>
+                        <tr><td>api-base-url</td><td>{{ $apiBaseUrl }}</td><td>should include http(s):// and port if needed</td></tr>
+                        <tr><td>key</td><td>{{ $key }}</td><td></td></tr>
+                      </table>
+                  </p>
+              {{ else }}
+                {{ $requestUrl := "" }}
+
+                {{ if eq $service "radarr" }}
+                  {{ if eq $type "recent" }}
+                    {{ $requestUrl = printf "%s/api/v3/history/since?includeMovie=true&eventType=grabbed&date=%s" $apiBaseUrl $negInterval }}
+                  {{ else if eq $type "missing" }}
+                    {{ $requestUrl = printf "%s/api/v3/wanted/missing?page=1&pageSize=50" $apiBaseUrl }}
+                  {{ else if eq $type "upcoming" }}
+                    {{ $requestUrl = printf "%s/api/v3/calendar?start=%s&end=%s" $apiBaseUrl $now $posInterval }}
+                  {{ end }}
+                {{ end }}
+
+                {{ $data := newRequest $requestUrl
+                  | withHeader "Accept" "application/json"
+                  | withHeader "X-Api-Key" $key
+                  | getResponse }}
+
+                <ul class="list list-gap-14 collapsible-container single-line-titles" data-collapse-after="{{ $collapseAfter }}">
+                  {{ $array := "" }}
+                  {{ $sortByField := "" }}
+                  {{ $itemDisplayed := false }}
+                  {{ $itemDate := "" }}
+                  {{ $isAvailable := false }}
+
+                  {{ if eq $type "missing" }}
+                    {{ $array = "records" }}
+                    {{ $sortByField = "releaseDate" }}
+                  {{ else if eq $type "recent" }}
+                    {{ $sortByField = "date" }}
+                  {{ else }}
+                    {{ $sortByField = "releaseDate" }}
+                  {{ end }}
+
+                  {{ range $data.JSON.Array $array | sortByTime $sortByField "rfc3339" $sortTime }}
+
+                    {{ if eq $service "radarr"}}
+                      {{ $isAvailable = .Bool "isAvailable" }}
+                      {{ $itemDate = .String "releaseDate" }}
+                    {{ end }}
+
+                    {{ if or (eq $type "upcoming") (eq $type "recent") (and (or (and (gt $itemDate $negInterval) ((lt $itemDate $now ))) (eq $intervalH 0))  $isAvailable) }}
+                      {{ $itemDisplayed = true }}
+                      {{ $title := "" }}
+                      {{ $subtitle := "" }}
+                      {{ $coverUrl := "" }}
+                      {{ $status := "" }}
+                      {{ $coverBase := "" }}
+                      {{ $height := "" }}
+                      {{ $width := "" }}
+                      {{ $popoverTitle := "" }}
+                      {{ $popoverSubtitle := "" }}
+                      {{ $popoverSummary := "" }}
+                      {{ $summary := "" }}
+                      {{ $link := "" }}
+                      {{ $grabbed := false }}
+                      {{ $date := now }}
+                      {{ $datetype := "" }}
+                      {{ $seString := "" }}
+                      {{ $genres := "" }}
+                      {{ $buttonJustify := "left" }}
+
+
+                      {{ if eq $service "radarr" }}
+                        {{ $movie := "" }}
+                        {{ $status = .String "status" }}
+                        {{ if eq $coverProxy "" }}
+                          {{ $coverBase = printf "%s/api/v3/mediacover" $apiBaseUrl }}
+                        {{ else }}
+                          {{ $coverBase = $coverProxy }}
+                        {{ end }}
+                        {{ if eq $status "announced"}}
+                          {{ if ne (.String "inCinemas") "" }}
+                            {{ $date = (.String "inCinemas" | parseTime "RFC3339") }}
+                            {{ $datetype = "In Cinemas" }}
+                          {{ else }}
+                            {{ $date = (.String "releaseDate" | parseTime "RFC3339") }}
+                            {{ $datetype = "Releases" }}
+                          {{ end }}
+                        {{ else if eq $status "inCinemas"}}
+                          {{ $date = (.String "releaseDate" | parseTime "RFC3339") }}
+                          {{ $datetype = "Releases" }}
+                        {{ else if eq $status "released"}}
+                          {{ $date = (.String "releaseDate" | parseTime "RFC3339") }}
+                          {{ $datetype = "Released" }}
+                        {{ end }}
+
+                        {{ if eq $type "recent" }}
+                          {{ if eq $coverProxy "" }}
+                            {{ $coverUrl = printf "%s/%s/poster-500.jpg?apikey=%s" $coverBase (.String "movie.id") $key }}
+                          {{ else }}
+                            {{ $coverUrl = printf "%s/%s/poster-500.jpg" $coverBase (.String "movie.id") }}
+                          {{ end }}
+                          {{ $datetype = "Downloaded" }}
+                          {{ $date = (.String "date" | parseTime "RFC3339") }}
+                          {{ $title = .String "movie.title" }}
+                          {{ $subtitle = "" }}
+                          {{ $summary = .String "movie.overview" }}
+                          {{ $popoverTitle = .String "movie.title" }}
+                          {{ $popoverSubtitle = printf "%s %s" $datetype ($date | formatTime "1/2/2006") }}
+                          {{ $popoverSummary = .String "movie.overview" }}
+                          {{ $link = printf "%s/movie/%s#" $url (.String "movie.titleSlug") }}
+                          {{ $movie = .Get "movie" }}
+                          {{ $genres = $movie.Get "genres" }}
+                          {{ if and $showGrabbed (gt (.Int "movie.movieFileId") 0) }}
+                            {{ $grabbed = true }}
+                          {{ end }}
+                        {{ else }}
+                          {{ if eq $coverProxy "" }}
+                            {{ $coverUrl = printf "%s/%s/poster-500.jpg?apikey=%s" $coverBase (.String "id") $key }}
+                          {{ else }}
+                            {{ $coverUrl = printf "%s/%s/poster-500.jpg" $coverBase (.String "id") }}
+                          {{ end }}
+                          {{ $title = .String "title" }}
+                          {{ $subtitle = "" }}
+                          {{ $summary = .String "overview" }}
+                          {{ $link = printf "%s/movie/%s#" $url (.String "titleSlug") }}
+                          {{ $popoverTitle = .String "title" }}
+                          {{ $popoverSubtitle = printf "%s %s" $datetype ($date | formatTime "1/2/2006") }}
+                          {{ $popoverSummary = .String "overview" }}
+                          {{ $genres = .Get "genres" }}
+                          {{ if eq $type "missing" }}
+                            {{ if and $showGrabbed (.Bool "movie.hasFile") }}
+                              {{ $grabbed = true }}
+                            {{ end }}
+                          {{ else }}
+                            {{ if and $showGrabbed (.Bool "hasFile") }}
+                              {{ $grabbed = true }}
+                            {{ end }}
+                          {{ end }}
+                        {{ end }}
+                      {{ end }}
+
+                      {{ if eq $size "small" }}
+                        {{ $buttonJustify = "right" }}
+                        {{ $height = "9rem" }}
+                        {{ $width = "6rem" }}
+                      {{ else if eq $size "medium" }}
+                        {{ $height = "12rem" }}
+                        {{ $width = "8rem" }}
+                      {{ else if eq $size "large" }}
+                        {{ $height = "15rem" }}
+                        {{ $width = "10rem" }}
+                      {{ else if eq $size "huge" }}
+                        {{ $height = "18rem" }}
+                        {{ $width = "12rem" }}
+                      {{ end }}
+
+                      <li style="position: relative;">
+                        <div class="flex gap-10 items-start thumbnail-container thumbnail-parent">
+                          <div>
+                            <div data-popover-type="html" data-popover-position="above" data-popover-show-delay="500" style="width: {{ $width  }}; height: {{ $height }}; align-content: center;">
+                              <div data-popover-html>
+                                <div style="margin: 5px;">
+                                  <strong class="size-h4 color-primary" title="{{ $popoverTitle }}">{{ $popoverTitle }}</strong>
+                                  <div class="size-h4 text-truncate text-very-compact color-subdue" title="{{ $popoverSubtitle }}">{{ $popoverSubtitle }}</div>
+                                  <p class="margin-top-20" style="overflow-y: auto; text-align: justify; max-height: 20rem;">
+                                    {{ if ne $popoverSummary "" }}
+                                      {{ $popoverSummary }}
+                                    {{ else }}
+                                      TBA
+                                    {{ end }}
+                                  </p>
+                                 {{ if gt (len ($genres.Array "")) 0 }}
+                                  <ul class="attachments margin-top-20">
+                                    {{ range $genres.Array "" }}
+                                      <li>{{ .String "" }}</li>
+                                    {{ end }}
+                                  </ul>
+                                  {{ end }}
+                                </div>
+                              </div>
+                              <img class="thumbnail" src="{{ $coverUrl }}" alt="Cover for {{ .String "title" }}" loading="lazy" style="width: 100%; height: 100%; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); object-fit: cover; border-radius: 0.5rem;">
+                            </div>
+                        </div>
+                          <div class="shrink min-width-0" style="height: 9rem; position: relative; padding-top: 5px; padding-right: 5px;">
+                            <strong class="size-h4 block text-truncate color-primary" title="{{ $title }}">{{ $title }}</strong>
+                            <div class="text-truncate text-very-compact" title="{{ $subtitle }}">{{ $subtitle }}</div>
+                            <div class="text-very-compact text-truncate">
+                              <span>{{ $datetype }} {{ $date.Format "1/2" }}</span>
+                            </div>
+
+                            {{ if $showGrabbed }}
+                              {{ if eq $buttonJustify "right" }}
+                                </div>
+                                <a href="{{ $link }}" class="bookmarks-link size-h4 color-primary" target="_blank" rel="noreferrer"
+                                  style="position: absolute; bottom: 1rem; right: 1rem;
+                                    {{ if $grabbed }} color: var(--color-positive); border: 1px solid var(--color-positive); {{ else }} color: var(--color-negative); border: 1px solid var(--color-negative); {{ end }}
+                                    font-weight: bold; padding: 2px 5px; border-radius: 3px; display: inline-block; margin-top: 5px; text-decoration: none;">
+                                {{ if $grabbed }}Grabbed{{ else }}Missing{{ end }}
+                                </a>
+                              {{ else }}
+                                <a href="{{ $link }}" class="bookmarks-link size-h4 color-primary" target="_blank" rel="noreferrer"
+                                  style="{{ if $grabbed }} color: var(--color-positive); border: 1px solid var(--color-positive); {{ else }} color: var(--color-negative); border: 1px solid var(--color-negative); {{ end }}
+                                    font-weight: bold; padding: 2px 5px; border-radius: 3px; display: inline-block; margin-top: 5px; text-decoration: none;">
+                                {{ if $grabbed }}Grabbed{{ else }}Missing{{ end }}
+                                </a>
+                                </div>
+                              {{ end }}
+                            {{ else }}
+                              <div class="{{ if eq $size "small" }}text-truncate{{ if eq $service "radarr" }} margin-top-5{{ end }}{{ else }}text-truncate-2-lines margin-top-5{{ end }}">
+                                {{ $summary }}
+                              </div>
+                            {{ end }}
+                        </div>
+                      </li>
+                    {{ end }}
+                  {{ end }}
+                  {{ if not $itemDisplayed }}
+                    <li>No items found.</li>
+                  {{ end }}
+                </ul>
+              {{ end }}
+
+          # Jellyfin Latest Additions
+          - type: custom-api
+            title: Latest Shows
+            title-url: https://jellyfin.sarma.love
+            frameless: true
+            cache: 5m
+            options:
+              base-url: http://jellyfin.media.svc.cluster.local:8096
+              api-key: ${JELLYFIN_API_KEY}
+              user-name: ${JELLYFIN_USERNAME}
+              library-name: "Shows"
+              mode: "latest"
+              item-count: "10"
+              small-column: false
+              show-thumbnail: true
+              thumbnail-aspect-ratio: "default"
+            template: |
+              {{/* Required config options */}}
+              {{ $baseURL := .Options.StringOr "base-url" "" }}
+              {{ $apiKey := .Options.StringOr "api-key" "" }}
+              {{ $userName := .Options.StringOr "user-name" "" }}
+              {{ $libraryName := .Options.StringOr "library-name" "" }}
+              {{ $mode := .Options.StringOr "mode" "latest" }}
+              {{ $itemCount := .Options.StringOr "item-count" "10" }}
+              {{ $mediaTypes := .Options.StringOr "media-types" "Movie,Episode,MusicAlbum" }}
+              {{ $thumbAspectRatio := .Options.StringOr "thumbnail-aspect-ratio" "" }}
+              {{ $isSmallColumn:= .Options.BoolOr "small-column" false }}
+              {{ $showThumbnail := .Options.BoolOr "show-thumbnail" false }}
+              {{ $showProgressBar := .Options.BoolOr "progress-bar" true }}
+
+              {{ define "errorMsg" }}
+                <div class="widget-error-header">
+                  <div class="color-negative size-h3">ERROR</div>
+                  <svg class="widget-error-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"></path>
+                  </svg>
+                </div>
+                <p class="break-all">{{ . }}</p>
+              {{ end }}
+
+              {{ if or (eq $baseURL "") (eq $apiKey "") (eq $userName "") (eq $mode "") (and (eq $mode "latest") (eq $libraryName "")) }}
+                {{ template "errorMsg" "Some required options are not set." }}
+              {{ else }}
+                {{ $userID := "" }}
+                {{ $usersCall := newRequest (print $baseURL "/Users")
+                    | withParameter "api_key" $apiKey
+                    | withHeader "Accept" "application/json"
+                    | getResponse }}
+
+                {{ range $i, $user := $usersCall.JSON.Array "" }}
+                  {{ if eq ($user.String "Name") $userName }}
+                    {{ $userID = $user.String "Id" }}
+                    {{ break }}
+                  {{ end }}
+                {{ end }}
+                {{ if eq $userID "" }}
+                  {{ template "errorMsg" (printf "User '%s' not found." $userName) }}
+                {{ else }}
+                  {{ $items := "" }}
+                  {{ $libraryID := "" }}
+                  {{ $userViewsCall := newRequest (print $baseURL "/UserViews")
+                      | withParameter "api_key" $apiKey
+                      | withParameter "userId" $userID
+                      | withHeader "Accept" "application/json"
+                      | getResponse }}
+
+                  {{ range $i, $item := $userViewsCall.JSON.Array "Items" }}
+                    {{ if eq ($item.String "Name") $libraryName }}
+                      {{ $libraryID = $item.String "Id" }}
+                      {{ break }}
+                    {{ end }}
+                  {{ end }}
+
+                  {{ if eq $libraryID "" }}
+                    {{ template "errorMsg" (printf "Library '%s' not found." $libraryName) }}
+                  {{ else }}
+                    {{ $latestCall := newRequest (print $baseURL "/Users/" $userID "/Items/Latest")
+                        | withParameter "api_key" $apiKey
+                        | withParameter "Limit" $itemCount
+                        | withParameter "ParentId" $libraryID
+                        | withParameter "IncludeItemTypes" $mediaTypes
+                        | withParameter "GroupItems" "true"
+                        | withHeader "Accept" "application/json"
+                        | getResponse }}
+                    {{ $items = $latestCall.JSON.Array "" }}
+
+                    {{ if eq (len $items) 0 }}
+                      <p>No items found, start streaming something!</p>
+                    {{ else }}
+                      <div class="carousel-container show-right-cutoff">
+                        <div class="cards-horizontal carousel-items-container">
+                          {{ range $n, $item := $items }}
+                            {{ $mediaType := $item.String "Type" }}
+                            {{ $title := $item.String "Name" }}
+                            {{ $itemID := $item.String "Id" }}
+                            {{ $seriesTitle := "" }}
+                            {{ $artist := "" }}
+                            {{ $seriesID := "" }}
+                            {{ $season := "" }}
+                            {{ $episode := "" }}
+                            {{ $playPercentage := "" }}
+                            {{ $unwatchedEpisodeCount := "" }}
+
+                            {{ if eq $mediaType "Series" }}
+                              {{ $unwatchedEpisodeCount = $item.Int "UserData.UnplayedItemCount" }}
+                            {{ else if eq $mediaType "Episode" }}
+                              {{ $unwatchedEpisodeCount = 1 }}
+                              {{ $seriesTitle = $item.String "SeriesName" }}
+                              {{ $seriesID = $item.String "SeriesId" }}
+                              {{ $season = $item.Int "ParentIndexNumber" }}
+                              {{ $episode = $item.Int "IndexNumber" }}
+                              {{ if $item.Exists "UserData.PlayedPercentage" }}
+                                {{ $playPercentage = $item.String "UserData.PlayedPercentage" }}
+                              {{ end }}
+                              {{ $itemID = $seriesID }}
+                              {{ $title = $seriesTitle }}
+                            {{ else if eq $mediaType "MusicAlbum" }}
+                              {{ $artist = $item.String "AlbumArtist" }}
+                            {{ end }}
+
+                            {{ $linkURL := print $baseURL "/web/#/details?id=" $itemID }}
+                            {{ $thumbURL := concat $baseURL "/Items/" $itemID "/Images/Primary?api_key=" $apiKey }}
+
+                            <a class="card widget-content-frame" href="{{ $linkURL | safeURL }}">
+                              {{ if $showThumbnail }}
+                                <div style="position: relative;">
+                                  <img src="{{ $thumbURL | safeURL }}"
+                                    alt="{{ $title }} thumbnail"
+                                    loading="lazy"
+                                    class="media-server-thumbnail shrink-0"
+                                    style="
+                                      object-fit: fill;
+                                      border-radius: var(--border-radius) var(--border-radius) 0 0;
+                                      width: 100%;
+                                      display: block;
+                                      {{ if eq $thumbAspectRatio "square" }}aspect-ratio: 1;
+                                      {{ else if eq $thumbAspectRatio "portrait" }}aspect-ratio: 2/3;
+                                      {{ else if eq $thumbAspectRatio "landscape" }}aspect-ratio: 16/9;
+                                      {{ else }}aspect-ratio: initial;
+                                      {{ end }}
+                                    "
+                                  />
+                                  {{ if and ($showProgressBar) (not (eq $playPercentage "")) }}
+                                    <div style="
+                                      position: absolute;
+                                      bottom: 8px;
+                                      left: 8px;
+                                      right: 8px;
+                                      height: 6px;
+                                      border-radius: var(--border-radius);
+                                      overflow: hidden;
+                                      background-color: rgba(255, 255, 255, 0.2);
+                                    ">
+                                      <div style="
+                                        width: {{ print $playPercentage "%" }};
+                                        height: 100%;
+                                        border-radius: var(--border-radius) 0 0 var(--border-radius);
+                                        background-color: var(--color-primary)
+                                      "></div>
+                                    </div>
+                                  {{ end }}
+                                </div>
+                              {{ end }}
+
+                              <div class="grow padding-inline-widget margin-top-10 margin-bottom-10">
+                                <ul class="flex flex-column justify-evenly margin-bottom-3 {{ if $isSmallColumn }}size-h6{{ end }}" style="height: 100%;">
+                                  {{ if or (eq $mediaType "Series") (eq $mediaType "Episode") }}
+                                    <ul class="list-horizontal-text flex-nowrap">
+                                      <li class="color-primary shrink-0">{{ $unwatchedEpisodeCount }}</li>
+                                      <li class="text-truncate">{{ $title }}</li>
+                                    </ul>
+                                  {{ else if eq $mediaType "MusicAlbum" }}
+                                    <ul class="list-horizontal-text flex-nowrap">
+                                      <li class="color-primary text-truncate">{{ $artist }}</li>
+                                      <li class="text-truncate">{{ $title }}</li>
+                                    </ul>
+                                  {{ else }}
+                                    <li class="text-truncate">{{ $title }}</li>
+                                  {{ end }}
+                                </ul>
+                              </div>
+                            </a>
+                          {{ end }}
+                        </div>
+                      </div>
+                    {{ end }}
+                  {{ end }}
+                {{ end }}
+              {{ end }}
+
+          # Jellyfin Watch History
+          - type: custom-api
+            title: Watch History
+            title-url: https://jellyfin.sarma.love
+            frameless: true
+            cache: 5m
+            options:
+              media-server: "jellyfin"
+              base-url: http://jellyfin.media.svc.cluster.local:8096
+              api-key: ${JELLYFIN_API_KEY}
+              user-name: ${JELLYFIN_USERNAME}
+              history-length: "10"
+              small-column: false
+              compact: true
+              show-thumbnail: true
+              thumbnail-aspect-ratio: "default"
+              show-user: false
+              time-absolute: false
+              time-format: "Jan 02 15:04"
+            template: |
+              {{ $mediaServer := .Options.StringOr "media-server" "" }}
+              {{ $baseURL := .Options.StringOr "base-url" "" }}
+              {{ $apiKey := .Options.StringOr "api-key" "" }}
+              {{ $userName := .Options.StringOr "user-name" "" }}
+
+              {{ define "errorMsg" }}
+                <div class="widget-error-header">
+                  <div class="color-negative size-h3">ERROR</div>
+                  <svg class="widget-error-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"></path>
+                  </svg>
+                </div>
+                <p class="break-all">{{ . }}</p>
+              {{ end }}
+
+              {{ if or (eq $mediaServer "") (eq $baseURL "") (eq $apiKey "") (and (eq $mediaServer "jellyfin") (eq $userName "")) }}
+                {{ template "errorMsg" "Some required options are not set" }}
+              {{ else }}
+
+              {{ $historyLength := .Options.StringOr "history-length" "10" }}
+              {{ $mediaTypes := .Options.StringOr "media-types" "Movie,Episode,Audio" }}
+              {{ $isSmallColumn := .Options.BoolOr "small-column" false }}
+              {{ $isCompact := .Options.BoolOr "compact" true }}
+              {{ $showThumbnail := .Options.BoolOr "show-thumbnail" false }}
+              {{ $thumbAspectRatio := .Options.StringOr "thumbnail-aspect-ratio" "" }}
+              {{ $showUser := .Options.BoolOr "show-user" true }}
+              {{ $timeAbsolute := .Options.BoolOr "time-absolute" false }}
+              {{ $timeFormat := .Options.StringOr "time-format" "Jan 02 15:04" }}
+
+              {{ $userID := "" }}
+              {{ $historyRequestURL := "" }}
+              {{ $usersRequestURL := "" }}
+              {{ $historyCall := "" }}
+              {{ $usersCall := "" }}
+              {{ $history := "" }}
+
+              {{ $usersRequestURL = concat $baseURL "/Users" }}
+              {{ $usersCall = newRequest $usersRequestURL
+                | withParameter "api_key" $apiKey
+                | withHeader "Accept" "application/json"
+                | getResponse }}
+
+              {{ $usersList := $usersCall.JSON.Array "" }}
+              {{ range $i, $user := $usersList }}
+                {{ if eq ($user.String "Name") $userName }}
+                  {{ $userID = $user.String "Id" }}
+                  {{ break }}
+                {{ end }}
+              {{ end }}
+              {{ if eq $userID "" }}
+                {{ template "errorMsg" (concat "User '" $userName "' not found.") }}
+              {{ end }}
+
+              {{ $historyRequestURL = concat $baseURL "/Users/" $userID "/Items" }}
+              {{ $historyCall = newRequest $historyRequestURL
+                | withParameter "api_key" $apiKey
+                | withParameter "Limit" $historyLength
+                | withParameter "IncludeItemTypes" $mediaTypes
+                | withParameter "Recursive" "true"
+                | withParameter "isPlayed" "true"
+                | withParameter "sortBy" "DatePlayed"
+                | withParameter "sortOrder" "Descending"
+                | withParameter "Fields" "UserDataLastPlayedDate"
+                | withHeader "Accept" "application/json"
+                | getResponse }}
+
+              {{ $history = $historyCall.JSON.Array "Items" }}
+
+              {{ if and (eq $historyCall.Response.StatusCode 200) (eq (len $history) 0) }}
+                <p>Nothing has been played. Start streaming something!</p>
+              {{ else }}
+                <div class="carousel-container show-right-cutoff">
+                  <div class="cards-horizontal carousel-items-container">
+                    {{ range $n, $item := $history }}
+                      {{ $mediaType := $item.String "Type" }}
+                      {{ $isMovie := eq $mediaType "Movie" }}
+                      {{ $isShows := eq $mediaType "Episode" }}
+                      {{ $isMusic := eq $mediaType "Audio" }}
+                      {{ $title := $item.String "Name" }}
+                      {{ $showTitle := "" }}
+                      {{ $showSeason := "" }}
+                      {{ $showEpisode := "" }}
+                      {{ $artist := "" }}
+                      {{ $albumTitle := "" }}
+                      {{ $thumbURL := "" }}
+                      {{ $playedAt := "" }}
+
+                      {{ if $isShows }}
+                        {{ $showTitle = $item.String "SeriesName" }}
+                        {{ $showSeason = $item.String "ParentIndexNumber" }}
+                        {{ $showEpisode = $item.String "IndexNumber" }}
+                      {{ else if $isMusic }}
+                        {{ $artist = $item.String "AlbumArtist" }}
+                        {{ $albumTitle = $item.String "Album" }}
+                      {{ end }}
+
+                      {{ $thumbID := $item.String "Id" }}
+                      {{ if $isShows }}
+                        {{ $thumbID  = $item.String "SeasonId" }}
+                      {{ end }}
+                      {{ $thumbURL = concat $baseURL "/Items/" $thumbID "/Images/Primary?api_key=" $apiKey }}
+
+                      {{ $time := $item.String "UserData.LastPlayedDate" }}
+                      {{ if $timeAbsolute }}
+                        {{ $playedAt = $time | parseLocalTime "rfc3339" | formatTime $timeFormat }}
+                      {{ else }}
+                        {{ $playedAt = $time | parseRelativeTime "rfc3339" }}
+                      {{ end }}
+
+                      {{ $showInfoFormat := concat "Season " $showSeason " Episode " $showEpisode}}
+                      {{ if $isCompact }}
+                        {{ $showInfoFormat = concat "S" $showSeason "E" $showEpisode}}
+                      {{ end }}
+
+                      <div class="card widget-content-frame">
+                        {{ if $showThumbnail }}
+                          <img src="{{ $thumbURL | safeURL }}"
+                            alt="{{ $title }} thumbnail"
+                            loading="lazy"
+                            class="media-server-thumbnail shrink-0"
+                            style="
+                              object-fit: cover;
+                              border-radius: var(--border-radius) var(--border-radius) 0 0;
+                              {{ if eq $thumbAspectRatio "square" }}
+                                aspect-ratio: 1;
+                              {{ else if eq $thumbAspectRatio "portrait" }}
+                                aspect-ratio: 3/4;
+                              {{ else if eq $thumbAspectRatio "landscape" }}
+                                aspect-ratio: 4/3;
+                              {{ else }}
+                                aspect-ratio: initial;
+                              {{ end }}
+                            "
+                          />
+                        {{ end }}
+
+                        <div class="grow padding-inline-widget margin-top-10 margin-bottom-10">
+                          <ul class="flex flex-column justify-evenly margin-bottom-3 {{if $isSmallColumn}}size-h6{{end}}" style="height: 100%;">
+                            {{ if $isCompact }}
+                              <ul class="list-horizontal-text flex-nowrap">
+                                {{ if $showUser }}
+                                  <li class="color-primary text-truncate">{{ $userName }}</li>
+                                {{ end }}
+
+                                {{ if $timeAbsolute }}
+                                  <li class="text-truncate">{{ $playedAt }}</li>
+                                {{ else }}
+                                  <li class="shrink-0">
+                                    <span {{ $playedAt }}></span>
+                                    {{ if not $showUser }}
+                                      <span> ago</span>
+                                    {{ end }}
+                                  </li>
+                                {{ end }}
+                              </ul>
+
+                              {{ if $isShows }}
+                                <ul class="list-horizontal-text flex-nowrap">
+                                  <li class="text-truncate">{{ $showInfoFormat }}</li>
+                                  <li class="text-truncate">{{ $showTitle }}</li>
+                                </ul>
+                              {{ else if $isMusic }}
+                                <ul class="list-horizontal-text flex-nowrap">
+                                  <li class="text-truncate">{{ $artist }}</li>
+                                  <li class="text-truncate">{{ $albumTitle }}</li>
+                                </ul>
+                              {{ end }}
+
+                              <li class="text-truncate">{{ $title }}</li>
+                            {{ else }}
+                              {{ if $showUser }}
+                                <li class="color-primary text-truncate">{{ $userName }}</li>
+                              {{ end }}
+
+                              {{ if $timeAbsolute }}
+                                <li class="text-truncate">{{ $playedAt }}</li>
+                              {{ else }}
+                                <li class="text-truncate">
+                                  <span {{ $playedAt }}></span>
+                                  <span> ago</span>
+                                </li>
+                              {{ end }}
+
+                              {{ if $isShows }}
+                                <li class="text-truncate">{{ $showTitle }}</li>
+                                <li class="text-truncate">{{ $showInfoFormat }}</li>
+                              {{ else if $isMusic }}
+                                <li class="text-truncate">{{ $artist }}</li>
+                                <li class="text-truncate">{{ $albumTitle }}</li>
+                              {{ end }}
+
+                              <li class="text-truncate">{{ $title }}</li>
+                            {{ end }}
+                          </ul>
+                        </div>
+                      </div>
+                    {{ end }}
+                  </div>
+                </div>
+              {{ end }}
+              {{ end }}
+
+          # Jellyfin Currently Playing
+          - type: custom-api
+            title: Currently Playing
+            title-url: https://jellyfin.sarma.love
+            cache: 10s
+            options:
+              media-server: "jellyfin"
+              base-url: http://jellyfin.media.svc.cluster.local:8096
+              api-key: ${JELLYFIN_API_KEY}
+              small-column: false
+              compact: true
+              play-state: "indicator"
+              show-thumbnail: true
+              full-thumbnail: false
+              show-paused: false
+              show-progress-bar: true
+              show-progress-info: true
+              time-format: "15:04"
+            template: |
+              {{ $mediaServer := .Options.StringOr "media-server" "" }}
+              {{ $baseURL := .Options.StringOr "base-url" "" }}
+              {{ $apiKey := .Options.StringOr "api-key" "" }}
+
+              {{ define "errorMsg" }}
+                <div class="widget-error-header">
+                  <div class="color-negative size-h3">ERROR</div>
+                  <svg class="widget-error-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"></path>
+                  </svg>
+                </div>
+                <p class="break-all">{{ . }}</p>
+              {{ end }}
+
+              {{ if or (eq $mediaServer "") (eq $baseURL "") (eq $apiKey "") }}
+                {{ template "errorMsg" "Some required options are not set" }}
+              {{ else }}
+
+              {{ $isSmallColumn := .Options.BoolOr "small-column" false }}
+              {{ $isCompact := .Options.BoolOr "compact" true }}
+              {{ $playState := .Options.StringOr "play-state" "indicator" }}
+              {{ $showThumbnail := .Options.BoolOr "show-thumbnail" false }}
+              {{ $fullThumbnail := .Options.BoolOr "full-thumbnail" false }}
+              {{ $showPaused := .Options.BoolOr "show-paused" false }}
+              {{ $showProgressBar := .Options.BoolOr "show-progress-bar" false }}
+              {{ $showProgressInfo := .Options.BoolOr "show-progress-info" true }}
+              {{ $timeFormat := .Options.StringOr "time-format" "15:04" }}
+
+              {{ $sessionsRequestURL := concat $baseURL "/Sessions" }}
+              {{ $sessionsCall := newRequest $sessionsRequestURL
+                | withParameter "api_key" $apiKey
+                | withParameter "activeWithinSeconds" "30"
+                | withHeader "Accept" "application/json"
+                | getResponse }}
+
+              {{ $sessions := $sessionsCall.JSON.Array "" }}
+              {{ $activeSessions := len $sessions }}
+
+              {{ if and (eq $sessionsCall.Response.StatusCode 200) (eq $activeSessions 0) }}
+                <p>Nothing is playing right now.</p>
+              {{ else }}
+
+                <style>
+                  .media-server-session-container--grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                  }
+                  @media (max-width: 768px) {
+                    .media-server-session-container--grid {
+                      display: flex;
+                      flex-direction: column;
+                    }
+                  }
+                  .media-server-progress-container {
+                    height: 1rem;
+                    max-width: 32rem;
+                    border: 1px solid var(--color-text-base);
+                    border-radius: var(--border-radius);
+                    overflow: hidden;
+                  }
+                  .media-server-progress-bar {
+                    height: 100%;
+                    background: var(--color-primary);
+                    border-radius: 3px;
+                    transition: width 1s linear;
+                  }
+                  @keyframes progress-animation { to { width: 100%; } }
+                </style>
+
+                <div class="gap-10 {{ if $isSmallColumn }}flex flex-column{{ else }}media-server-session-container--grid{{ end }}">
+                {{ range $i, $session := $sessions }}
+                  {{ $isClient := $session.Bool "PlayState.CanSeek" }}
+                  {{ $isPlaying := and ($session.Exists "NowPlayingItem") (not ($session.Bool "PlayState.IsPaused")) }}
+                  {{ $state := "paused" }}
+                  {{ if $isPlaying }}
+                    {{ $state = "playing" }}
+                  {{ end }}
+
+                  {{ $userName := $session.String "UserName" }}
+                  {{ $mediaType := $session.String "NowPlayingItem.Type" }}
+                  {{ $isMovie := eq $mediaType "Movie" }}
+                  {{ $isShows := eq $mediaType "Episode" }}
+                  {{ $isMusic := eq $mediaType "Audio" }}
+
+                  {{ $title := $session.String "NowPlayingItem.Name" }}
+                  {{ $showTitle := $session.String "NowPlayingItem.SeriesName" }}
+                  {{ $showSeason := $session.String "NowPlayingItem.ParentIndexNumber" }}
+                  {{ $showEpisode := $session.String "NowPlayingItem.IndexNumber" }}
+                  {{ $artist := $session.String "NowPlayingItem.AlbumArtist" }}
+                  {{ $albumTitle := $session.String "NowPlayingItem.Album" }}
+
+                  {{ $thumbID := $session.String "NowPlayingItem.Id" }}
+                  {{ if $isShows }}
+                    {{ $thumbID = $session.String "NowPlayingItem.ParentId" }}
+                  {{ end }}
+                  {{ $thumbURL := concat $baseURL "/Items/" $thumbID "/Images/Primary?api_key=" $apiKey }}
+
+                  {{ $duration := $session.Float "NowPlayingItem.RunTimeTicks" }}
+                  {{ $offset := $session.Float "PlayState.PositionTicks" }}
+                  {{ $remainingSeconds := div (sub $duration $offset) 10000000 | toInt }}
+                  {{ $progress := mul 100 (div $offset $duration) | toInt }}
+                  {{ $now := now | formatTime "15:04:05" | parseLocalTime "15:04:05" }}
+                  {{ $endTime := $now.Add (duration (printf "%ds" $remainingSeconds)) | formatTime $timeFormat }}
+
+                  {{ $showInfoFormat := concat "Season " $showSeason " Episode " $showEpisode}}
+                  {{ if $isCompact }}
+                    {{ $showInfoFormat = concat "S" $showSeason "E" $showEpisode}}
+                  {{ end }}
+
+                  {{ if and $isClient (or $isPlaying $showPaused) }}
+                  <div class="card gap-5">
+                    <div class="flex items-center gap-10 size-h3">
+                      <span class="color-primary">{{ $userName }}</span>
+                      {{ if eq $playState "text" }}
+                        <span {{ if $isPlaying }}class="color-primary"{{ end }}>
+                          [{{ $state }}]
+                        </span>
+                      {{ else if eq $playState "indicator" }}
+                        <style>
+                          .media-server-indicator {
+                            height: .7rem;
+                            width: .7rem;
+                            border-radius: 100%;
+                            {{ if $isPlaying }}
+                              animation: pulse 5s infinite;
+                              background: var(--color-primary);
+                            {{ else }}
+                              background: var(--color-text-base-muted);
+                            {{ end }}
+                          }
+                          @keyframes pulse {
+                            0% { box-shadow: 0 0 0 0 var(--color-text-base); }
+                            40% { box-shadow: 0 0 0 4px transparent; }
+                            100% { box-shadow: 0 0 0 4px transparent; }
+                          }
+                        </style>
+                        <div class="media-server-indicator"></div>
+                      {{ end }}
+                    </div>
+
+                    <hr class="margin-bottom-5" />
+
+                    <div class="flex items-center gap-10" style="align-items: stretch;">
+                      {{ if $showThumbnail }}
+                        <img src="{{ $thumbURL | safeURL }}"
+                          alt="{{ $title }} thumbnail"
+                          class="shrink-0"
+                          loading="lazy"
+                          style="
+                            max-width: 7.5rem;
+                            border: 2px solid var(--color-primary);
+                            border-radius: var(--border-radius);
+                            object-fit: cover;
+                            {{ if and $isCompact (not $fullThumbnail) }} aspect-ratio: 1; {{ end }} "
+                        />
+                      {{ end }}
+                      <ul class="flex flex-column grow justify-evenly" style="width: 0;">
+                        {{ if $isCompact }}
+                          {{ if $isShows }}
+                            <ul class="list-horizontal-text flex-nowrap">
+                              <li class="shrink-0">{{ concat "S" $showSeason "E" $showEpisode }}</li>
+                              <li class="text-truncate">{{ $showTitle }}</li>
+                            </ul>
+                          {{ else if $isMusic }}
+                            <ul class="list-horizontal-text flex-nowrap">
+                              <li class="shrink-0">{{ $artist }}</li>
+                              <li class="text-truncate">{{ $albumTitle }}</li>
+                            </ul>
+                          {{ end }}
+                          <li class="text-truncate">{{ $title }}</li>
+                        {{ else }}
+                          {{ if $isShows }}
+                            <li>{{ $showTitle }}</li>
+                            <li>{{ concat "S" $showSeason "E" $showEpisode }}</li>
+                          {{ else if $isMusic }}
+                            <li>{{ $artist }}</li>
+                            <li>{{ $albumTitle }}</li>
+                          {{ end }}
+                          <li>{{ $title }}</li>
+                        {{ end }}
+
+                        <li>
+                          {{ if and $isPlaying $showProgressBar }}
+                            <div class="flex gap-10 items-center">
+                              <div class="media-server-progress-container grow">
+                                <div
+                                  class ="media-server-progress-bar"
+                                  data-progress="{{ $progress }}"
+                                  data-remaining="{{ $remainingSeconds }}"
+                                  style="
+                                    width: {{ $progress }}%;
+                                    animation: progress-animation {{ $remainingSeconds }}s linear forwards;"
+                                >
+                                </div>
+                              </div>
+                              {{ if $showProgressInfo }}
+                                <p>
+                                  {{ if and (not $isCompact) (not $isSmallColumn) }}
+                                    ends at 
+                                  {{ end }}
+                                  {{ $endTime }}
+                                </p>
+                              {{ end }}
+                            </div>
+                          {{ end }}
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  {{ end }}
+                {{ end }}
+              </div>
+              {{ end }}
+              {{ end }}
