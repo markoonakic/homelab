@@ -270,6 +270,8 @@ pages:
                     check-url: http://jellyseerr.media.svc.cluster.local:5055
                     icon: si:jellyfin
 
+      - size: full
+        widgets:
           - type: split-column
             widgets:
               - type: monitor
