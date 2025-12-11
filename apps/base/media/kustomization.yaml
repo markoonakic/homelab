@@ -10,3 +10,5 @@ resources:
   - ./radarr
   - ./bazarr
   - ./jellyfin
+  - ./jellyseerr
+  - ./tautulli
