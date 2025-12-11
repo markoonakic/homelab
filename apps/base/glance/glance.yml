@@ -407,40 +407,18 @@ pages:
               {{ if not $transfer }}
                 <div class="error">Unable to connect to qBittorrent</div>
               {{ else }}
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-                  <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="color: var(--color-text-base);">Download:</span>
-                    <span style="font-weight: bold; color: var(--color-positive);">
-                      {{ if gt ($transfer.Get "dl_info_speed").Int 0 }}
-                        {{ divf ($transfer.Get "dl_info_speed").Float 1048576 | printf "%.1f" }} MB/s
-                      {{ else }}
-                        0 MB/s
-                      {{ end }}
-                    </span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="color: var(--color-text-base);">Upload:</span>
-                    <span style="font-weight: bold; color: var(--color-warning);">
-                      {{ if gt ($transfer.Get "up_info_speed").Int 0 }}
-                        {{ divf ($transfer.Get "up_info_speed").Float 1048576 | printf "%.1f" }} MB/s
-                      {{ else }}
-                        0 MB/s
-                      {{ end }}
-                    </span>
-                  </div>
-                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; padding-top: 10px; border-top: 1px solid var(--color-separator);">
-                    <div style="text-align: center;">
-                      <div style="font-size: 1.5em; font-weight: bold; color: var(--color-primary);">
-                        {{ len $seeding.Array }}
-                      </div>
-                      <div style="font-size: 0.85em;">Seeding</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                  <div style="text-align: center;">
+                    <div style="font-size: 1.5em; font-weight: bold; color: var(--color-primary);">
+                      {{ len $seeding.Array }}
                     </div>
-                    <div style="text-align: center;">
-                      <div style="font-size: 1.5em; font-weight: bold; color: var(--color-positive);">
-                        {{ len $leeching.Array }}
-                      </div>
-                      <div style="font-size: 0.85em;">Downloading</div>
+                    <div style="font-size: 0.85em;">Seeding</div>
+                  </div>
+                  <div style="text-align: center;">
+                    <div style="font-size: 1.5em; font-weight: bold; color: var(--color-positive);">
+                      {{ len $leeching.Array }}
                     </div>
+                    <div style="font-size: 0.85em;">Downloading</div>
                   </div>
                 </div>
               {{ end }}
