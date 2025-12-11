@@ -17,7 +17,7 @@ spec:
     createNamespace: false
   values:
     defaultSettings:
-      defaultReplicaCount: 1
+      defaultReplicaCount: 2
     persistence:
-      defaultClassReplicaCount: 1
+      defaultClassReplicaCount: 2
       reclaimPolicy: Retain
