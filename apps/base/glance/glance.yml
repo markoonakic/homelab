@@ -302,89 +302,165 @@ pages:
 
           # Jellyfin Library Stats
           - type: custom-api
-            title: Library Stats
+            title: "Jellyfin Stats"
             title-url: https://jellyfin.sarma.love
             cache: 1h
-            url: http://jellyfin:8096/emby/Items/Counts
-            headers:
-              X-Emby-Token: ${JELLYFIN_API_KEY}
+            base-url: http://jellyfin:8096
+            options:
+              url: http://jellyfin:8096
+              key: ${JELLYFIN_API_KEY}
             template: |
-              {{ if not .JSON }}
-                <div class="error">Error: Unable to fetch library statistics</div>
-              {{ else }}
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                  <div style="text-align: center; padding: 10px;">
-                    <div style="font-size: 2em; font-weight: bold; color: var(--color-primary);">
-                      {{ .JSON.Get "MovieCount" }}
-                    </div>
-                    <div style="color: var(--color-text-base);">Movies</div>
-                  </div>
-                  <div style="text-align: center; padding: 10px;">
-                    <div style="font-size: 2em; font-weight: bold; color: var(--color-primary);">
-                      {{ .JSON.Get "SeriesCount" }}
-                    </div>
-                    <div style="color: var(--color-text-base);">Shows</div>
-                  </div>
-                  <div style="text-align: center; padding: 10px;">
-                    <div style="font-size: 2em; font-weight: bold; color: var(--color-primary);">
-                      {{ .JSON.Get "EpisodeCount" }}
-                    </div>
-                    <div style="color: var(--color-text-base);">Episodes</div>
-                  </div>
-                  <div style="text-align: center; padding: 10px;">
-                    <div style="font-size: 2em; font-weight: bold; color: var(--color-primary);">
-                      {{ .JSON.Get "SongCount" }}
-                    </div>
-                    <div style="color: var(--color-text-base);">Songs</div>
-                  </div>
-                </div>
-              {{ end }}
+              {{ $url := .Options.StringOr "url" "" }}
+              {{ $key := .Options.StringOr "key" "" }}
 
-          # Jellyseerr Request Stats
+              {{- if or (eq $url "") (eq $key "") -}}
+
+                <p>Error: The URL or API Key was not configured in the widget options.</p>
+
+              {{- else -}}
+
+                {{- $requestUrl := printf "%s/emby/Items/Counts?api_key=%s" $url $key -}}
+                {{- $jellyfinData := newRequest $requestUrl | getResponse -}}
+
+                {{- if eq $jellyfinData.Response.StatusCode 200 -}}
+                  <div class="flex flex-column gap-5">
+                    <div class="flex justify-between text-center">
+
+                      <div>
+                        <div class="color-highlight size-h3">{{ $jellyfinData.JSON.Int "MovieCount" | formatNumber }}</div>
+                        <div class="size-h5 uppercase">Movies</div>
+                      </div>
+
+                      <div>
+                        <div class="color-highlight size-h3">{{ $jellyfinData.JSON.Int "SeriesCount" | formatNumber }}</div>
+                        <div class="size-h5 uppercase">TV Shows</div>
+                      </div>
+
+                      <div>
+                        <div class="color-highlight size-h3">{{ $jellyfinData.JSON.Int "EpisodeCount" | formatNumber }}</div>
+                        <div class="size-h5 uppercase">Episodes</div>
+                      </div>
+
+                      <div>
+                        <div class="color-highlight size-h3">{{ $jellyfinData.JSON.Int "SongCount" | formatNumber }}</div>
+                        <div class="size-h5 uppercase">Songs</div>
+                      </div>
+
+                    </div>
+                  </div>
+                {{- else -}}
+                  <p>Failed: {{ $jellyfinData.Response.Status }}</p>
+                {{- end -}}
+              {{- end -}}
+
+          # Jellyseerr Request Stats (Overseerr-compatible)
           - type: custom-api
-            title: Media Requests
-            title-url: https://jellyseerr.sarma.love
-            cache: 1h
+            title: Jellyseerr Requests
+            title-url: https://jellyseerr.sarma.love/requests
             url: http://jellyseerr:5055/api/v1/request/count
+            cache: 1h
+            options:
+              small-column: false
+              compact: true
             headers:
-              accept: application/json
-              X-Api-Key: ${JELLYSEERR_API_KEY}
+              accept: "application/json"
+              x-api-key: ${JELLYSEERR_API_KEY}
             template: |
-              {{ if not .JSON }}
-                <div class="error">Unable to fetch request statistics</div>
-              {{ else }}
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
-                  <div style="padding: 8px; text-align: center;">
-                    <div style="font-size: 1.5em; font-weight: bold; color: var(--color-warning);">
-                      {{ .JSON.Get "pending" }}
+              {{ $isSmallColumn := .Options.BoolOr "small-column" false }}
+              {{ $isCompact := .Options.BoolOr "compact" false }}
+
+              {{ if eq .Response.StatusCode 200 }}
+                {{ if $isSmallColumn }}
+                  <ul class="list list-gap-10 collapsible-container" data-collapse-after="3">
+                    <li class="flex items-start gap-10">
+                      <div class="flex-1 size-h3 {{ if $isCompact }}size-h5{{ end }}">Total</div>
+                      <div class="flex-1 color-highlight shrink-0 text-right size-h3 {{ if $isCompact }}size-h5{{ end }}">
+                        {{ .JSON.Int "total" | formatNumber }}
+                      </div>
+                    </li>
+                    <li class="flex items-start gap-10">
+                      <div class="flex-1 size-h3 {{ if $isCompact }}size-h5{{ end }}">Movies</div>
+                      <div class="flex-1 color-highlight shrink-0 text-right size-h3 {{ if $isCompact }}size-h5{{ end }}">
+                        {{ .JSON.Int "movie" | formatNumber }}
+                      </div>
+                    </li>
+                    <li class="flex items-start gap-10">
+                      <div class="flex-1 size-h3 {{ if $isCompact }}size-h5{{ end }}">TV Series</div>
+                      <div class="flex-1 color-highlight shrink-0 text-right size-h3 {{ if $isCompact }}size-h5{{ end }}">
+                        {{ .JSON.Int "tv" | formatNumber }}
+                      </div>
+                    </li>
+                    <li class="flex items-start gap-10">
+                      <div class="flex-1 size-h3 {{ if $isCompact }}size-h5{{ end }}">Pending</div>
+                      <div class="flex-1 color-highlight shrink-0 text-right size-h3 {{ if $isCompact }}size-h5{{ end }}">
+                        {{ .JSON.Int "pending" | formatNumber }}
+                      </div>
+                    </li>
+                    <li class="flex items-start gap-10">
+                      <div class="flex-1 size-h3 {{ if $isCompact }}size-h5{{ end }}">Approved</div>
+                      <div class="flex-1 color-highlight shrink-0 text-right size-h3 {{ if $isCompact }}size-h5{{ end }}">
+                        {{ .JSON.Int "approved" | formatNumber }}
+                      </div>
+                    </li>
+                    <li class="flex items-start gap-10">
+                      <div class="flex-1 size-h3 {{ if $isCompact }}size-h5{{ end }}">Declined</div>
+                      <div class="flex-1 color-highlight shrink-0 text-right size-h3 {{ if $isCompact }}size-h5{{ end }}">
+                        {{ .JSON.Int "declined" | formatNumber }}
+                      </div>
+                    </li>
+                    <li class="flex items-start gap-10">
+                      <div class="flex-1 size-h3 {{ if $isCompact }}size-h5{{ end }}">Processing</div>
+                      <div class="flex-1 color-highlight shrink-0 text-right size-h3 {{ if $isCompact }}size-h5{{ end }}">
+                        {{ .JSON.Int "processing" | formatNumber }}
+                      </div>
+                    </li>
+                    <li class="flex items-start gap-10">
+                      <div class="flex-1 size-h3 {{ if $isCompact }}size-h5{{ end }}">Available</div>
+                      <div class="flex-1 color-highlight shrink-0 text-right size-h3 {{ if $isCompact }}size-h5{{ end }}">
+                        {{ .JSON.Int "available" | formatNumber }}
+                      </div>
+                    </li>
+                  </ul>
+                {{ else }}
+                  <div class="flex justify-evenly text-center">
+                    <div>
+                        <div class="color-highlight size-h1 {{ if $isCompact }}size-h3{{ end }}">{{ .JSON.Int "total" | formatNumber }}</div>
+                        <div class="size-h3 {{ if $isCompact }}size-h5{{ end }}">Total</div>
                     </div>
-                    <div style="font-size: 0.85em;">Pending</div>
-                  </div>
-                  <div style="padding: 8px; text-align: center;">
-                    <div style="font-size: 1.5em; font-weight: bold; color: var(--color-positive);">
-                      {{ .JSON.Get "approved" }}
+                    <div>
+                        <div class="color-highlight size-h1 {{ if $isCompact }}size-h3{{ end }}">{{ .JSON.Int "movie" | formatNumber }}</div>
+                        <div class="size-h3 {{ if $isCompact }}size-h5{{ end }}">Movies</div>
                     </div>
-                    <div style="font-size: 0.85em;">Approved</div>
-                  </div>
-                  <div style="padding: 8px; text-align: center;">
-                    <div style="font-size: 1.5em; font-weight: bold; color: var(--color-primary);">
-                      {{ .JSON.Get "processing" }}
+                    <div>
+                        <div class="color-highlight size-h1 {{ if $isCompact }}size-h3{{ end }}">{{ .JSON.Int "tv" | formatNumber }}</div>
+                        <div class="size-h3 {{ if $isCompact }}size-h5{{ end }}">TV Series</div>
                     </div>
-                    <div style="font-size: 0.85em;">Processing</div>
-                  </div>
-                  <div style="padding: 8px; text-align: center;">
-                    <div style="font-size: 1.5em; font-weight: bold; color: var(--color-text-highlight);">
-                      {{ .JSON.Get "available" }}
+                  {{ if not $isCompact }}
                     </div>
-                    <div style="font-size: 0.85em;">Available</div>
+                    <div class="flex justify-evenly text-center margin-top-20">
+                  {{ end }}
+                    <div>
+                        <div class="color-highlight size-h1 {{ if $isCompact }}size-h3{{ end }}">{{ .JSON.Int "pending" | formatNumber }}</div>
+                        <div class="size-h3 {{ if $isCompact }}size-h5{{ end }}">Pending</div>
+                    </div>
+                    <div>
+                        <div class="color-highlight size-h1 {{ if $isCompact }}size-h3{{ end }}">{{ .JSON.Int "approved" | formatNumber }}</div>
+                        <div class="size-h3 {{ if $isCompact }}size-h5{{ end }}">Approved</div>
+                    </div>
+                    <div>
+                        <div class="color-highlight size-h1 {{ if $isCompact }}size-h3{{ end }}">{{ .JSON.Int "declined" | formatNumber }}</div>
+                        <div class="size-h3 {{ if $isCompact }}size-h5{{ end }}">Declined</div>
+                    </div>
+                    <div>
+                        <div class="color-highlight size-h1 {{ if $isCompact }}size-h3{{ end }}">{{ .JSON.Int "processing" | formatNumber }}</div>
+                        <div class="size-h3 {{ if $isCompact }}size-h5{{ end }}">Processing</div>
+                    </div>
+                    <div>
+                        <div class="color-highlight size-h1 {{ if $isCompact }}size-h3{{ end }}">{{ .JSON.Int "available" | formatNumber }}</div>
+                        <div class="size-h3 {{ if $isCompact }}size-h5{{ end }}">Available</div>
+                    </div>
                   </div>
-                </div>
-                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--color-separator); text-align: center;">
-                  <span style="font-size: 0.9em; color: var(--color-text-base);">
-                    Total: {{ .JSON.Get "total" }} requests
-                    ({{ .JSON.Get "movie" }} movies, {{ .JSON.Get "tv" }} shows)
-                  </span>
-                </div>
+                {{ end }}
               {{ end }}
 
           # qBittorrent Stats
@@ -392,33 +468,57 @@ pages:
             title: qBittorrent
             title-url: https://qbittorrent.sarma.love
             cache: 10s
+            options:
+              view: "basic"
+              mode: "default"
             subrequests:
               transfer:
                 url: http://qbittorrent:8080/api/v2/transfer/info
               seeding:
-                url: http://qbittorrent:8080/api/v2/torrents/info?filter=seeding
+                url: http://qbittorrent:8080/api/v2/torrents/info
+                parameters:
+                  filter: seeding
               leeching:
-                url: http://qbittorrent:8080/api/v2/torrents/info?filter=downloading
+                url: http://qbittorrent:8080/api/v2/torrents/info
+                parameters:
+                  filter: downloading
             template: |
-              {{ $transfer := .Subrequests.transfer.JSON }}
-              {{ $seeding := .Subrequests.seeding.JSON }}
-              {{ $leeching := .Subrequests.leeching.JSON }}
+              {{ $transfer := .Subrequest "transfer" }}
+              {{ $seeding := .Subrequest "seeding" }}
+              {{ $leeching := .Subrequest "leeching" }}
 
-              {{ if not $transfer }}
-                <div class="error">Unable to connect to qBittorrent</div>
+              {{ if and (eq $transfer.Response.StatusCode 200) (eq $seeding.Response.StatusCode 200) (eq $leeching.Response.StatusCode 200) }}
+                {{ $isDetailed := eq (.Options.StringOr "view" "basic") "detailed" }}
+                {{ $mode := .Options.StringOr "mode" "default" }}
+
+                <!-- Basic View -->
+                <div class="flex justify-between text-center">
+                  <div>
+                    {{ $dlSpeed := $transfer.JSON.Float "dl_info_speed" }}
+                    <div class="color-highlight size-h3">{{ printf "%.1f MB/s" (div $dlSpeed 1000000.0) }}</div>
+                    <div class="size-h6">DOWNLOADING</div>
+                  </div>
+                  {{ if eq $mode "upload" }}
+                  <div>
+                    {{ $ulSpeed := $transfer.JSON.Float "up_info_speed" }}
+                    <div class="color-highlight size-h3">{{ printf "%.1f MB/s" (div $ulSpeed 1000000.0) }}</div>
+                    <div class="size-h6">UPLOADING</div>
+                  </div>
+                  {{ end }}
+                  <div>
+                    <div class="color-highlight size-h3">{{ len ($seeding.JSON.Array "") }}</div>
+                    <div class="size-h6">SEEDING</div>
+                  </div>
+                  {{ if eq $mode "default" }}
+                  <div>
+                    <div class="color-highlight size-h3">{{ len ($leeching.JSON.Array "") }}</div>
+                    <div class="size-h6">LEECHING</div>
+                  </div>
+                  {{ end }}
+                </div>
               {{ else }}
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                  <div style="text-align: center;">
-                    <div style="font-size: 1.5em; font-weight: bold; color: var(--color-primary);">
-                      {{ len $seeding.Array }}
-                    </div>
-                    <div style="font-size: 0.85em;">Seeding</div>
-                  </div>
-                  <div style="text-align: center;">
-                    <div style="font-size: 1.5em; font-weight: bold; color: var(--color-positive);">
-                      {{ len $leeching.Array }}
-                    </div>
-                    <div style="font-size: 0.85em;">Downloading</div>
-                  </div>
+                <div class="color-negative text-center">
+                  <p>Error fetching qBittorrent data.</p>
+                  <p class="size-sm">Check URL and authentication bypass settings.</p>
                 </div>
               {{ end }}
