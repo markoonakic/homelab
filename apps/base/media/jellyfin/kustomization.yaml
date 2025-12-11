@@ -6,3 +6,4 @@ resources:
   - pvc.yaml
   - helmrelease.yaml
   - servicemonitor.yaml
+  - ingress.yaml
