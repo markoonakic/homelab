@@ -34,6 +34,32 @@ spec:
                 secretKeyRef:
                   name: glance-api-keys
                   key: HEADSCALE_API_KEY
+            # Media stack API keys
+            - name: SONARR_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: glance-api-keys
+                  key: SONARR_API_KEY
+            - name: RADARR_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: glance-api-keys
+                  key: RADARR_API_KEY
+            - name: JELLYFIN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: glance-api-keys
+                  key: JELLYFIN_API_KEY
+            - name: JELLYFIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: glance-api-keys
+                  key: JELLYFIN_USERNAME
+            - name: JELLYSEERR_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: glance-api-keys
+                  key: JELLYSEERR_API_KEY
           volumeMounts:
             - name: config
               mountPath: /app/config/glance.yml
