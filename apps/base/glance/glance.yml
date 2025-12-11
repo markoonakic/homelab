@@ -300,66 +300,6 @@ pages:
                     check-url: http://jellystat.media.svc.cluster.local:3000
                     icon: mdi:chart-line
 
-          # Sonarr Upcoming TV Shows
-          - type: custom-api
-            title: Upcoming TV Shows
-            title-url: https://sonarr.sarma.love
-            cache: 1h
-            options:
-              service: sonarr
-              type: upcoming
-              api-base-url: http://sonarr:8989
-              key: ${SONARR_API_KEY}
-              url: https://sonarr.sarma.love
-              size: medium
-              collapse-after: 5
-              interval: 7
-
-          # Radarr Upcoming Movies
-          - type: custom-api
-            title: Upcoming Movies
-            title-url: https://radarr.sarma.love
-            cache: 1h
-            options:
-              service: radarr
-              type: upcoming
-              api-base-url: http://radarr:7878
-              key: ${RADARR_API_KEY}
-              url: https://radarr.sarma.love
-              size: medium
-              collapse-after: 5
-              interval: 14
-
-          # Jellyfin Currently Playing
-          - type: custom-api
-            title: Currently Playing
-            title-url: https://jellyfin.sarma.love
-            cache: 30s
-            options:
-              media-server: jellyfin
-              base-url: http://jellyfin:8096
-              api-key: ${JELLYFIN_API_KEY}
-              compact: true
-              play-state: indicator
-              show-progress-bar: true
-              show-progress-info: true
-              time-format: "15:04"
-
-          # Jellyfin Latest Additions
-          - type: custom-api
-            title: Latest Additions
-            title-url: https://jellyfin.sarma.love
-            cache: 30m
-            options:
-              base-url: http://jellyfin:8096
-              api-key: ${JELLYFIN_API_KEY}
-              user-name: ${JELLYFIN_USERNAME}
-              mode: latest
-              item-count: "15"
-              media-types: Movie,Episode
-              show-thumbnail: false
-              progress-bar: false
-
           # Jellyfin Library Stats
           - type: custom-api
             title: Library Stats
@@ -399,23 +339,6 @@ pages:
                   </div>
                 </div>
               {{ end }}
-
-          # Jellyfin Watch History
-          - type: custom-api
-            title: Watch History
-            title-url: https://jellyfin.sarma.love
-            cache: 5m
-            options:
-              media-server: jellyfin
-              base-url: http://jellyfin:8096
-              api-key: ${JELLYFIN_API_KEY}
-              user-name: ${JELLYFIN_USERNAME}
-              history-length: "10"
-              media-types: Movie,Episode
-              compact: true
-              show-thumbnail: false
-              show-user: false
-              time-absolute: false
 
           # Jellyseerr Request Stats
           - type: custom-api
