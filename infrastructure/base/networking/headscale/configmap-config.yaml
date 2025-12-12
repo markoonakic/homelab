@@ -1,123 +1,22 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: headscale-config
-  namespace: headscale
+    name: headscale-config
+    namespace: headscale
 data:
-  config.yaml: |
-    server_url: https://headscale.sarma.love
-    listen_addr: 0.0.0.0:8080
-    metrics_listen_addr: 0.0.0.0:9090
-    grpc_listen_addr: 0.0.0.0:50443
-    grpc_allow_insecure: false
-
-    # DERP configuration for relay
-    derp:
-      server:
-        enabled: true
-        region_id: 999
-        region_code: "sarma"
-        region_name: "sarma"
-        stun_listen_addr: "0.0.0.0:3478"
-        private_key_path: /var/lib/headscale/derp_server_private.key
-      urls: []
-      paths: []
-      auto_update_enabled: false
-      update_frequency: 24h
-
-    # Database
-    database:
-      type: sqlite
-      debug: false
-      sqlite:
-        path: /var/lib/headscale/db.sqlite
-        write_ahead_log: true
-
-    # Private key will be auto-generated on first run
-    private_key_path: /var/lib/headscale/private.key
-    noise:
-      private_key_path: /var/lib/headscale/noise_private.key
-
-    # IP prefixes for VPN clients
-    prefixes:
-      v4: 100.64.0.0/10
-      v6: fd7a:115c:a1e0::/48
-      allocation: sequential
-
-    # DNS configuration
-    dns:
-      magic_dns: true
-      base_domain: internal.sarma.love
-      nameservers:
-        global:
-          - 1.1.1.1
-          - 8.8.8.8
-      extra_records:
-        - name: "headplane.sarma.love"
-          type: "A"
-          value: "192.168.0.220"
-        - name: "grafana.sarma.love"
-          type: "A"
-          value: "192.168.0.220"
-        - name: "prometheus.sarma.love"
-          type: "A"
-          value: "192.168.0.220"
-        - name: "vault.sarma.love"
-          type: "A"
-          value: "192.168.0.220"
-        - name: "glance.sarma.love"
-          type: "A"
-          value: "192.168.0.220"
-        - name: "linkding.sarma.love"
-          type: "A"
-          value: "192.168.0.220"
-        - name: "longhorn.sarma.love"
-          type: "A"
-          value: "192.168.0.220"
-        - name: "traefik.sarma.love"
-          type: "A"
-          value: "192.168.0.220"
-        - name: "qbittorrent.sarma.love"
-          type: "A"
-          value: "192.168.0.220"
-        - name: "prowlarr.sarma.love"
-          type: "A"
-          value: "192.168.0.220"
-        - name: "sonarr.sarma.love"
-          type: "A"
-          value: "192.168.0.220"
-        - name: "radarr.sarma.love"
-          type: "A"
-          value: "192.168.0.220"
-        - name: "bazarr.sarma.love"
-          type: "A"
-          value: "192.168.0.220"
-        - name: "jellyfin.sarma.love"
-          type: "A"
-          value: "192.168.0.220"
-        - name: "jellyseerr.sarma.love"
-          type: "A"
-          value: "192.168.0.220"
-        - name: "jellystat.sarma.love"
-          type: "A"
-          value: "192.168.0.220"
-        - name: "tautulli.sarma.love"
-          type: "A"
-          value: "192.168.0.220"
-
-    # ACL policy file
-    policy:
-      mode: file
-      path: /etc/headscale/acl.json
-
-    # Logging
-    log:
-      format: text
-      level: info
-
-    # Ephemeral nodes
-    ephemeral_node_inactivity_timeout: 30m
-
-    # Unix socket for CLI
-    unix_socket: /var/run/headscale/headscale.sock
-    unix_socket_permission: "0770"
+    config.yaml: ENC[AES256_GCM,data:T61fe2Zf0rVcuvV+1kxVPq+kpeMdsAZGkrzho5DkB6fOE3mDG8JOoDJHIK5hYBQCz4cshLpzRktnaF310JfHRdL8iv62hLFpEVb4mKekE5Pc2BO6hRZ9SB8nTOZFkDoGmlk67xjtZpf3x0dUc5S3cAGnN4cKcVJ0Wtxd/dHoq87yIN4wvN1Jleo+dn8Oym0YW8VVM2+013HWnjCVWD6xUBh0eoyvcBmF2TffqEW/V5cbKx96cNDKk1zom1ij+TWGQ6wKAxxTFfTYTDHdMRUnAhMPVgtrdQHNnyJqTkQ3KopfhdQ4x1//cNgy0EZpjHLrryDmyiCzdoiTiOlJyL6L7KPn8mWrV7QHEtMslurPXE5ck5twHDalsC/XdCcP+Tv4HPsc/KJOcj6KCHDVjTB/323sNJDds0gIsFFUBBWu5p9VUPjqxFmzigv7UZKGe58QbExJOvXvzbUCIW8e3rXa2FeVD296LrDkoMfHHD84WZ6UFOkVT93SvSBUuzgxwgFu6KVLzxTBZxCCwqT1dE3Je2yTGjrP1vmi5UgsVxutOGscl64oxNfB1ENtbrjYjFWDA4a+ARnqA0LEjWUkwg/Ww8Vre4OdbZb1MQ0PiP4Wyr72q7NvlJ2MQPpsPhbmewY3wK167wb6/78Z0CeMyWIWBKY73kCsRCkdC7K7MxFL4ljeTI9ie5wP6ZzzFuarqmG9raTuysYgZ4wGz7R6iCpPqj4rMjvct+QAEajAjSt1UAr8shJyc8+E0rb9j8afgYcg01hAL434LvWD3DjiPMQ8LOy632mxG8k5P1hsmSYm/LTVCKK2RRx9KefAddOpQnVr8DtOqmf031iHkyyP42hbbAmDYqw1ym0Gy/oaWXvxP/A36TwC9oMFcFXtU9k3TZw0MjQ59ir47QB7V6s0AGv37u7ZR5dktBQcP+uUQ9UUJQY+2L4BXxsrFRFi8Z6DxDMDkJpEKdtjzXkkF75KRoiw4kBqPMqkGFFJwVCEyujcC/ztVlY3mT5OUUV2BqVbL6X6mNsAbwkArd/50v30I7Pn0l3rt71zjgTmkB8nQpT6QTAhWb4UsmNIj9172TMLjJcXdEAC3h6QhHjzqqjkSWghIIsywpX6Tl8AsK/7JStv8oa4NFzQJi2K105XaPLJA9uN7WAnec/RirVlD2TtiYlfNlqkpEZPVWUD59537jbAAUBvhwQx/yt8CGitk7VRcOd2gHG4XhEEEsFRDSReucW8wMP5nkzkyGU5NPeC1vIJC897NNM/JZS8F2DyOHn/nUaeBFNF9Uj6xcGIIsc+pbptVRQIC31kq/SVsaZIUKJ2w9UzCXi4wOo3iSVffP1PgMCscWd5KLC5MjCM6ZBb9xaAy5HFmhlZ0R8mkGYcVR9Q0GEBAztcnUBASFOUupOiabjtunhoEMK2veBRuu8pzzigOq40d+9mtMHYQ8u1YClLOmv6bagLJjCinYJFKRfCz5DErn3WK6gXsWjoy2F7SJHyF6z16qTMyS31Aktkx5ilW8rexC4toM1Kwcm1uPzTvpgbfJLluRT5/nK9CSZdDYLFU1QKf6LXfP/G6OS7VaafFfQ+9oGTsRkWB1G1X8hCreQYf1zP/VwMCrLhx5XT44dhBW3Wq11rI6MJGsOLqH1kDJggDbk4pk9BSdiy07Q12dKGUP/Ov4V07N7cYIf1wBlxc9az7PK8wRMdIVdUQnWeDFDYugo78DvMLgGTCdtcD5q6EyqwxPxNXgUDlM3q/nwh5bWxdW03F6B26puILns+po1BR7RzEtgCEbdkRoqaPve9lbBd6Ln81Yg7gpb1kxNz9l5b03UbG6WxR4GD88k606dB9Ihe6sunhTpnJJcGuzrTWxkntA/5FKpaxHjtTwBZI15aljWnvzL2bX3WDuG92V37Jj4V22oWPcutpsbwvd5idlHiMtxY/7khopzB7sKj2oSu03n7Be/+dRSJz6BY8FbWa8oM7zZGuKTJ5AZLw8EGFWqQyEl9qaxgZyJV+W+uhooOL8JqneUVpVsI+pMIGJSjjouReARwTPtKB2d2gbzr+hgBmLBboykvHE4t6fqNhtFOnxRlZjbbVYVPQPft4jqaetUtDwkjY/hp0UL/PQwSH1FK4JJ4BYA8MwX+KfQ82XvzYMppQ9B9JzRf31SwiNknVUqfaTRi5qGUfGIiqxZd/wXMLpY5Dm5oMqyV5padSJhtB/+tT7DChsDmlyDkexlXiRscHPx1Eb/w+x+HIR5lcxRIOGGPC8VMQU8wOPdS83VgDo7tT2Nda2SgfTz63HcLh465LKvO2zZ90Jgk87+a1qVyqjgwXeZcNK3FapJgrbF1OFKtV7hvZziqupqbiv4gZWxffzRreSXcqBtS9vLYtliIHhApT/zQQe/ZGwgeAbUoh3TSrEJDAgTspMIzH4O6ZNohBGKxJxq7i2OHPFglEm56L9mcEtL0dtC6WsVHe90DhWlD3m83pK1aGclt4oJHJ67aQY9MwyCBlrkhjNx1v8L3At/7g9oDuFJO2O5oqTjQ17i51cXhAYeLp++yxoicnxWgQUWiZkjdB5ycZMVY/Pp41l7b/IZj7PzXTQv8G0RUKenu6/hTdQLohIZPJbDHKfWwRZhJbxuN8wK3QWwjW27j5qP/Q36J7rY85t0uX52G53Uwoi+3LU8OTBAeoHd66B08yCUfE6f/Ut/DM3P7TIyND2A3asvK8uavuqVICYfVP9BGpiVIMKcWawQ0k/xdxAyuD2D+NIFZHdkao1x/aAmG6UoZuRLfrT0ZOyorjEzn1o22on/cl/9+3pBZhSy/fqOrChXnY6bVs65dsss7uKopgo/U7KXprALfJS/Db5rcDjHWrUcq83t2UiZDGrtYknBR32D+xLZBPR8kD/dPsqHskJuwF6Wt6LbSPvSraAvfOJEBgscwQpSeXu76D2a6w8c7vh8CO/fx779f0IDmwLWr7Wc8Owcny5/818rsTRb5yIg+qRvflK1q8w38akDkaRAnWd+V41h8YVd2s7xIEichTcFKN2F9LFxYZTyB/K5pckpLwcriSqKaN86fvELLdP2J5rJ2tEVb9Gc7WzzSMO8xRdzrbU9WVmbfmodFPGPYI1Gyn5wcLzUIS0OwzWhvRKII2rCiqoxm911B5cYXuIv2LzmE5k/orp6A52+sO8aw5Pcjc5KEzL1CbEI1K24Vf2SsfgDP0Vwnkn4KCOakRANdt14CdEhyd9qGvY3l85L0GwYBFuK4YFTRVsDQ/zZU1ZHsDA8BaZIAOLHeVaAtQh7X4Ud6fYkmoNu8sbqhSeh5gYqFJ9t1Os8Vamhn/k/L4bQH/2p+iPeGtdQeH+vWrpNP+gu9X9hMhv7vsVvqjhxPdELkpzXss8qkdnUm3CJKJ0egymJmf2Y1fbjNxhCQyDPUUGm8lacNLBkElW+XJuqdz/w3T0g=,iv:MfAsFXBhHHMdKoGbipf9MAQxsFP3cGMDjljI1qczy88=,tag:MPzC0Yj+p65uwYr85iEgkw==,type:str]
+sops:
+    age:
+        - recipient: age1hujjuflxstf7fgzms6rgw6gpwh6kcs3yqv9qtu0js48gsa0h63js3xnvng
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBHMGMvSWVjR2dmeUlPSlR2
+            VHU4bzFPVmd4bVBpajE2Q0hpeFROWmpHRVFVCm45VzdXNW9DeFZvSkVsaDg4d1hp
+            cTZFLzNOc0VSL3lsS1RYc29YNHFYRU0KLS0tIGNka1d1Mmw0c01UT3JPYUF6OUd0
+            bGs4ZG1LbjVnWWNIUmF1WlpzQjBHNDQKpALlTCcxIgx7Gl6/12LTnA5pNKOLrkUc
+            jXQEwD66mfoddGC6iKP0XNY5TGnP5oTZZLc251l6cJvxKAxGGRCfXw==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-12-12T11:07:07Z"
+    mac: ENC[AES256_GCM,data:FS7QIzP0bHkIcStY/yllcSrG4ScAfPdpVRiyiwGe5wai2SdW2u83hyLReyqdId4q6I0DYtpFJQ/jo5M3rNyy3aYq+kOiGS1I295pnwCI9ksqJUf3fxrUGBJ+BtUf31tBBkGFqhTM/vyEYBxQ/U0BIZcJMX+NNt+vVfvIpe3K2+k=,iv:3y+U1Ew2SuYMOdy5d6sZ3M/fA5mza6elxLmUNxFxqPg=,tag:q6S/0TZzxkTCRVp86TEMuw==,type:str]
+    encrypted_regex: ^(data)$
+    version: 3.11.0

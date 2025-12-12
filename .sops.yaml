@@ -1,4 +1,12 @@
 creation_rules:
+  # Encrypt entire Glance config (not a K8s manifest)
+  - path_regex: apps/base/glance/glance\.yml
+    age: age1hujjuflxstf7fgzms6rgw6gpwh6kcs3yqv9qtu0js48gsa0h63js3xnvng
+  # Encrypt Headscale ConfigMap data field only
+  - path_regex: infrastructure/base/networking/headscale/configmap-config\.yaml
+    encrypted_regex: ^(data)$
+    age: age1hujjuflxstf7fgzms6rgw6gpwh6kcs3yqv9qtu0js48gsa0h63js3xnvng
+  # Encrypt Kubernetes Secret data fields
   - path_regex: .*.yaml
     encrypted_regex: ^(data|stringData)$
     age: age1hujjuflxstf7fgzms6rgw6gpwh6kcs3yqv9qtu0js48gsa0h63js3xnvng
