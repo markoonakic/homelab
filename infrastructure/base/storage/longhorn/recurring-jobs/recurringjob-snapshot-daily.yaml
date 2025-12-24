@@ -1,0 +1,15 @@
+---
+apiVersion: longhorn.io/v1beta2
+kind: RecurringJob
+metadata:
+  name: snapshot-daily
+  namespace: longhorn-system
+spec:
+  name: snapshot-daily  # Required: recurring job name in spec
+  cron: "0 2 * * *"  # Run at 2 AM daily
+  task: snapshot
+  retain: 7  # Keep 7 snapshots (1 week)
+  concurrency: 1
+  labels:
+    category: critical-data
+    type: snapshot

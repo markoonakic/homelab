@@ -6,3 +6,5 @@ resources:
   - release.yaml
   - ingress.yaml
   - middleware-auth.yaml
+  - recurring-jobs/recurringjob-headscale-daily.yaml
+  - recurring-jobs/recurringjob-snapshot-daily.yaml

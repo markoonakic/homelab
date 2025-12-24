@@ -37,6 +37,11 @@ spec:
       enabled: true
       storageClass: longhorn
       size: 10Gi
+      annotations:
+        # Force 3 replicas for critical password vault data
+        longhorn.io/replicas: "3"
+        # Daily snapshots with 7-day retention
+        recurring-job-selectors.longhorn.io: '[{"name":"snapshot-daily", "isGroup":false}]'
 
     resources:
       requests:
