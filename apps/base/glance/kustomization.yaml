@@ -6,7 +6,7 @@ resources:
   - clusterrole.yaml
   - clusterrolebinding.yaml
   - secret-api-keys.yaml
-  - configmap-glance.yaml
+  - secret-glance.yaml
   - deployment.yaml
   - service.yaml
   - ingress.yaml

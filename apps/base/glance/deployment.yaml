@@ -89,8 +89,8 @@ spec:
 
       volumes:
         - name: config
-          configMap:
-            name: glance-config
+          secret:
+            secretName: glance-secret
         - name: assets
           configMap:
             name: glance-css
