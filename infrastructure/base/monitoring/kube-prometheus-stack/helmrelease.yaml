@@ -25,6 +25,8 @@ spec:
     # Grafana configuration
     grafana:
       enabled: true
+      deploymentStrategy:
+        type: Recreate  # Required for RWO PVC - prevents multi-attach errors during updates
       admin:
         existingSecret: "grafana-admin-credentials"
         userKey: "admin-user"
