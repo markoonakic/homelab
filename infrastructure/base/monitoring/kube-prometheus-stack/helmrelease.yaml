@@ -107,16 +107,15 @@ spec:
           limits:
             cpu: 500m
             memory: 256Mi
-        # TEMPORARILY COMMENTED OUT FOR DEBUGGING YAML ERROR
-        # affinity:
-        #   podAntiAffinity:
-        #     preferredDuringSchedulingIgnoredDuringExecution:
-        #       - weight: 100
-        #         podAffinityTerm:
-        #           labelSelector:
-        #             matchLabels:
-        #               app.kubernetes.io/name: alertmanager
-        #           topologyKey: kubernetes.io/hostname
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchLabels:
+                      app.kubernetes.io/name: alertmanager
+                  topologyKey: kubernetes.io/hostname
 
     # Node exporter
     nodeExporter:
