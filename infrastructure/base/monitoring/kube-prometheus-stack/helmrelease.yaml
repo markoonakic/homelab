@@ -24,7 +24,7 @@ spec:
   values:
     # Grafana configuration
     grafana:
-      enabled: false  # Temporarily disabled to allow Prometheus/Alertmanager storage optimization to apply
+      enabled: true
       deploymentStrategy:
         type: Recreate  # Required for RWO PVC - prevents multi-attach errors during updates
       admin:
