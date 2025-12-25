@@ -43,16 +43,15 @@ spec:
         limits:
           cpu: 1000m
           memory: 1Gi
-      # TEMPORARILY COMMENTED OUT FOR DEBUGGING YAML ERROR
-      # affinity:
-      #   podAntiAffinity:
-      #     preferredDuringSchedulingIgnoredDuringExecution:
-      #       - weight: 100
-      #         podAffinityTerm:
-      #           labelSelector:
-      #             matchLabels:
-      #               app.kubernetes.io/name: grafana
-      #           topologyKey: kubernetes.io/hostname
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: grafana
+                topologyKey: kubernetes.io/hostname
 
     # Prometheus configuration
     prometheus:
