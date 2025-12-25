@@ -8,3 +8,6 @@ resources:
   - ingress-grafana.yaml
   - ingress-prometheus.yaml
   - middleware-auth.yaml
+  - pdb-prometheus.yaml
+  - pdb-grafana.yaml
+  - pdb-alertmanager.yaml

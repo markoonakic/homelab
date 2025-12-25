@@ -8,3 +8,4 @@ resources:
   - middleware-auth.yaml
   - ingress-dashboard.yaml
   - service-api.yaml
+  - pdb.yaml

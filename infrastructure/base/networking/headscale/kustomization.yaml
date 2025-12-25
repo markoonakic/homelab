@@ -11,3 +11,4 @@ resources:
   - service-headscale.yaml
   - service-derp.yaml
   - ingress.yaml
+  - pdb.yaml
