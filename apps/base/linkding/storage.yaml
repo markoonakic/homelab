@@ -2,6 +2,9 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: linkding-data-pvc
+  annotations:
+    longhorn.io/replicas: "2"
+    recurring-job-selectors.longhorn.io: '[{"name":"snapshot-daily", "isGroup":false}]'
 spec:
   accessModes:
     - ReadWriteOnce

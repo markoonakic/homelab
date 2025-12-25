@@ -3,6 +3,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: headscale-data
   namespace: headscale
+  annotations:
+    longhorn.io/replicas: "3"
+    recurring-job-selectors.longhorn.io: '[{"name":"snapshot-daily", "isGroup":false}]'
 spec:
   accessModes:
     - ReadWriteOnce

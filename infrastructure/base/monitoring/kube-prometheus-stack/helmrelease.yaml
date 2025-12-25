@@ -33,6 +33,9 @@ spec:
         enabled: true
         storageClassName: "longhorn"
         size: 10Gi
+        annotations:
+          longhorn.io/replicas: "2"
+          recurring-job-selectors.longhorn.io: '[{"name":"snapshot-daily", "isGroup":false}]'
       resources:
         requests:
           cpu: 100m
