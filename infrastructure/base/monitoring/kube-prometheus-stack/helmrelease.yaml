@@ -59,6 +59,9 @@ spec:
         retention: 30d
         storageSpec:
           volumeClaimTemplate:
+            metadata:
+              annotations:
+                longhorn.io/replicas: "2"  # Tier 3: Metrics (30-day retention)
             spec:
               storageClassName: longhorn
               accessModes: ["ReadWriteOnce"]
@@ -87,6 +90,9 @@ spec:
       alertmanagerSpec:
         storage:
           volumeClaimTemplate:
+            metadata:
+              annotations:
+                longhorn.io/replicas: "2"  # Tier 3: Ephemeral alert state
             spec:
               storageClassName: longhorn
               accessModes: ["ReadWriteOnce"]
