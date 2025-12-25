@@ -64,6 +64,7 @@ spec:
             metadata:
               annotations:
                 longhorn.io/replicas: "1"  # Tier 3: Regenerable metrics, save 50Gi
+                recurring-job-selectors.longhorn.io: '[{"name":"snapshot-daily", "isGroup":false}]'
             spec:
               storageClassName: longhorn
               accessModes: ["ReadWriteOnce"]
@@ -96,6 +97,7 @@ spec:
             metadata:
               annotations:
                 longhorn.io/replicas: "1"  # Tier 3: Ephemeral state, save 10Gi
+                recurring-job-selectors.longhorn.io: '[{"name":"snapshot-daily", "isGroup":false}]'
             spec:
               storageClassName: longhorn
               accessModes: ["ReadWriteOnce"]
