@@ -43,15 +43,16 @@ spec:
         limits:
           cpu: 1000m
           memory: 1Gi
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app.kubernetes.io/name: grafana
-                topologyKey: kubernetes.io/hostname
+      # TEMPORARILY COMMENTED OUT FOR DEBUGGING YAML ERROR
+      # affinity:
+      #   podAntiAffinity:
+      #     preferredDuringSchedulingIgnoredDuringExecution:
+      #       - weight: 100
+      #         podAffinityTerm:
+      #           labelSelector:
+      #             matchLabels:
+      #               app.kubernetes.io/name: grafana
+      #           topologyKey: kubernetes.io/hostname
 
     # Prometheus configuration
     prometheus:
@@ -107,15 +108,16 @@ spec:
           limits:
             cpu: 500m
             memory: 256Mi
-        affinity:
-          podAntiAffinity:
-            preferredDuringSchedulingIgnoredDuringExecution:
-              - weight: 100
-                podAffinityTerm:
-                  labelSelector:
-                    matchLabels:
-                      app.kubernetes.io/name: alertmanager
-                  topologyKey: kubernetes.io/hostname
+        # TEMPORARILY COMMENTED OUT FOR DEBUGGING YAML ERROR
+        # affinity:
+        #   podAntiAffinity:
+        #     preferredDuringSchedulingIgnoredDuringExecution:
+        #       - weight: 100
+        #         podAffinityTerm:
+        #           labelSelector:
+        #             matchLabels:
+        #               app.kubernetes.io/name: alertmanager
+        #           topologyKey: kubernetes.io/hostname
 
     # Node exporter
     nodeExporter:
