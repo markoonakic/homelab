@@ -18,7 +18,7 @@ spec:
     deployment:
       enabled: true
       kind: Deployment
-      replicas: 1  # Single replica sufficient for 2-node homelab
+      replicas: 2  # HA across 3-node cluster
 
     # Service configuration - LoadBalancer with MetalLB
     service:
