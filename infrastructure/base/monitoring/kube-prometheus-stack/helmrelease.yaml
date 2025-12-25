@@ -61,7 +61,7 @@ spec:
           volumeClaimTemplate:
             metadata:
               annotations:
-                longhorn.io/replicas: "2"  # Tier 3: Metrics (30-day retention)
+                longhorn.io/replicas: "1"  # Tier 3: Regenerable metrics, save 50Gi
             spec:
               storageClassName: longhorn
               accessModes: ["ReadWriteOnce"]
@@ -92,7 +92,7 @@ spec:
           volumeClaimTemplate:
             metadata:
               annotations:
-                longhorn.io/replicas: "2"  # Tier 3: Ephemeral alert state
+                longhorn.io/replicas: "1"  # Tier 3: Ephemeral state, save 10Gi
             spec:
               storageClassName: longhorn
               accessModes: ["ReadWriteOnce"]
