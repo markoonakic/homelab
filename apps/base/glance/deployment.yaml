@@ -34,6 +34,18 @@ spec:
                 secretKeyRef:
                   name: glance-api-keys
                   key: HEADSCALE_API_KEY
+            # Media service URLs (cluster-internal for better performance)
+            - name: JELLYFIN_URL
+              value: "http://jellyfin.media.svc.cluster.local:8096"
+            - name: SONARR_URL
+              value: "http://sonarr.media.svc.cluster.local:8989"
+            - name: RADARR_URL
+              value: "http://radarr.media.svc.cluster.local:7878"
+            - name: QBITTORRENT_IP
+              valueFrom:
+                secretKeyRef:
+                  name: glance-api-keys
+                  key: QBITTORRENT_IP
             # Media stack API keys
             - name: SONARR_API_KEY
               valueFrom:
