@@ -39,7 +39,3 @@ spec:
       kind: Deployment
       name: jellyseerr
       namespace: media
-    - apiVersion: apps/v1
-      kind: Deployment
-      name: jellystat
-      namespace: media

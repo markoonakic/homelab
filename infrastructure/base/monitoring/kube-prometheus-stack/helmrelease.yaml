@@ -45,20 +45,12 @@ spec:
         limits:
           cpu: 1000m
           memory: 1Gi
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app.kubernetes.io/name: grafana
-                topologyKey: kubernetes.io/hostname
+      # Removed affinity for flexible scheduling across nodes
 
     # Prometheus configuration
     prometheus:
       prometheusSpec:
-        retention: 30d
+        retention: 14d  # Reduced from 30d for memory optimization
         storageSpec:
           volumeClaimTemplate:
             metadata:
@@ -74,10 +66,10 @@ spec:
         resources:
           requests:
             cpu: 500m
-            memory: 2Gi
+            memory: 1536Mi  # Reduced from 2Gi (1.5Gi)
           limits:
             cpu: 2000m
-            memory: 4Gi
+            memory: 3Gi  # Reduced from 4Gi
         # Prometheus affinity causes YAML duplicate error - chart has built-in affinity
         # affinity:
         #   podAntiAffinity:
