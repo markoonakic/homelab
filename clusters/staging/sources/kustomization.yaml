@@ -1,5 +1,4 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - media-stack-gitrepo.yaml
-  - media-stack-kustomization.yaml
+  - private-apps-gitrepo.yaml

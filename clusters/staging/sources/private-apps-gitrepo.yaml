@@ -1,11 +1,11 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
-  name: media-stack
+  name: private-apps
   namespace: flux-system
 spec:
   interval: 1m0s
-  url: ssh://git@github.com/markoonakic/homelab-media-private.git
+  url: ssh://git@github.com/markoonakic/homelab-private.git
   ref:
     branch: main
   secretRef:
