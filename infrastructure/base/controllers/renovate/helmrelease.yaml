@@ -104,11 +104,13 @@ spec:
 
     # Environment variables
     env:
-      LOG_LEVEL: info
-      RENOVATE_TOKEN:
-        secretKeyRef:
-          name: renovate-github-token
-          key: token
+      - name: LOG_LEVEL
+        value: info
+      - name: RENOVATE_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: renovate-github-token
+            key: token
 
     # Resource limits
     resources:
