@@ -38,7 +38,6 @@ spec:
           "repositories": ["markoonakic/homelab"],
           "schedule": ["after 2am and before 4am"],
           "timezone": "Europe/Belgrade",
-          "dryRun": "full",
           "automerge": false,
           "dependencyDashboard": true,
           "requireConfig": "optional",
