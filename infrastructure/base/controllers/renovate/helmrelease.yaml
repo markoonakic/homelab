@@ -35,7 +35,7 @@ spec:
       config: |
         {
           "platform": "github",
-          "repositories": ["markoonakic/homelab"],
+          "repositories": ["markoonakic/homelab", "markoonakic/homelab-private"],
           "schedule": ["after 2am and before 4am"],
           "timezone": "Europe/Belgrade",
           "automerge": false,
