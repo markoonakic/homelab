@@ -1,0 +1,134 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: renovate
+  namespace: flux-system
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: renovate
+      version: "45.63.1"
+      sourceRef:
+        kind: HelmRepository
+        name: renovate
+        namespace: flux-system
+  targetNamespace: renovate
+  install:
+    createNamespace: false
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    # CronJob schedule - Daily at 2 AM Europe/Belgrade
+    cronjob:
+      schedule: "0 2 * * *"
+      concurrencyPolicy: Forbid
+      successfulJobsHistoryLimit: 3
+      failedJobsHistoryLimit: 3
+
+    # Renovate configuration
+    renovate:
+      # GitHub platform configuration
+      config: |
+        {
+          "platform": "github",
+          "repositories": ["markoonakic/homelab"],
+          "schedule": ["after 2am and before 4am"],
+          "timezone": "Europe/Belgrade",
+          "dryRun": "full",
+          "automerge": false,
+          "dependencyDashboard": true,
+          "requireConfig": "optional",
+          "semanticCommits": "enabled",
+          "separateMajorMinor": true,
+          "separateMinorPatch": false,
+          "labels": ["dependencies", "renovate"],
+          "regexManagers": [
+            {
+              "fileMatch": ["helmrelease\\.yaml$"],
+              "matchStrings": [
+                "repository:\\s+(?<depName>[^\\s]+)\\s+tag:\\s+(?<currentValue>[^\\s]+)"
+              ],
+              "datasourceTemplate": "docker"
+            }
+          ],
+          "packageRules": [
+            {
+              "matchUpdateTypes": ["patch"],
+              "matchCategories": ["media-stack"],
+              "groupName": "Media Stack - Patch Updates",
+              "automerge": false
+            },
+            {
+              "matchUpdateTypes": ["patch"],
+              "matchCategories": ["infrastructure"],
+              "groupName": "Infrastructure - Patch Updates",
+              "automerge": false
+            },
+            {
+              "matchUpdateTypes": ["minor"],
+              "matchCategories": ["media-stack"],
+              "groupName": "Media Stack - Minor Updates",
+              "automerge": false
+            },
+            {
+              "matchUpdateTypes": ["minor"],
+              "matchCategories": ["infrastructure"],
+              "groupName": "Infrastructure - Minor Updates",
+              "automerge": false
+            },
+            {
+              "matchUpdateTypes": ["major"],
+              "groupName": "{{depName}} - Major Update",
+              "labels": ["major-update", "needs-review"],
+              "automerge": false
+            },
+            {
+              "matchPackagePatterns": ["flux", "cert-manager", "traefik", "longhorn"],
+              "labels": ["critical-infrastructure"],
+              "automerge": false
+            },
+            {
+              "matchDatasources": ["docker"],
+              "versioning": "docker"
+            },
+            {
+              "matchDatasources": ["helm"],
+              "versioning": "helm"
+            }
+          ]
+        }
+
+    # Environment variables
+    env:
+      LOG_LEVEL: info
+      RENOVATE_TOKEN:
+        secretKeyRef:
+          name: renovate-github-token
+          key: token
+
+    # Resource limits
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+
+    # Security context
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      fsGroup: 1000
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: false
+
+    # Pod security context
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      fsGroup: 1000
