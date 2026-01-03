@@ -15,11 +15,6 @@ spec:
         app: karakeep
         component: meilisearch
     spec:
-      securityContext:
-        fsGroup: 1000
-        runAsUser: 1000
-        runAsGroup: 1000
-        runAsNonRoot: true
       containers:
         - name: meilisearch
           image: getmeili/meilisearch:v1.11.3
