@@ -15,6 +15,21 @@ spec:
         app: karakeep
         component: meilisearch
     spec:
+      initContainers:
+        - name: volume-setup
+          image: busybox:1.36
+          volumeMounts:
+            - name: data
+              mountPath: /meili_data
+          command:
+            - sh
+            - -c
+            - |
+              echo "Preparing meilisearch volume..."
+              rm -rf /meili_data/lost+found
+              mkdir -p /meili_data
+              chmod 755 /meili_data
+              echo "Volume preparation complete"
       containers:
         - name: meilisearch
           image: getmeili/meilisearch:v1.11.3
