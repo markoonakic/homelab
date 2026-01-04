@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mealie-app-data
+  namespace: mealie
+  annotations:
+    longhorn.io/replicas: "2"
+    recurring-job-selectors.longhorn.io: '[{"name":"snapshot-daily", "isGroup":false}]'
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 10Gi
