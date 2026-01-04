@@ -57,10 +57,6 @@ spec:
             # Application Settings
             - name: BASE_URL
               value: "https://mealie.sarma.love"
-            - name: PUID
-              value: "911"
-            - name: PGID
-              value: "911"
             - name: TZ
               value: "Europe/Belgrade"
             - name: ALLOW_SIGNUP

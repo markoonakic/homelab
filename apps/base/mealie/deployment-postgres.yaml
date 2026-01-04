@@ -15,6 +15,21 @@ spec:
         app: mealie
         component: postgres
     spec:
+      initContainers:
+        - name: volume-setup
+          image: busybox:1.36
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+          command:
+            - sh
+            - -c
+            - |
+              echo "Preparing postgres volume..."
+              rm -rf /var/lib/postgresql/data/lost+found
+              mkdir -p /var/lib/postgresql/data
+              chmod 755 /var/lib/postgresql/data
+              echo "Volume preparation complete"
       containers:
         - name: postgres
           image: postgres:17-alpine
