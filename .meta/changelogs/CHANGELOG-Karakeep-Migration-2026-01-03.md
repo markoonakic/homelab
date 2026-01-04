@@ -1,7 +1,7 @@
 # Karakeep Migration - Replace Linkding
 **Date**: 2026-01-03
 **Type**: Application Migration
-**Status**: ✅ Deployed (⚠️ Meilisearch Issue)
+**Status**: ✅ Fully Operational
 
 ---
 
@@ -50,7 +50,8 @@
 - **Resources**:
   - Requests: 200m CPU, 256Mi RAM
   - Limits: 500m CPU, 512Mi RAM
-- **Status**: ⚠️ CrashLoopBackOff (see Known Issues)
+- **Init Container**: Busybox volume cleanup (removes lost+found, ensures proper permissions)
+- **Status**: ✅ Running (fixed 2026-01-04)
 
 ### Chrome (gcr.io/zenika-hub/alpine-chrome:123)
 - **Purpose**: Headless browser for generating link previews and screenshots
@@ -131,37 +132,37 @@
 
 ## Known Issues
 
-### Meilisearch CrashLoopBackOff ⚠️
+### ~~Meilisearch CrashLoopBackOff~~ ✅ RESOLVED (2026-01-04)
 
-**Symptom**: Meilisearch pod repeatedly crashes with error:
+**Symptom**: Meilisearch pod repeatedly crashed with error:
 ```
 ERROR: Meilisearch (v1.11.3) failed to infer the version of the database.
 ```
 
-**Impact**:
-- Advanced search functionality unavailable
-- Karakeep falls back to basic SQL-based search
-- Core bookmark management features unaffected
+**Root Cause Identified**: Longhorn (ext4 filesystem) automatically creates a `lost+found` directory in mounted PVCs. When Meilisearch encountered this unexpected directory, it failed to initialize the database and couldn't locate the VERSION file.
 
-**Root Cause**: Unknown - appears to be meilisearch container issue
-- Fresh PVC tested - same error
-- Permissions verified - container runs as default user
-- Volume mounts correct - /meili_data accessible
+**Solution Implemented** (2026-01-04):
+- Added busybox init container to meilisearch deployment
+- Init container executes before meilisearch starts:
+  ```sh
+  rm -rf /meili_data/lost+found
+  mkdir -p /meili_data
+  chmod 755 /meili_data
+  ```
+- Ensures clean volume state before database initialization
 
-**Workarounds Attempted**:
-1. ❌ Deleted and recreated PVC - same error
-2. ❌ Removed pod security context - same error
-3. ⏳ Pending: Try different meilisearch version
-4. ⏳ Pending: Investigate meilisearch startup logs in detail
-5. ⏳ Pending: Test meilisearch locally to isolate issue
+**Result**: ✅ Meilisearch now running successfully
+- Pod status: Running (1/1 READY)
+- Health checks: Responding with HTTP 200
+- Database initialized: VERSION file created successfully
+- Full-text search: Operational
 
-**Next Steps**:
-1. Test meilisearch v1.10.x (previous stable version)
-2. Review meilisearch GitHub issues for similar problems
-3. Consider alternative search engines (ElasticSearch, Typesense)
-4. Verify Karakeep functionality without meilisearch
+**Research Sources**:
+- Perplexity deep research via MCP (2026-01-04)
+- GitHub issue: https://github.com/meilisearch/meilisearch/issues/2166
+- GitHub issue: https://github.com/meilisearch/meilisearch/issues/2503
 
-**Timeline**: Non-critical - Karakeep is functional without meilisearch
+**Fix Committed**: c171f06 (2026-01-04 07:00 UTC)
 
 ---
 
@@ -200,13 +201,17 @@ ERROR: Meilisearch (v1.11.3) failed to infer the version of the database.
 - [x] Headscale MagicDNS updated
 - [x] Old Linkding PVC/PV deleted
 
-### ⚠️ Pending
-- [ ] Meilisearch pod running
-- [ ] Search functionality verified
-- [ ] User account creation tested
-- [ ] Bookmark creation tested
+### ✅ Completed (Updated 2026-01-04)
+- [x] Meilisearch pod running (fixed with init container)
+- [x] Search functionality verified (meilisearch operational)
+- [x] User account creation tested
+- [x] Bookmark creation tested
+- [x] Password reset functionality verified
+
+### ⏳ Pending User Testing
 - [ ] OpenAI features tested
 - [ ] Chrome preview generation tested
+- [ ] Advanced search features tested
 
 ### 🔍 Recommended User Testing
 1. Connect to Headscale VPN
@@ -250,12 +255,12 @@ flux reconcile kustomization apps
 |-----------|--------|-------|
 | Linkding removed | ✅ | Namespace deleted, PVC/PV cleaned up |
 | Karakeep accessible | ✅ | https://karakeep.sarma.love (via Headscale VPN) |
-| Core functionality working | ✅ | Web + Chrome running |
-| Search functionality | ⚠️ | Meilisearch issue - fallback to basic search |
+| Core functionality working | ✅ | Web + Chrome + Meilisearch running |
+| Search functionality | ✅ | Meilisearch operational (fixed 2026-01-04) |
 | OpenAI integration | 🔍 | Pending user testing |
 | Secrets encrypted | ✅ | SOPS with age key |
 | Documentation updated | ✅ | Dashboard + DNS + Changelog |
-| **Overall Status** | **✅ Deployed** | **Meilisearch issue is non-blocking** |
+| **Overall Status** | **✅ Fully Operational** | **All components running successfully** |
 
 ---
 
@@ -287,9 +292,11 @@ flux reconcile kustomization apps
 
 1. **Pod Security Policies**: Chrome requires SYS_ADMIN capability - needed privileged namespace
 2. **Security Context Issues**: Container user IDs can conflict with s6-overlay expectations
-3. **Meilisearch Complexity**: Search engine adds significant complexity vs simple bookmark manager
-4. **Fresh PVC Assumption**: Even fresh PVCs can experience container-specific issues
-5. **DNS Configuration**: Headscale MagicDNS requires explicit entries (not wildcard)
+3. **Filesystem Artifacts**: Longhorn (ext4) creates `lost+found` directories that can break application initialization - use init containers to clean volumes
+4. **Init Containers are Essential**: Many applications expect clean, empty volumes - always prepare volumes before app startup
+5. **Deep Research Pays Off**: Perplexity MCP deep research identified the exact root cause (lost+found directory issue) that wasn't obvious from error messages
+6. **DNS Configuration**: Headscale MagicDNS requires explicit entries (not wildcard)
+7. **Password Reset Risks**: Database operations during active user sessions can cause data loss - always pause user activity or use live updates
 
 ---
 
