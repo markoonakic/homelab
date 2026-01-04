@@ -75,11 +75,6 @@ spec:
                 - mealie
             initialDelaySeconds: 5
             periodSeconds: 5
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
       volumes:
         - name: data
           persistentVolumeClaim:
