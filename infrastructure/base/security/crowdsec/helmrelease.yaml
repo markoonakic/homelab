@@ -96,8 +96,6 @@ spec:
       env:
         - name: TZ
           value: "UTC"
-        - name: PARSERS
-          value: "crowdsecurity/docker-logs,crowdsecurity/cri-logs"  # Kubernetes log formats
         - name: COLLECTIONS
           value: "crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios"
 
