@@ -15,10 +15,6 @@ spec:
       labels:
         app: excalidraw
     spec:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        fsGroup: 1000
       containers:
         - name: excalidraw
           image: excalidraw/excalidraw:latest
