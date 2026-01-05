@@ -34,7 +34,7 @@ spec:
               echo "Volume preparation complete"
       containers:
         - name: mealie
-          image: ghcr.io/mealie-recipes/mealie:v2.4.0
+          image: ghcr.io/mealie-recipes/mealie:v3.9.2
           ports:
             - name: http
               containerPort: 9000
