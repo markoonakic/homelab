@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespace.yaml
+  - helmrepository.yaml
+  - pvc-lapi.yaml
+  - helmrelease.yaml
+  - servicemonitor.yaml
+  # - secret-bouncer-key.yaml  # Will be uncommented after API key is generated

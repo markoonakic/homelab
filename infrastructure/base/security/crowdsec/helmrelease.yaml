@@ -1,0 +1,118 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: crowdsec
+  namespace: crowdsec
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: crowdsec
+      version: "0.12.x"  # Latest 0.12 patch version
+      sourceRef:
+        kind: HelmRepository
+        name: crowdsec
+        namespace: crowdsec
+  values:
+    # Container image configuration
+    image:
+      repository: crowdsecurity/crowdsec
+      tag: "v1.6.0"  # Stable version
+
+    # LAPI (Local API) configuration
+    lapi:
+      replicas: 1  # SQLite does not support replication
+
+      # Persistent storage
+      persistentVolume:
+        enabled: true
+        existingClaim: "crowdsec-lapi-data"
+        accessModes:
+          - ReadWriteOnce
+
+      # Database configuration (SQLite)
+      database:
+        type: sqlite
+        # SQLite stores in /var/lib/crowdsec/data/crowdsec.db (default)
+
+      # Resource allocation
+      resources:
+        requests:
+          cpu: 500m
+          memory: 512Mi
+        limits:
+          cpu: 1000m
+          memory: 1Gi
+
+      # Service configuration
+      service:
+        type: ClusterIP  # Internal access only
+        port: 8080
+
+      # Metrics configuration
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+          namespace: monitoring
+          interval: 30s
+
+      # Environment variables
+      env:
+        - name: TZ
+          value: "UTC"
+        - name: DISABLE_ONLINE_API
+          value: "true"  # No central API connection (fully local)
+        - name: DISABLE_AGENT
+          value: "false"
+
+      # Deployment strategy (Recreate for RWO PVC)
+      strategy:
+        type: Recreate
+
+    # Agent configuration (DaemonSet on all nodes)
+    agent:
+      enabled: true
+
+      # DaemonSet deployment
+      kind: DaemonSet
+
+      # Resource allocation (per node)
+      resources:
+        requests:
+          cpu: 100m
+          memory: 200Mi
+        limits:
+          cpu: 200m
+          memory: 400Mi
+
+      # Acquisition configuration (Traefik logs via Kubernetes API)
+      acquisition:
+        - namespace: traefik
+          podName: "*"  # All Traefik pods
+          program: traefik
+
+      # Collections to install
+      env:
+        - name: TZ
+          value: "UTC"
+        - name: PARSERS
+          value: "crowdsecurity/docker-logs,crowdsecurity/cri-logs"  # Kubernetes log formats
+        - name: COLLECTIONS
+          value: "crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios"
+
+      # Metrics
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+          namespace: monitoring
+          interval: 30s
+
+    # Disable components we don't need
+    dashboard:
+      enabled: false  # We'll use Grafana instead
+
+    # TLS configuration (disabled for simplicity)
+    tls:
+      enabled: false  # Internal cluster communication only

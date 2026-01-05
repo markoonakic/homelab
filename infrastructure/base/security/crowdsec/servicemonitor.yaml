@@ -1,0 +1,41 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: crowdsec-lapi
+  namespace: monitoring
+  labels:
+    app: crowdsec
+    component: lapi
+spec:
+  namespaceSelector:
+    matchNames:
+      - crowdsec
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: crowdsec
+      app.kubernetes.io/component: lapi
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: crowdsec-agent
+  namespace: monitoring
+  labels:
+    app: crowdsec
+    component: agent
+spec:
+  namespaceSelector:
+    matchNames:
+      - crowdsec
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: crowdsec
+      app.kubernetes.io/component: agent
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics
