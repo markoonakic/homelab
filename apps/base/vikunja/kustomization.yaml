@@ -4,5 +4,6 @@ resources:
   - namespace.yaml
   - helmrepository.yaml
   - helmrelease.yaml
+  - postgresql.yaml
   - ingress.yaml
   - secret.yaml

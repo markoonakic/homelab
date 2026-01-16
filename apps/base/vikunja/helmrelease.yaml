@@ -23,17 +23,17 @@ spec:
       retries: 3
   values:
     vikunja:
-      # Environment variables for secrets and database connection
+      # Environment variables for database connection
       env:
         VIKUNJA_DATABASE_TYPE: "postgres"
-        VIKUNJA_DATABASE_HOST: "vikunja-postgresql"
+        VIKUNJA_DATABASE_HOST: "postgresql"
         VIKUNJA_DATABASE_USER: "vikunja"
         VIKUNJA_DATABASE_DATABASE: "vikunja"
         VIKUNJA_DATABASE_PASSWORD:
           valueFrom:
             secretKeyRef:
               name: vikunja-secrets
-              key: password
+              key: postgres-password
         VIKUNJA_SERVICE_JWTSECRET:
           valueFrom:
             secretKeyRef:
@@ -70,32 +70,9 @@ spec:
           cpu: 500m
           memory: 512Mi
 
-    # PostgreSQL subchart - use bitnamilegacy since free images deprecated
+    # Disable PostgreSQL subchart - we deploy separately
     postgresql:
-      enabled: true
-      image:
-        registry: docker.io
-        repository: bitnamilegacy/postgresql
-        tag: "17.2.0-debian-12-r8"
-      auth:
-        username: vikunja
-        database: vikunja
-        existingSecret: vikunja-secrets
-        secretKeys:
-          adminPasswordKey: postgres-password
-          userPasswordKey: password
-      primary:
-        persistence:
-          enabled: true
-          storageClass: longhorn
-          size: 3Gi
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 500m
-            memory: 512Mi
+      enabled: false
 
     # Redis disabled (single replica, not needed)
     redis:
