@@ -28,7 +28,7 @@ spec:
         api-config:
           enabled: true
           data:
-            config.yml:
+            config.yml: |
               service:
                 enableregistration: true
                 frontendurl: "https://vikunja.sarma.love"
