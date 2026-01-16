@@ -72,7 +72,7 @@ spec:
       image:
         registry: docker.io
         repository: bitnami/postgresql
-        tag: "16"
+        tag: "latest"
       auth:
         username: vikunja
         database: vikunja
