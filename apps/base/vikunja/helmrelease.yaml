@@ -34,7 +34,7 @@ spec:
                 frontendurl: "https://vikunja.sarma.love"
               database:
                 type: postgres
-                host: vikunja-postgresql
+                host: vikunja-vikunja-postgresql
                 database: vikunja
                 user: vikunja
               files:
@@ -69,6 +69,10 @@ spec:
     # PostgreSQL subchart
     postgresql:
       enabled: true
+      image:
+        registry: docker.io
+        repository: bitnami/postgresql
+        tag: "16"
       auth:
         username: vikunja
         database: vikunja
