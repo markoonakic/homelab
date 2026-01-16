@@ -33,7 +33,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: vikunja-secrets
-              key: postgresql-password
+              key: password
         VIKUNJA_SERVICE_JWTSECRET:
           valueFrom:
             secretKeyRef:
@@ -70,20 +70,20 @@ spec:
           cpu: 500m
           memory: 512Mi
 
-    # PostgreSQL subchart - using official postgres image
+    # PostgreSQL subchart - use bitnamilegacy since free images deprecated
     postgresql:
       enabled: true
       image:
         registry: docker.io
-        repository: postgres
-        tag: "17"
+        repository: bitnamilegacy/postgresql
+        tag: "17.2.0-debian-12-r8"
       auth:
         username: vikunja
         database: vikunja
         existingSecret: vikunja-secrets
         secretKeys:
-          adminPasswordKey: postgresql-password
-          userPasswordKey: postgresql-password
+          adminPasswordKey: postgres-password
+          userPasswordKey: password
       primary:
         persistence:
           enabled: true
