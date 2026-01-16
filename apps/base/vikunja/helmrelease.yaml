@@ -23,7 +23,24 @@ spec:
       retries: 3
   values:
     vikunja:
-      # Vikunja configuration
+      # Environment variables for secrets and database connection
+      env:
+        VIKUNJA_DATABASE_TYPE: "postgres"
+        VIKUNJA_DATABASE_HOST: "vikunja-postgresql"
+        VIKUNJA_DATABASE_USER: "vikunja"
+        VIKUNJA_DATABASE_DATABASE: "vikunja"
+        VIKUNJA_DATABASE_PASSWORD:
+          valueFrom:
+            secretKeyRef:
+              name: vikunja-secrets
+              key: postgresql-password
+        VIKUNJA_SERVICE_JWTSECRET:
+          valueFrom:
+            secretKeyRef:
+              name: vikunja-secrets
+              key: jwt-secret
+
+      # Vikunja configuration (non-sensitive settings)
       configMaps:
         api-config:
           enabled: true
@@ -32,21 +49,8 @@ spec:
               service:
                 enableregistration: true
                 frontendurl: "https://vikunja.sarma.love"
-              database:
-                type: postgres
-                host: vikunja-vikunja-postgresql
-                database: vikunja
-                user: vikunja
               files:
                 maxsize: 20MB
-
-      # Environment variables for secrets
-      env:
-        VIKUNJA_DATABASE_PASSWORD:
-          valueFrom:
-            secretKeyRef:
-              name: vikunja-secrets
-              key: postgresql-password
 
       # Persistence for file attachments
       persistence:
@@ -66,26 +70,25 @@ spec:
           cpu: 500m
           memory: 512Mi
 
-    # PostgreSQL subchart
+    # PostgreSQL subchart - using official postgres image
     postgresql:
       enabled: true
       image:
         registry: docker.io
-        repository: bitnami/postgresql
-        tag: "latest"
+        repository: postgres
+        tag: "17"
       auth:
         username: vikunja
         database: vikunja
         existingSecret: vikunja-secrets
         secretKeys:
+          adminPasswordKey: postgresql-password
           userPasswordKey: postgresql-password
       primary:
         persistence:
           enabled: true
           storageClass: longhorn
           size: 3Gi
-          annotations:
-            longhorn.io/replicas: "2"
         resources:
           requests:
             cpu: 100m
@@ -97,3 +100,7 @@ spec:
     # Redis disabled (single replica, not needed)
     redis:
       enabled: false
+
+    # Typesense enabled for better search
+    typesense:
+      enabled: true
