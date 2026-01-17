@@ -45,7 +45,7 @@ spec:
         api-config:
           enabled: true
           data:
-            config.yml: |
+            config.yml:
               service:
                 enableregistration: true
                 frontendurl: "https://vikunja.sarma.love"
@@ -71,8 +71,12 @@ spec:
           memory: 512Mi
 
     # Disable PostgreSQL subchart - we deploy separately
+    # Note: auth values required even when disabled due to template bug in chart
     postgresql:
       enabled: false
+      auth:
+        username: vikunja
+        database: vikunja
 
     # Redis disabled (single replica, not needed)
     redis:
