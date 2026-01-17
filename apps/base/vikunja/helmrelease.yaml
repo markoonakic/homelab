@@ -51,6 +51,10 @@ spec:
                 frontendurl: "https://vikunja.sarma.love"
               files:
                 maxsize: 20MB
+              typesense:
+                enabled: true
+                url: "http://vikunja-vikunja-typesense:8108"
+                apikey: "typesense"
 
       # Persistence for file attachments
       persistence:
