@@ -71,9 +71,14 @@ spec:
           memory: 512Mi
 
     # Disable PostgreSQL subchart - we deploy separately
-    # Note: auth values required even when disabled due to template bug in chart
+    # Note: auth and global values required even when disabled due to template bug
     postgresql:
       enabled: false
+      global:
+        postgresql:
+          auth:
+            username: vikunja
+            database: vikunja
       auth:
         username: vikunja
         database: vikunja
