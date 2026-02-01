@@ -43,6 +43,11 @@ spec:
                 secretKeyRef:
                   name: karakeep-secrets
                   key: openai-api-key
+            - name: OPENAI_BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: karakeep-secrets
+                  key: openai-base-url
             - name: NEXTAUTH_SECRET
               valueFrom:
                 secretKeyRef:
