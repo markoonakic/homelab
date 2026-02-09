@@ -13,7 +13,7 @@ I chose Talos Linux for its immutable, minimal design. The setup runs distribute
 ## System Architecture
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'background': '#ebdbb2', 'lineColor': '#665c54', 'edgeLabelBackground': 'transparent', 'primaryTextColor': '#282828'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'background': '#ebdbb2', 'lineColor': '#665c54', 'edgeLabelBackground': '#ebdbb2', 'primaryTextColor': '#282828'}}}%%
 
 graph TD
     %% ── External Services ──
