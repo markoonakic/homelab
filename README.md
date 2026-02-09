@@ -13,7 +13,56 @@ I chose Talos Linux for its immutable, minimal design. The setup runs distribute
 ## System Architecture
 
 ```mermaid
-<!-- DIAGRAM PLACEHOLDER -->
+%%{init: {'theme': 'base', 'themeVariables': {'lineColor': '#665c54', 'edgeLabelBackground': '#ebdbb2'}}}%%
+
+graph TD
+    %% ── External Sources ──
+    renovate["Renovate"]:::gitops -->|"PRs"| github["GitHub"]:::external
+    letsencrypt["Let's Encrypt"]:::external
+    headscale["Headscale VPN"]:::external
+
+    %% ── Git Sync ──
+    github -->|"git sync"| flux
+
+    %% ── Cluster ──
+    subgraph cluster["Talos Linux Cluster · 3 Nodes · 8 CPU · 20GB RAM"]
+        flux["FluxCD"]:::gitops -->|"decrypt"| sops["SOPS + age"]:::gitops
+        certmanager["cert-manager"]:::network
+        metallb["MetalLB"]:::network
+        traefik["Traefik"]:::network
+        apps["Applications\nVaultwarden · Karakeep · Vikunja\nMealie · Excalidraw · Glance"]:::application
+        monitoring["Monitoring\nPrometheus · Grafana · Alertmanager"]:::monitor
+        longhorn["Longhorn\nReplicated Storage"]:::store
+    end
+
+    %% ── Flux Reconciliation ──
+    flux -.-> certmanager
+    flux -.-> apps
+    flux -.-> longhorn
+
+    %% ── TLS Flow ──
+    letsencrypt -->|"certs"| certmanager
+    certmanager -->|"TLS"| traefik
+
+    %% ── Traffic Flow ──
+    headscale -->|"VPN"| traefik
+    metallb --> traefik
+    traefik --> apps
+    traefik --> monitoring
+
+    %% ── Persistence ──
+    apps --> longhorn
+    monitoring --> longhorn
+
+    %% ── Gruvbox Palette ──
+    classDef external fill:#458588,stroke:#282828,stroke-width:2px,color:#ebdbb2
+    classDef gitops fill:#98971a,stroke:#282828,stroke-width:2px,color:#ebdbb2
+    classDef network fill:#d65d0e,stroke:#282828,stroke-width:2px,color:#ebdbb2
+    classDef monitor fill:#b16286,stroke:#282828,stroke-width:2px,color:#ebdbb2
+    classDef application fill:#d79921,stroke:#282828,stroke-width:2px,color:#282828
+    classDef store fill:#689d6a,stroke:#282828,stroke-width:2px,color:#ebdbb2
+
+    style cluster fill:#fbf1c7,stroke:#928374,stroke-width:2px,color:#282828
 ```
 
 ## Writing
