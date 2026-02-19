@@ -6,8 +6,6 @@ resources:
   - helmrepository-bitnami.yaml
   - helmrepository-tarnished.yaml
   - secret.yaml
-  - secret-helm-values.yaml
   - helmrelease-postgres.yaml
   - storage-app.yaml
   - helmrelease-tarnished.yaml
-  - ingress.yaml

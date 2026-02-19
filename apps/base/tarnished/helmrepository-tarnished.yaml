@@ -2,7 +2,7 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: tarnished-oci
-  namespace: flux-system
+  namespace: tarnished
 spec:
   interval: 24h
   type: oci
