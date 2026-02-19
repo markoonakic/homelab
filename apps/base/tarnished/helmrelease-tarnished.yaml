@@ -1,0 +1,54 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tarnished
+  namespace: flux-system
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: tarnished
+      version: "0.1.0"
+      sourceRef:
+        kind: HelmRepository
+        name: tarnished-oci
+        namespace: flux-system
+  targetNamespace: tarnished
+  install:
+    createNamespace: false
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  valuesFrom:
+    - kind: Secret
+      name: tarnished-helm-values
+      namespace: tarnished
+      valuesKey: values.yaml
+  values:
+    ingress:
+      enabled: true
+      className: traefik
+      host: tarnished.sarma.love
+      annotations:
+        traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+        traefik.ingress.kubernetes.io/router.tls: "true"
+      tls:
+        enabled: true
+        secretName: sarma-wildcard-tls
+    persistence:
+      enabled: true
+      existingClaim: tarnished-uploads
+    postgresql:
+      enabled: true
+      host: tarnished-postgres
+      database: tarnished
+      user: tarnished
+    resources:
+      requests:
+        cpu: 200m
+        memory: 256Mi
+      limits:
+        cpu: 1000m
+        memory: 1Gi
