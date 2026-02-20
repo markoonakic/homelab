@@ -28,6 +28,25 @@ spec:
       repository: ghcr.io/markoonakic/tarnished
       tag: "0.1.1"
 
+    service:
+      type: ClusterIP
+      port: 5577
+
+    ingress:
+      enabled: true
+      className: traefik
+      host: tarnished.sarma.love
+      annotations:
+        traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+        traefik.ingress.kubernetes.io/router.tls: "true"
+      tls:
+        enabled: true
+        secretName: sarma-wildcard-tls
+
+    persistence:
+      enabled: true
+      existingClaim: tarnished-uploads
+
     postgresql:
       enabled: true
       host: tarnished-postgres
@@ -40,14 +59,14 @@ spec:
       existingSecret: tarnished-secrets
       existingSecretKey: secret-key
 
-    persistence:
-      enabled: true
-      existingClaim: tarnished-uploads
+    env:
+      - name: APP_URL
+        value: "https://tarnished.sarma.love"
 
-    ingress:
-      enabled: true
-      className: traefik
-      host: tarnished.sarma.love
-      tls:
-        enabled: true
-        secretName: sarma-wildcard-tls
+    resources:
+      requests:
+        cpu: 200m
+        memory: 256Mi
+      limits:
+        cpu: 1000m
+        memory: 1Gi
