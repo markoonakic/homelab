@@ -1,9 +1,9 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: tarnished-oci
+  name: ghcr-tarnished
   namespace: tarnished
 spec:
-  interval: 24h
+  interval: 5m
   type: oci
   url: oci://ghcr.io/markoonakic
