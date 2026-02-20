@@ -79,3 +79,29 @@ spec:
         limits:
           cpu: 500m
           memory: 512Mi
+
+    # Custom probes with Host header to fix 400 Bad Request issue
+    # FastAPI rejects requests without a recognized Host header
+    livenessProbe:
+      httpGet:
+        path: /health
+        port: http
+        httpHeaders:
+          - name: Host
+            value: localhost
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+
+    readinessProbe:
+      httpGet:
+        path: /health
+        port: http
+        httpHeaders:
+          - name: Host
+            value: localhost
+      initialDelaySeconds: 10
+      periodSeconds: 5
+      timeoutSeconds: 3
+      failureThreshold: 3
