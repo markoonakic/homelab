@@ -6,4 +6,4 @@ metadata:
 spec:
   interval: 5m
   type: oci
-  url: oci://ghcr.io/markoonakic
+  url: oci://ghcr.io/markoonakic/charts
