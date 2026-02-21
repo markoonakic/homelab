@@ -49,7 +49,7 @@ spec:
                   name: karakeep-secrets
                   key: openai-base-url
             - name: INFERENCE_TEXT_MODEL
-              value: "llama-3.3-70b"
+              value: "gpt-oss-120b"
             - name: INFERENCE_OUTPUT_SCHEMA
               value: "json"
             - name: NEXTAUTH_SECRET
