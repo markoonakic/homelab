@@ -45,15 +45,23 @@ spec:
           "separateMajorMinor": true,
           "separateMinorPatch": false,
           "labels": ["dependencies", "renovate"],
-          "regexManagers": [
-            {
-              "fileMatch": ["helmrelease\\.yaml$"],
-              "matchStrings": [
-                "repository:\\s+(?<depName>[^\\s]+)\\s+tag:\\s+(?<currentValue>[^\\s]+)"
-              ],
-              "datasourceTemplate": "docker"
-            }
-          ],
+          "flux": {
+            "managerFilePatterns": [
+              "/(^|/)clusters\\/staging\\/flux-system\\/gotk-components\\.ya?ml$/"
+            ]
+          },
+          "kubernetes": {
+            "managerFilePatterns": [
+              "/(^|/)apps\\/base\\/.+\\/deployment\\.ya?ml$/",
+              "/(^|/)infrastructure\\/base\\/.+\\/deployment\\.ya?ml$/"
+            ]
+          },
+          "helm-values": {
+            "managerFilePatterns": [
+              "/(^|/)apps\\/base\\/.+\\/helmrelease.*\\.ya?ml$/",
+              "/(^|/)infrastructure\\/base\\/.+\\/helmrelease.*\\.ya?ml$/"
+            ]
+          },
           "packageRules": [
             {
               "matchUpdateTypes": ["patch"],
