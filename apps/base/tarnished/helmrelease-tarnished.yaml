@@ -39,15 +39,9 @@ spec:
       enabled: true
       existingClaim: tarnished-uploads
 
-    # PostgreSQL mode enabled (v0.1.19 fixes hardcoded DATABASE_URL bug)
+    # SQLite mode (testing libmagic issue)
     postgresql:
-      enabled: true
-      host: tarnished-postgres-postgresql.tarnished.svc.cluster.local
-      port: 5432
-      database: tarnished
-      user: tarnished
-      existingSecret: tarnished-secrets
-      existingSecretPasswordKey: postgres-password
+      enabled: false
 
     secretKey:
       existingSecret: tarnished-secrets
