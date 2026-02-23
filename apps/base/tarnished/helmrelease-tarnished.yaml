@@ -53,6 +53,12 @@ spec:
       existingSecret: tarnished-secrets
       existingSecretKey: secret-key
 
+    # Override hardcoded DATABASE_URL from Dockerfile (bug in v0.1.18)
+    # Empty value allows discrete POSTGRES_* vars to work
+    env:
+      - name: DATABASE_URL
+        value: ""
+
     resources:
       requests:
         cpu: 200m
