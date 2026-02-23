@@ -24,8 +24,6 @@ spec:
   values:
     replicaCount: 1
 
-    # Image tag defaults to .Chart.AppVersion (0.1.18)
-
     ingress:
       enabled: true
       className: traefik
@@ -41,26 +39,13 @@ spec:
       enabled: true
       existingClaim: tarnished-uploads
 
+    # Test with SQLite (PostgreSQL disabled)
     postgresql:
-      enabled: true
-      host: tarnished-postgres-postgresql
-      database: tarnished
-      user: tarnished
-      existingSecret: tarnished-secrets
-      existingSecretPasswordKey: postgres-password
+      enabled: false
 
     secretKey:
       existingSecret: tarnished-secrets
       existingSecretKey: secret-key
-
-    # Override hardcoded DATABASE_URL from Dockerfile (bug in v0.1.18)
-    # Set explicitly via secret reference to override the SQLite default
-    env:
-      - name: DATABASE_URL
-        valueFrom:
-          secretKeyRef:
-            name: tarnished-secrets
-            key: database-url
 
     resources:
       requests:
