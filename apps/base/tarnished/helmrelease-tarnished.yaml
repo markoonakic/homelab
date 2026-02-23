@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: tarnished
-      version: "0.1.16"
+      version: "0.1.18"
       sourceRef:
         kind: HelmRepository
         name: ghcr-tarnished
@@ -24,13 +24,7 @@ spec:
   values:
     replicaCount: 1
 
-    image:
-      repository: ghcr.io/markoonakic/tarnished
-      tag: "0.1.16"
-
-    service:
-      type: ClusterIP
-      port: 5577
+    # Image tag defaults to .Chart.AppVersion (0.1.18)
 
     ingress:
       enabled: true
@@ -59,10 +53,6 @@ spec:
       existingSecret: tarnished-secrets
       existingSecretKey: secret-key
 
-    env:
-      - name: APP_URL
-        value: "https://tarnished.sarma.love"
-
     resources:
       requests:
         cpu: 200m
@@ -79,29 +69,3 @@ spec:
         limits:
           cpu: 500m
           memory: 512Mi
-
-    # Custom probes with Host header to fix 400 Bad Request issue
-    # FastAPI rejects requests without a recognized Host header
-    livenessProbe:
-      httpGet:
-        path: /health
-        port: http
-        httpHeaders:
-          - name: Host
-            value: localhost
-      initialDelaySeconds: 30
-      periodSeconds: 10
-      timeoutSeconds: 5
-      failureThreshold: 3
-
-    readinessProbe:
-      httpGet:
-        path: /health
-        port: http
-        httpHeaders:
-          - name: Host
-            value: localhost
-      initialDelaySeconds: 10
-      periodSeconds: 5
-      timeoutSeconds: 3
-      failureThreshold: 3
