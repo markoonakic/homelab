@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: tarnished
-      version: "0.1.18"
+      version: "0.1.19"
       sourceRef:
         kind: HelmRepository
         name: ghcr-tarnished
@@ -39,9 +39,15 @@ spec:
       enabled: true
       existingClaim: tarnished-uploads
 
-    # Test with SQLite (PostgreSQL disabled)
+    # PostgreSQL mode enabled (v0.1.19 fixes hardcoded DATABASE_URL bug)
     postgresql:
-      enabled: false
+      enabled: true
+      host: tarnished-postgres-postgresql.tarnished.svc.cluster.local
+      port: 5432
+      database: tarnished
+      user: tarnished
+      existingSecret: tarnished-secrets
+      existingSecretPasswordKey: postgres-password
 
     secretKey:
       existingSecret: tarnished-secrets
