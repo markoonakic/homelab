@@ -24,7 +24,7 @@ spec:
   values:
     image:
       repository: vaultwarden/server
-      tag: 1.32.7-alpine
+      tag: 1.35.4-alpine
 
     env:
       TZ: "Europe/Belgrade"
