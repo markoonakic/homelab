@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: headplane
-        image: ghcr.io/tale/headplane:0.6.1
+        image: ghcr.io/tale/headplane:0.6.2
         imagePullPolicy: IfNotPresent
         env:
         - name: TZ
