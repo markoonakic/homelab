@@ -56,7 +56,7 @@ flowchart TD
     flux -.->|deploy| net
     letsencrypt -->|certs| certmanager
     certmanager -->|TLS| traefik
-    headscale -->|VPN| traefik
+    headscale -->|VPN| metallb
     metallb --> traefik
     traefik --> apps
     flux -.->|deploy| apps
