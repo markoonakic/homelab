@@ -13,7 +13,7 @@ I chose Talos Linux for its immutable, minimal design. The setup runs distribute
 ## System Architecture
 
 ```mermaid
-flowchart LR
+flowchart TD
     subgraph external["External Services"]
         direction LR
         github[GitHub]
@@ -35,50 +35,36 @@ flowchart LR
         metallb[MetalLB]
     end
 
-    subgraph apps["Applications"]
-        direction LR
-        vaultwarden[Vaultwarden]
-        karakeep[Karakeep]
-        vikunja[Vikunja]
-        mealie[Mealie]
-        excalidraw[Excalidraw]
-        glance[Glance]
-        tarnished[Tarnished]
+    subgraph stor["Storage"]
+        longhorn[Longhorn]
     end
 
     subgraph mon["Monitoring"]
-        direction LR
         prometheus[Prometheus]
         grafana[Grafana]
         alertmanager[Alertmanager]
     end
 
-    subgraph stor["Storage"]
-        longhorn[Longhorn]
+    subgraph apps["Applications"]
+        vaultwarden[Vaultwarden]
+        karakeep[Karakeep]
+        vikunja[Vikunja]
     end
 
-    subgraph infra["Talos Linux Cluster"]
-        direction LR
-        node1[Control Plane<br/>+ Worker]
-        node2[Control Plane]
-        node3[Worker]
-    end
-
-    renovate -->|PRs| github
     github -->|sync| flux
     flux -->|decrypt| sops
     flux -.->|deploy| net
-    flux -.->|deploy| apps
-    flux -.->|deploy| mon
-    flux -.->|deploy| stor
     letsencrypt -->|certs| certmanager
     certmanager -->|TLS| traefik
     headscale -->|VPN| traefik
     metallb --> traefik
     traefik --> apps
-    traefik --> mon
+    flux -.->|deploy| apps
+    flux -.->|deploy| mon
+    flux -.->|deploy| stor
     apps --> longhorn
     mon --> longhorn
+    traefik --> mon
 ```
 
 ## Writing
