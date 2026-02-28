@@ -25,7 +25,6 @@ flowchart TD
         direction LR
         flux[FluxCD]
         sops[SOPS]
-        renovate[Renovate]
     end
 
     subgraph net["Networking"]
