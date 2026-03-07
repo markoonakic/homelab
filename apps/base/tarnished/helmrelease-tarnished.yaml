@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: tarnished
-      version: "0.1.23"
+      version: "0.1.27"
       sourceRef:
         kind: HelmRepository
         name: ghcr-tarnished
@@ -39,7 +39,6 @@ spec:
       enabled: true
       existingClaim: tarnished-uploads
 
-    # PostgreSQL mode (fresh deployment with v0.1.23)
     postgresql:
       enabled: true
       host: tarnished-postgres-postgresql.tarnished.svc.cluster.local
