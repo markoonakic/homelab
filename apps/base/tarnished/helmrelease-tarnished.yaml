@@ -39,9 +39,15 @@ spec:
       enabled: true
       existingClaim: tarnished-uploads
 
-    # SQLite mode (PostgreSQL disabled)
+    # PostgreSQL mode (fresh deployment with v0.1.23)
     postgresql:
-      enabled: false
+      enabled: true
+      host: tarnished-postgres-postgresql.tarnished.svc.cluster.local
+      port: 5432
+      database: tarnished
+      user: tarnished
+      existingSecret: tarnished-secrets
+      existingSecretPasswordKey: postgres-password
 
     secretKey:
       existingSecret: tarnished-secrets
