@@ -5,6 +5,8 @@ metadata:
   namespace: karakeep
 spec:
   replicas: 1
+  strategy:
+    type: Recreate  # Required for RWO volumes - prevents volume attachment conflicts during updates
   selector:
     matchLabels:
       app: karakeep
