@@ -12,59 +12,11 @@ I chose Talos Linux for its immutable, minimal design. The setup runs distribute
 
 ## System Architecture
 
-```mermaid
-flowchart TD
-    subgraph external["External Services"]
-        direction LR
-        github[GitHub]
-        letsencrypt[Let's Encrypt]
-        headscale[Headscale]
-    end
+![Architecture Diagram](.diagrams/architecture-diagram.excalidraw.svg)
 
-    subgraph gitops["GitOps Pipeline"]
-        direction LR
-        flux[FluxCD]
-        sops[SOPS]
-    end
+## GitOps Workflow
 
-    subgraph net["Networking"]
-        direction LR
-        certmanager[cert-manager]
-        traefik[Traefik]
-        metallb[MetalLB]
-    end
-
-    subgraph stor["Storage"]
-        longhorn[Longhorn]
-    end
-
-    subgraph mon["Monitoring"]
-        prometheus[Prometheus]
-        grafana[Grafana]
-        alertmanager[Alertmanager]
-    end
-
-    subgraph apps["Applications"]
-        vaultwarden[Vaultwarden]
-        karakeep[Karakeep]
-        vikunja[Vikunja]
-    end
-
-    github -->|sync| flux
-    flux -->|decrypt| sops
-    flux -.->|deploy| net
-    letsencrypt -->|certs| certmanager
-    certmanager -->|TLS| traefik
-    headscale -->|VPN| metallb
-    metallb --> traefik
-    traefik --> apps
-    flux -.->|deploy| apps
-    flux -.->|deploy| mon
-    flux -.->|deploy| stor
-    apps --> longhorn
-    mon --> longhorn
-    traefik --> mon
-```
+![GitOps Workflow](.diagrams/gitops-diagram.excalidraw.svg)
 
 ## Writing
 
