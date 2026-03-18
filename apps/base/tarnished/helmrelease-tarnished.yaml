@@ -24,9 +24,6 @@ spec:
   values:
     replicaCount: 1
 
-    image:
-      pullPolicy: Always
-
     ingress:
       enabled: true
       className: traefik
