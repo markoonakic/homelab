@@ -28,6 +28,8 @@ spec:
           env:
             - name: TZ
               value: "UTC"
+            - name: FORCE_OWNERSHIP
+              value: "false"
             - name: SEARXNG_SETTINGS_PATH
               value: /etc/searxng/settings.yml
             - name: SEARXNG_SECRET
