@@ -4,5 +4,6 @@ resources:
   - ./storage
   - ./controllers
   - ./networking
+  - ./searxng
   - ./monitoring
   - ./security
