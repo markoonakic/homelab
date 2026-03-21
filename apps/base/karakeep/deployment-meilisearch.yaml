@@ -17,6 +17,13 @@ spec:
         app: karakeep
         component: meilisearch
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/worker
+                    operator: Exists
       initContainers:
         - name: volume-setup
           image: busybox:1.36

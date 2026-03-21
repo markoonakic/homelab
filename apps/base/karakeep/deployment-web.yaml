@@ -5,6 +5,8 @@ metadata:
   namespace: karakeep
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: karakeep
@@ -15,6 +17,13 @@ spec:
         app: karakeep
         component: web
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/worker
+                    operator: Exists
       containers:
         - name: karakeep
           image: ghcr.io/hoarder-app/hoarder:0.30.0

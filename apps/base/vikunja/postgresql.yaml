@@ -29,6 +29,13 @@ spec:
       labels:
         app: postgresql
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/worker
+                    operator: Exists
       containers:
         - name: postgresql
           image: postgres:17.2

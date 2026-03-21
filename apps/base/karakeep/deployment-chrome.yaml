@@ -15,6 +15,13 @@ spec:
         app: karakeep
         component: chrome
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/worker
+                    operator: Exists
       containers:
         - name: chrome
           image: gcr.io/zenika-hub/alpine-chrome:123
