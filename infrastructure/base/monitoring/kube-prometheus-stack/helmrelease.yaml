@@ -24,7 +24,7 @@ spec:
   values:
     # Grafana configuration
     grafana:
-      enabled: true
+      enabled: false
       deploymentStrategy:
         type: Recreate  # Required for RWO PVC - prevents multi-attach errors during updates
       admin:
@@ -50,6 +50,7 @@ spec:
     # Prometheus configuration
     prometheus:
       prometheusSpec:
+        replicas: 0
         retention: 14d  # Reduced from 30d for memory optimization
         storageSpec:
           volumeClaimTemplate:
@@ -84,6 +85,7 @@ spec:
     # Alertmanager configuration
     alertmanager:
       alertmanagerSpec:
+        replicas: 0
         storage:
           volumeClaimTemplate:
             metadata:
