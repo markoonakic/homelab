@@ -17,8 +17,6 @@ spec:
       app: headscale
   template:
     metadata:
-      annotations:
-        homelab.sarma.love/restarted-at: "2026-03-18T20:39:10Z"
       labels:
         app: headscale
     spec:
