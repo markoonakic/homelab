@@ -19,6 +19,8 @@ spec:
       enabled: true
       kind: Deployment
       replicas: 2  # HA across 3-node cluster
+      podAnnotations:
+        homelab.sarma.love/restarted-at: "2026-03-20T18:51:00Z"
 
     # Service configuration - LoadBalancer with MetalLB
     service:
