@@ -15,6 +15,13 @@ spec:
       labels:
         app: headplane
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/worker
+                    operator: Exists
       containers:
       - name: headplane
         image: ghcr.io/tale/headplane:0.6.1

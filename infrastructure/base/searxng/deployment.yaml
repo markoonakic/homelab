@@ -17,6 +17,13 @@ spec:
       labels:
         app: searxng
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/worker
+                    operator: Exists
       containers:
         - name: searxng
           image: ghcr.io/searxng/searxng:2026.3.18-3810dc9d1

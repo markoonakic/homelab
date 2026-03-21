@@ -15,6 +15,13 @@ spec:
       labels:
         app: excalidraw
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/worker
+                    operator: Exists
       containers:
         - name: excalidraw
           image: excalidraw/excalidraw:latest
