@@ -23,7 +23,7 @@ data:
         {
           "action": "accept",
           "src": ["group:admin"],
-          "dst": ["*"],
+          "dst": ["autogroup:member", "autogroup:tagged"],
           "users": ["root", "autogroup:nonroot"]
         }
       ],
