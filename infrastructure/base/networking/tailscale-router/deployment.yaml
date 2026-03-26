@@ -32,7 +32,7 @@ spec:
       containers:
       - name: tailscale
         imagePullPolicy: IfNotPresent
-        image: tailscale/tailscale:v1.90.9
+        image: tailscale/tailscale:v1.94.2
         env:
         # Store state in k8s secret
         - name: TS_KUBE_SECRET
