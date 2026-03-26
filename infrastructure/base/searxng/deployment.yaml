@@ -22,7 +22,7 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                  - key: node-role.kubernetes.io/worker
+                  - key: node-role.kubernetes.io/laptop
                     operator: Exists
       containers:
         - name: searxng
