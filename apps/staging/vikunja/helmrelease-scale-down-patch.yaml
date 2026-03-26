@@ -1,0 +1,49 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: vikunja
+  namespace: flux-system
+spec:
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+              name: vikunja-vikunja
+            patch: |
+              - op: add
+                path: /spec/template/spec/affinity
+                value:
+                  nodeAffinity:
+                    requiredDuringSchedulingIgnoredDuringExecution:
+                      nodeSelectorTerms:
+                        - matchExpressions:
+                            - key: node-role.kubernetes.io/worker
+                              operator: Exists
+          - target:
+              kind: Deployment
+              name: vikunja-vikunja
+            patch: |
+              - op: replace
+                path: /spec/replicas
+                value: 0
+          - target:
+              kind: Deployment
+              name: vikunja-vikunja-typesense
+            patch: |
+              - op: add
+                path: /spec/template/spec/affinity
+                value:
+                  nodeAffinity:
+                    requiredDuringSchedulingIgnoredDuringExecution:
+                      nodeSelectorTerms:
+                        - matchExpressions:
+                            - key: node-role.kubernetes.io/worker
+                              operator: Exists
+          - target:
+              kind: Deployment
+              name: vikunja-vikunja-typesense
+            patch: |
+              - op: replace
+                path: /spec/replicas
+                value: 0

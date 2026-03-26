@@ -6,3 +6,6 @@ resources:
   # example: if you ever want a staging-only tweak to Longhorn or Renovate,
   # you add strategic merge patches here
   # - path: longhorn-values-patch.yaml
+patches:
+  - path: headscale-scale-down-patch.yaml
+  - path: headplane-scale-down-patch.yaml
