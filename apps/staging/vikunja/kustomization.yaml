@@ -3,5 +3,5 @@ kind: Kustomization
 resources:
   - ../../base/vikunja/
 patches:
-  - path: helmrelease-scale-down-patch.yaml
-  - path: postgresql-scale-down-patch.yaml
+  - path: helmrelease-worker-pin-patch.yaml
+  - path: postgresql-worker-pin-patch.yaml

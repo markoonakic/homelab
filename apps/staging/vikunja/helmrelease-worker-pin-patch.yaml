@@ -11,39 +11,29 @@ spec:
               kind: Deployment
               name: vikunja-vikunja
             patch: |
-              - op: add
+              - op: replace
                 path: /spec/template/spec/affinity
                 value:
                   nodeAffinity:
                     requiredDuringSchedulingIgnoredDuringExecution:
                       nodeSelectorTerms:
                         - matchExpressions:
-                            - key: node-role.kubernetes.io/worker
-                              operator: Exists
-          - target:
-              kind: Deployment
-              name: vikunja-vikunja
-            patch: |
-              - op: replace
-                path: /spec/replicas
-                value: 0
+                            - key: kubernetes.io/hostname
+                              operator: In
+                              values:
+                                - talos-awe-w01
           - target:
               kind: Deployment
               name: vikunja-vikunja-typesense
             patch: |
-              - op: add
+              - op: replace
                 path: /spec/template/spec/affinity
                 value:
                   nodeAffinity:
                     requiredDuringSchedulingIgnoredDuringExecution:
                       nodeSelectorTerms:
                         - matchExpressions:
-                            - key: node-role.kubernetes.io/worker
-                              operator: Exists
-          - target:
-              kind: Deployment
-              name: vikunja-vikunja-typesense
-            patch: |
-              - op: replace
-                path: /spec/replicas
-                value: 0
+                            - key: kubernetes.io/hostname
+                              operator: In
+                              values:
+                                - talos-awe-w01
