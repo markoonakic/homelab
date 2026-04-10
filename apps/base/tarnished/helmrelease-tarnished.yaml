@@ -83,6 +83,22 @@ spec:
           cpu: 500m
           memory: 512Mi
 
+    cleanup:
+      enabled: true
+      schedule: "0 4 * * *"
+      timeZone: "Europe/Belgrade"
+      mode: dry-run
+      successfulJobsHistoryLimit: 1
+      failedJobsHistoryLimit: 1
+      startingDeadlineSeconds: 600
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+        limits:
+          cpu: 50m
+          memory: 32Mi
+
     affinity:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
