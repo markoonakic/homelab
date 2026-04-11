@@ -35,7 +35,7 @@ spec:
         enabled: true
         storageClassName: "longhorn"
         size: 10Gi
-        labels:
+        extraPvcLabels:
           recurring-job.longhorn.io/source: "enabled"
           recurring-job.longhorn.io/snapshot-daily: "enabled"
         annotations:
