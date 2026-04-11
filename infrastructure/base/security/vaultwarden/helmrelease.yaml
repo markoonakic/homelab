@@ -21,6 +21,21 @@ spec:
   upgrade:
     remediation:
       retries: 3
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              version: v1
+              kind: PersistentVolumeClaim
+              name: vaultwarden-vaultwarden
+            patch: |
+              apiVersion: v1
+              kind: PersistentVolumeClaim
+              metadata:
+                name: vaultwarden-vaultwarden
+                labels:
+                  recurring-job.longhorn.io/source: "enabled"
+                  recurring-job.longhorn.io/snapshot-daily: "enabled"
   values:
     image:
       repository: vaultwarden/server
@@ -40,9 +55,6 @@ spec:
       annotations:
         # Force 3 replicas for critical password vault data
         longhorn.io/replicas: "3"
-      # NOTE: The gissilabs/vaultwarden chart does not template PVC labels,
-      # so recurring snapshot migration for Vaultwarden needs a separate
-      # existingClaim refactor rather than label values here.
 
     resources:
       requests:
