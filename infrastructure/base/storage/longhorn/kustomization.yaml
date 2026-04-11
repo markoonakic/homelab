@@ -8,4 +8,3 @@ resources:
   - middleware-auth.yaml
   - recurring-jobs/recurringjob-headscale-daily.yaml
   - recurring-jobs/recurringjob-snapshot-daily.yaml
-  - recurring-jobs/recurringjob-snapshot-canary-crawl4ai.yaml
