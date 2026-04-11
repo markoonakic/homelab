@@ -1,0 +1,14 @@
+apiVersion: longhorn.io/v1beta2
+kind: RecurringJob
+metadata:
+  name: snapshot-canary-crawl4ai
+  namespace: longhorn-system
+spec:
+  name: snapshot-canary-crawl4ai
+  cron: "*/2 * * * *"
+  task: snapshot-force-create
+  retain: 2
+  concurrency: 1
+  labels:
+    purpose: canary-verification
+    workload: crawl4ai
