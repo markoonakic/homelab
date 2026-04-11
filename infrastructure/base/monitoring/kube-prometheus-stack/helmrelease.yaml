@@ -35,9 +35,11 @@ spec:
         enabled: true
         storageClassName: "longhorn"
         size: 10Gi
+        labels:
+          recurring-job.longhorn.io/source: "enabled"
+          recurring-job.longhorn.io/snapshot-daily: "enabled"
         annotations:
           longhorn.io/replicas: "2"
-          recurring-job-selectors.longhorn.io: '[{"name":"snapshot-daily", "isGroup":false}]'
       resources:
         requests:
           cpu: 100m
@@ -55,9 +57,11 @@ spec:
         storageSpec:
           volumeClaimTemplate:
             metadata:
+              labels:
+                recurring-job.longhorn.io/source: "enabled"
+                recurring-job.longhorn.io/snapshot-daily: "enabled"
               annotations:
                 longhorn.io/replicas: "1"  # Tier 3: Regenerable metrics, save 50Gi
-                recurring-job-selectors.longhorn.io: '[{"name":"snapshot-daily", "isGroup":false}]'
             spec:
               storageClassName: longhorn
               accessModes: ["ReadWriteOnce"]
@@ -89,9 +93,11 @@ spec:
         storage:
           volumeClaimTemplate:
             metadata:
+              labels:
+                recurring-job.longhorn.io/source: "enabled"
+                recurring-job.longhorn.io/snapshot-daily: "enabled"
               annotations:
                 longhorn.io/replicas: "1"  # Tier 3: Ephemeral state, save 10Gi
-                recurring-job-selectors.longhorn.io: '[{"name":"snapshot-daily", "isGroup":false}]'
             spec:
               storageClassName: longhorn
               accessModes: ["ReadWriteOnce"]

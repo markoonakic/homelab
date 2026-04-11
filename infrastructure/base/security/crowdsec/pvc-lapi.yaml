@@ -3,9 +3,11 @@ kind: PersistentVolumeClaim
 metadata:
   name: crowdsec-lapi-data
   namespace: crowdsec
+  labels:
+    recurring-job.longhorn.io/source: "enabled"
+    recurring-job.longhorn.io/snapshot-daily: "enabled"
   annotations:
     longhorn.io/replicas: "2"  # Tier 2: Important data (attack decisions)
-    recurring-job-selectors.longhorn.io: '[{"name":"snapshot-daily", "isGroup":false}]'
 spec:
   accessModes:
     - ReadWriteOnce
