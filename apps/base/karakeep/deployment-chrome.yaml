@@ -15,6 +15,10 @@ spec:
         app: karakeep
         component: chrome
     spec:
+      automountServiceAccountToken: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -50,3 +54,6 @@ spec:
                 - ALL
               add:
                 - SYS_ADMIN
+            runAsGroup: 1000
+            runAsNonRoot: true
+            runAsUser: 1000

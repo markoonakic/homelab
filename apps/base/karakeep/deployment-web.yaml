@@ -20,6 +20,12 @@ spec:
         app: karakeep
         component: web
     spec:
+      automountServiceAccountToken: false
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -74,6 +80,10 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
+            - name: run
+              mountPath: /run
+            - name: tmp
+              mountPath: /tmp
           resources:
             requests:
               cpu: 200m
@@ -102,8 +112,15 @@ spec:
             capabilities:
               drop:
                 - ALL
-            readOnlyRootFilesystem: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 1000
+            runAsNonRoot: true
+            runAsUser: 1000
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: karakeep-web-data
+        - name: run
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
