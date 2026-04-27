@@ -40,14 +40,12 @@ spec:
             - sh
             - -c
             - |
-              chown 1000:1000 /run
-              chmod 755 /run
-              chmod 1777 /tmp
+              mkdir -p /runtime/run /runtime/tmp
+              chmod 755 /runtime/run
+              chmod 1777 /runtime/tmp
           volumeMounts:
-            - name: run
-              mountPath: /run
-            - name: tmp
-              mountPath: /tmp
+            - name: runtime
+              mountPath: /runtime
           resources:
             requests:
               cpu: 5m
@@ -60,13 +58,13 @@ spec:
             capabilities:
               drop:
                 - ALL
-              add:
-                - CHOWN
             readOnlyRootFilesystem: true
-            runAsUser: 0
+            runAsGroup: 1000
+            runAsNonRoot: true
+            runAsUser: 1000
       containers:
         - name: karakeep
-          image: ghcr.io/hoarder-app/hoarder:0.30.0
+          image: ghcr.io/karakeep-app/karakeep:0.30.0
           ports:
             - name: http
               containerPort: 3000
@@ -111,10 +109,12 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
-            - name: run
+            - name: runtime
               mountPath: /run
-            - name: tmp
+              subPath: run
+            - name: runtime
               mountPath: /tmp
+              subPath: tmp
           resources:
             requests:
               cpu: 200m
@@ -151,7 +151,5 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: karakeep-web-data
-        - name: run
-          emptyDir: {}
-        - name: tmp
+        - name: runtime
           emptyDir: {}
