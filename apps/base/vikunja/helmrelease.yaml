@@ -29,6 +29,9 @@ spec:
               name: vikunja-vikunja
             patch: |
               - op: add
+                path: /spec/replicas
+                value: 0
+              - op: add
                 path: /spec/template/spec/affinity
                 value:
                   nodeAffinity:
@@ -41,6 +44,9 @@ spec:
               kind: Deployment
               name: vikunja-vikunja-typesense
             patch: |
+              - op: add
+                path: /spec/replicas
+                value: 0
               - op: add
                 path: /spec/template/spec/affinity
                 value:

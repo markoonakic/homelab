@@ -11,6 +11,9 @@ spec:
               kind: Deployment
               name: vikunja-vikunja
             patch: |
+              - op: add
+                path: /spec/replicas
+                value: 0
               - op: replace
                 path: /spec/template/spec/affinity
                 value:
@@ -26,6 +29,9 @@ spec:
               kind: Deployment
               name: vikunja-vikunja-typesense
             patch: |
+              - op: add
+                path: /spec/replicas
+                value: 0
               - op: replace
                 path: /spec/template/spec/affinity
                 value:

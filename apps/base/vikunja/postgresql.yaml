@@ -20,7 +20,7 @@ metadata:
   namespace: vikunja
 spec:
   serviceName: postgresql
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: postgresql
