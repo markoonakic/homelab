@@ -105,7 +105,7 @@ spec:
                   name: karakeep-secrets
                   key: nextauth-secret
             - name: BROWSER_WEB_URL
-              value: "http://karakeep-chrome:9222"
+              value: "http://$(KARAKEEP_CHROME_SERVICE_HOST):$(KARAKEEP_CHROME_SERVICE_PORT_HTTP)"
           volumeMounts:
             - name: data
               mountPath: /data
