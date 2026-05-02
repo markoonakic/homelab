@@ -26,7 +26,7 @@ spec:
                     operator: Exists
       containers:
         - name: searxng
-          image: ghcr.io/searxng/searxng:2026.3.18-3810dc9d1
+          image: ghcr.io/searxng/searxng:2026.5.2-cd75013c9
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
