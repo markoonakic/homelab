@@ -25,7 +25,7 @@ spec:
           type: RuntimeDefault
       initContainers:
         - name: volume-setup
-          image: busybox:1.36
+          image: busybox:1.37
           volumeMounts:
             - name: data
               mountPath: /app/data

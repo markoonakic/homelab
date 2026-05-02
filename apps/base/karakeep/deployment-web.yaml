@@ -35,7 +35,7 @@ spec:
                     operator: Exists
       initContainers:
         - name: runtime-dir-setup
-          image: busybox:1.36
+          image: busybox:1.37
           command:
             - sh
             - -c
