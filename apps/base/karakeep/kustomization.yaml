@@ -4,6 +4,7 @@ resources:
   - namespace.yaml
   - storage-web.yaml
   - storage-meilisearch.yaml
+  - storage-meilisearch-v113.yaml
   - deployment-web.yaml
   - deployment-meilisearch.yaml
   - deployment-chrome.yaml
