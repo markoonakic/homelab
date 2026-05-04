@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - excalidraw/
   - glance-k8s/
+  - dynacat-k8s/
   - karakeep/
   - mealie/
   - tarnished/

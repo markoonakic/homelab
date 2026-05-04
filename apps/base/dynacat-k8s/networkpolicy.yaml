@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: dynacat-k8s-allow-dynacat
+  namespace: dynacat-k8s
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: dynacat-k8s
+      app.kubernetes.io/component: dashboard-extension
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: dynacat
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: dynacat
+              app.kubernetes.io/component: dashboard
+      ports:
+        - protocol: TCP
+          port: 8080
