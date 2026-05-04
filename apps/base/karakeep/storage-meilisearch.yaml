@@ -8,6 +8,7 @@ metadata:
     recurring-job.longhorn.io/snapshot-daily: "enabled"
   annotations:
     longhorn.io/replicas: "2"
+    homelab.sarma.love/retained-for-rollback: "meilisearch-v1.11.3"
 spec:
   accessModes:
     - ReadWriteOnce
