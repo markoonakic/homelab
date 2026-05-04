@@ -4,7 +4,7 @@ metadata:
   name: karakeep-meilisearch
   namespace: karakeep
 spec:
-  replicas: 1
+  replicas: 0
   strategy:
     type: Recreate  # Required for RWO volumes - prevents volume attachment conflicts during updates
   selector:
