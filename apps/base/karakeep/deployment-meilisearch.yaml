@@ -4,7 +4,7 @@ metadata:
   name: karakeep-meilisearch
   namespace: karakeep
 spec:
-  replicas: 0
+  replicas: 1
   strategy:
     type: Recreate  # Required for RWO volumes - prevents volume attachment conflicts during updates
   selector:
@@ -60,7 +60,7 @@ spec:
             readOnlyRootFilesystem: true
       containers:
         - name: meilisearch
-          image: getmeili/meilisearch:v1.11.3
+          image: getmeili/meilisearch:v1.13.3
           ports:
             - name: http
               containerPort: 7700
@@ -112,6 +112,6 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: karakeep-meilisearch-data
+            claimName: karakeep-meilisearch-data-v113
         - name: tmp
           emptyDir: {}
