@@ -8,7 +8,7 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: searxng
@@ -18,13 +18,6 @@ spec:
         app: searxng
     spec:
       enableServiceLinks: false
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: node-role.kubernetes.io/laptop
-                    operator: Exists
       containers:
         - name: searxng
           image: ghcr.io/searxng/searxng:2026.5.2-cd75013c9
