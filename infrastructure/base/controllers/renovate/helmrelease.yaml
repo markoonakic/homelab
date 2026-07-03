@@ -22,9 +22,9 @@ spec:
     remediation:
       retries: 3
   values:
-    # CronJob schedule - Daily at 2 AM Europe/Belgrade
+    # CronJob schedule - Daily at 4:30 AM Europe/Belgrade
     cronjob:
-      schedule: "0 2 * * *"
+      schedule: "30 4 * * *"
       concurrencyPolicy: Forbid
       successfulJobsHistoryLimit: 3
       failedJobsHistoryLimit: 3
@@ -36,7 +36,7 @@ spec:
         {
           "platform": "github",
           "repositories": ["markoonakic/homelab", "markoonakic/homelab-private"],
-          "schedule": ["after 2am and before 4am"],
+          "schedule": ["after 4am and before 6am"],
           "timezone": "Europe/Belgrade",
           "automerge": false,
           "dependencyDashboard": true,
