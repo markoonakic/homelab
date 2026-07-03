@@ -25,9 +25,11 @@ spec:
     # CronJob schedule - Daily at 4:30 AM Europe/Belgrade
     cronjob:
       schedule: "30 4 * * *"
+      timeZone: "Europe/Belgrade"
       concurrencyPolicy: Forbid
-      successfulJobsHistoryLimit: 3
-      failedJobsHistoryLimit: 3
+      activeDeadlineSeconds: 7200
+      successfulJobsHistoryLimit: 1
+      failedJobsHistoryLimit: 1
 
     # Renovate configuration
     renovate:
