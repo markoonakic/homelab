@@ -2,12 +2,12 @@ creation_rules:
   # Encrypt Glance ConfigMap data field only
   - path_regex: apps/base/glance/configmap-glance\.yaml
     encrypted_regex: ^(data)$
-    age: age1hujjuflxstf7fgzms6rgw6gpwh6kcs3yqv9qtu0js48gsa0h63js3xnvng
+    age: age1hujjuflxstf7fgzms6rgw6gpwh6kcs3yqv9qtu0js48gsa0h63js3xnvng,age1cjzsvxjepjgy9csel2kv50ww7ymq35976y76k8tw27cuw773zamq9d99rc
   # Encrypt Headscale ConfigMap data field only
   - path_regex: infrastructure/base/networking/headscale/configmap-config\.yaml
     encrypted_regex: ^(data)$
-    age: age1hujjuflxstf7fgzms6rgw6gpwh6kcs3yqv9qtu0js48gsa0h63js3xnvng
+    age: age1hujjuflxstf7fgzms6rgw6gpwh6kcs3yqv9qtu0js48gsa0h63js3xnvng,age1cjzsvxjepjgy9csel2kv50ww7ymq35976y76k8tw27cuw773zamq9d99rc
   # Encrypt Kubernetes Secret data fields
   - path_regex: .*.yaml
     encrypted_regex: ^(data|stringData)$
-    age: age1hujjuflxstf7fgzms6rgw6gpwh6kcs3yqv9qtu0js48gsa0h63js3xnvng
+    age: age1hujjuflxstf7fgzms6rgw6gpwh6kcs3yqv9qtu0js48gsa0h63js3xnvng,age1cjzsvxjepjgy9csel2kv50ww7ymq35976y76k8tw27cuw773zamq9d99rc
