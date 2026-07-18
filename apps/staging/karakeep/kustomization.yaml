@@ -3,3 +3,6 @@ kind: Kustomization
 namespace: karakeep
 resources:
   - ../../base/karakeep/
+patches:
+  - path: deployment-web-maintenance-patch.yaml
+  - path: deployment-meilisearch-maintenance-patch.yaml
