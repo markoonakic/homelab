@@ -3,7 +3,9 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - secret.yaml
+  - longhorn-user-secret.yaml
   - service.yaml
   - deployment.yaml
   - bucket-job.yaml
+  - longhorn-user-job.yaml
   - networkpolicy.yaml

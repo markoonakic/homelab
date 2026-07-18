@@ -4,6 +4,7 @@ resources:
   - namespace.yaml
   - repository.yaml
   - release.yaml
+  - backup-secret.yaml
   - ingress.yaml
   - middleware-auth.yaml
   - recurring-jobs/recurringjob-headscale-daily.yaml

@@ -1,0 +1,111 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: configure-longhorn-backup-user
+  namespace: backup-target
+spec:
+  backoffLimit: 10
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: minio-longhorn-user-init
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: talos-dy9-gja
+      restartPolicy: OnFailure
+      enableServiceLinks: false
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: configure-user
+          image: quay.io/minio/mc:RELEASE.2025-05-21T01-59-54Z@sha256:09f93f534cde415d192bb6084dd0e0ddd1715fb602f8a922ad121fd2bf0f8b44
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              attempts=0
+              until mc alias set admin http://minio:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD" >/dev/null 2>&1; do
+                attempts=$((attempts + 1))
+                test "$attempts" -lt 150
+                sleep 2
+              done
+              cat >/tmp/longhorn-policy.json <<'EOF'
+              {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Action": [
+                      "s3:ListBucket",
+                      "s3:ListBucketMultipartUploads"
+                    ],
+                    "Resource": ["arn:aws:s3:::longhorn-backups"]
+                  },
+                  {
+                    "Effect": "Allow",
+                    "Action": [
+                      "s3:GetObject",
+                      "s3:PutObject",
+                      "s3:DeleteObject",
+                      "s3:AbortMultipartUpload",
+                      "s3:ListMultipartUploadParts"
+                    ],
+                    "Resource": ["arn:aws:s3:::longhorn-backups/*"]
+                  }
+                ]
+              }
+              EOF
+              mc admin user add admin "$LONGHORN_ACCESS_KEY" "$LONGHORN_SECRET_KEY" >/dev/null
+              mc admin policy create admin longhorn-backups /tmp/longhorn-policy.json >/dev/null
+              mc admin policy attach admin longhorn-backups --user "$LONGHORN_ACCESS_KEY" >/dev/null
+              mc alias set verify http://minio:9000 "$LONGHORN_ACCESS_KEY" "$LONGHORN_SECRET_KEY" >/dev/null 2>&1
+              mc stat verify/longhorn-backups >/dev/null
+              mc ls verify/longhorn-backups >/dev/null
+          env:
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: minio-credentials
+                  key: access-key
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: minio-credentials
+                  key: secret-key
+            - name: LONGHORN_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: longhorn-minio-credentials
+                  key: access-key
+            - name: LONGHORN_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: longhorn-minio-credentials
+                  key: secret-key
+            - name: MC_CONFIG_DIR
+              value: /tmp/.mc
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 16Mi
