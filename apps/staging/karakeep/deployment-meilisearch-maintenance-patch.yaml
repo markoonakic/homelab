@@ -4,4 +4,4 @@ metadata:
   name: karakeep-meilisearch
   namespace: karakeep
 spec:
-  replicas: 0
+  replicas: 1
