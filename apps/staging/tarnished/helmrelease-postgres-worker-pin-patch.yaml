@@ -15,7 +15,7 @@ spec:
             patch: |
               - op: add
                 path: /spec/replicas
-                value: 0
+                value: 1
           - target:
               group: apps
               version: v1
