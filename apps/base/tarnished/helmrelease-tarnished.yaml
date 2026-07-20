@@ -33,7 +33,7 @@ spec:
                 value:
                   type: Recreate
   values:
-    replicaCount: 0
+    replicaCount: 1
 
     ingress:
       enabled: true
