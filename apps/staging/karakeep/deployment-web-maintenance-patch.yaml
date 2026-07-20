@@ -4,4 +4,4 @@ metadata:
   name: karakeep-web
   namespace: karakeep
 spec:
-  replicas: 0
+  replicas: 1
