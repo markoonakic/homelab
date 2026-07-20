@@ -11,7 +11,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: longhorn-repo
-      version: 1.7.2
+      version: 1.7.3
   targetNamespace: longhorn-system
   install:
     createNamespace: false
