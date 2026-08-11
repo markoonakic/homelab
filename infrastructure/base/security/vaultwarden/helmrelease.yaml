@@ -41,12 +41,13 @@ spec:
       repository: vaultwarden/server
       tag: 1.37.1-alpine
 
-    env:
-      TZ: "Europe/Belgrade"
-      DOMAIN: "https://vault.sarma.love"
-      SIGNUPS_ALLOWED: "false"
-      INVITATIONS_ALLOWED: "true"
-      SHOW_PASSWORD_HINT: "false"
+    vaultwarden:
+      domain: "https://vault.sarma.love"
+      allowSignups: false
+      allowInvitation: true
+      showPasswordHint: false
+      extraEnv:
+        TZ: "Europe/Belgrade"
 
     persistence:
       enabled: true
