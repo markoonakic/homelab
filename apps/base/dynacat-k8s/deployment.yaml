@@ -40,7 +40,7 @@ spec:
         - name: dynacat-k8s
           # Temporary implementation image: this binary serves a Dynacat/Glance-compatible
           # extension API. RBAC and service exposure below restrict it to the nodes view only.
-          image: ghcr.io/lukasdietrich/glance-k8s/glance-k8s:v0.4.8
+          image: ghcr.io/lukasdietrich/glance-k8s/glance-k8s:v0.5.6
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
