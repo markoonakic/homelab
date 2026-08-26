@@ -6,3 +6,4 @@ resources:
 patches:
   - path: deployment-web-maintenance-patch.yaml
   - path: deployment-meilisearch-maintenance-patch.yaml
+  - path: deployment-chrome-maintenance-patch.yaml
