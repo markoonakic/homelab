@@ -24,7 +24,7 @@ spec:
                     operator: Exists
       containers:
       - name: headplane
-        image: ghcr.io/tale/headplane:0.6.2
+        image: ghcr.io/tale/headplane:0.7.1
         imagePullPolicy: IfNotPresent
         env:
         - name: TZ
