@@ -18,7 +18,7 @@ spec:
       serviceAccountName: tailscale-subnet-router
       initContainers:
       - name: sysctler
-        image: busybox:1.37
+        image: busybox:1.38
         securityContext:
           privileged: true
         command: ["/bin/sh"]
