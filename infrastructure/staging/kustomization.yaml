@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - ../base
 
-  # example: if you ever want a staging-only tweak to Longhorn or Renovate,
-  # you add strategic merge patches here
-  # - path: longhorn-values-patch.yaml
+# Sarmica owns the mesh after the 2026-10-11 migration. Keep old state for rollback.
+patches:
+  - path: headscale-scale-down-patch.yaml
+  - path: headplane-scale-down-patch.yaml
