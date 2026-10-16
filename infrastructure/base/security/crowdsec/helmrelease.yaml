@@ -17,7 +17,7 @@ spec:
     # Container image configuration
     image:
       repository: crowdsecurity/crowdsec
-      tag: "v1.6.0"  # Stable version
+      tag: "v1.8.1"  # Stable version
 
     # LAPI (Local API) configuration
     lapi:
